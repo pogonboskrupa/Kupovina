@@ -1489,10 +1489,16 @@ function renderCatalog(){
     if(stores.length===1&&stores[0]==='DM'){sl='DM';sc='store-dm';}
     else if(stores.length===1&&stores[0]==='Bingo'){sl='Bingo';sc='store-bingo';}
     html+=`<div class="cat-section"><div class="cat-section-hdr"><span class="cat-section-icon">${m.icon}</span><span class="cat-section-name">${m.name}</span><span class="cat-section-store ${sc}">${sl}</span></div><div class="cat-prod-grid">`;
-    groups[cat].forEach(({p,i})=>{html+=`<div class="cat-prod"><div class="cat-prod-info"><div class="cat-prod-name">${esc(p.name)}</div><div class="cat-prod-qty">${esc(p.qty||'')}${p.store?' · '+esc(p.store):''}</div></div><span class="cat-prod-price">${p.price.toFixed(2)} KM</span><button class="cat-prod-edit" onclick="openEdit(${i})">✏️</button><button class="cat-prod-add" id="cat-add-${i}" onclick="addFromCatalog(${i})">+</button></div>`;});
+    groups[cat].forEach(({p,i})=>{html+=`<div class="cat-prod"><div class="cat-prod-info"><div class="cat-prod-name">${esc(p.name)}</div><div class="cat-prod-qty">${esc(p.qty||'')}${p.store?' · '+esc(p.store):''}</div></div><span class="cat-prod-price">${p.price.toFixed(2)} KM</span><button class="cat-prod-edit" onclick="openEdit(${i})">✏️</button><button class="cat-prod-edit" onclick="deleteCatalogItem(${i})" style="color:var(--accent2)">🗑️</button><button class="cat-prod-add" id="cat-add-${i}" onclick="addFromCatalog(${i})">+</button></div>`;});
     html+=`</div></div>`;
   });
   container.innerHTML=html;
+}
+function deleteCatalogItem(idx){
+  const name=catalog[idx].name;
+  if(!confirm('Obrisati "'+name+'" iz kataloga?'))return;
+  catalog.splice(idx,1);
+  saveCatalog();renderCatalog();toast('🗑️ '+name+' obrisano');
 }
 function openEdit(idx){const p=catalog[idx];editKey=idx;document.getElementById('edit-prod-name').textContent=p.name;document.getElementById('edit-qty').value=p.qty||'';document.getElementById('edit-price').value=p.price;document.getElementById('edit-modal').classList.add('visible');}
 function closeEdit(){document.getElementById('edit-modal').classList.remove('visible');editKey=null;}
