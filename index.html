@@ -2087,7 +2087,30 @@ function saveScanItems(){
     if(item.price>0){
       remem(item.name,item.price,item.qty||'',item.cat||'ostalo');
     }
+
+    // Add to catalog or update existing price
+    if(item.price>0){
+      const catIdx=catalog.findIndex(c=>c.name.toLowerCase()===item.name.toLowerCase());
+      if(catIdx>=0){
+        // Update price (and store if set)
+        catalog[catIdx].price=item.price;
+        if(store) catalog[catIdx].store=store;
+      }else{
+        // Add new item to catalog
+        catalog.push({
+          name:item.name,
+          qty:item.qty||'',
+          price:item.price,
+          cat:item.cat||'ostalo',
+          store:store||''
+        });
+      }
+    }
   });
+
+  // Save catalog and re-render
+  saveCatalog();
+  renderCatalog();
 
   // Save as receipt in Računi — use TOTAL field (from receipt) not sum of parsed items
   const receiptAmount=parseFloat(document.getElementById('scan-total').value)||totalAmount;
