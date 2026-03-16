@@ -437,13 +437,8 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .prio-btn.active-urgent{border-color:var(--accent2);color:var(--accent2);background:rgba(255,107,53,.08)}
 
 /* ── VOICE INPUT ── */
-.voice-btn{width:42px;height:42px;border-radius:50%;border:2px solid var(--accent3);background:transparent;color:var(--accent3);font-size:1.1rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.voice-btn:hover{background:rgba(53,200,245,.1)}
-.voice-btn.recording{border-color:var(--accent2);color:var(--accent2);background:rgba(255,107,53,.15);animation:vpulse 1s infinite}
-@keyframes vpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
 .voice-row{display:flex;gap:8px;align-items:flex-end;margin-bottom:9px}
 .voice-row .field{flex:1;margin-bottom:0}
-.voice-status{font-size:.65rem;color:var(--accent3);text-align:center;margin-bottom:6px}
 .cam-btn{width:42px;height:42px;border-radius:50%;border:2px solid var(--accent2);background:transparent;color:var(--accent2);font-size:1.1rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .cam-btn:hover{background:rgba(255,107,53,.1)}
 .cam-btn[style*="accent3"]:hover{background:rgba(53,200,245,.1)}
@@ -618,13 +613,11 @@ body.light .suggestions-bar{background:linear-gradient(135deg,#e8f4fd,#dbeef8);b
           oninput="onNameInput()" onblur="hideAc()" onkeydown="onNameKey(event)"/>
         <div class="ac-list" id="ac-list" style="display:none"></div>
       </div>
-      <button class="voice-btn" id="voice-btn" onclick="toggleVoice()" title="Glasovni unos">🎤</button>
       <button class="cam-btn" id="cam-btn" onclick="openReceiptCamera()" title="Uslikaj račun">📷</button>
       <button class="cam-btn" id="gallery-btn" onclick="openReceiptGallery()" title="Učitaj iz galerije" style="border-color:var(--accent3);color:var(--accent3)">🖼️</button>
       <input type="file" id="receipt-file-cam" accept="image/*" capture="environment" style="display:none" onchange="onReceiptPhoto(event)"/>
       <input type="file" id="receipt-file-gal" accept="image/*" style="display:none" onchange="onReceiptPhoto(event)"/>
     </div>
-    <div class="voice-status" id="voice-status" style="display:none"></div>
     <div class="row2">
       <div class="field"><label>Količina</label><input type="text" id="in-qty" placeholder="npr. 1 L"/></div>
       <div class="field"><label>Cijena (KM)</label><input type="number" id="in-price" placeholder="0.00" min="0" step="0.01"/></div>
@@ -1724,61 +1717,6 @@ function showNotification(title,body){
 }
 
 // ════════════════════════════════════════════════
-//  VOICE INPUT (Web Speech API)
-// ════════════════════════════════════════════════
-let recognition=null,isRecording=false;
-function initVoice(){
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){const vb=document.getElementById('voice-btn');if(vb)vb.style.display='none';return;}
-  recognition=new SR();
-  recognition.lang='bs-BA';
-  recognition.continuous=false;
-  recognition.interimResults=false;
-  recognition.onresult=(e)=>{
-    const text=e.results[0][0].transcript;
-    stopVoice();
-    const parts=text.split(/[,i]+/).map(s=>s.trim()).filter(s=>s);
-    if(parts.length===1){
-      document.getElementById('in-name').value=parts[0];
-      onNameInput();
-      toast('🎤 '+parts[0]);
-    }else{
-      let added=0;
-      parts.forEach(name=>{
-        if(!name)return;
-        const mem=priceMemory[name.toLowerCase()];
-        const itemName=mem?mem.name:name.charAt(0).toUpperCase()+name.slice(1);
-        if(items.find(i=>i.name.toLowerCase()===itemName.toLowerCase()&&!i.checked))return;
-        items.push({name:itemName,qty:mem?mem.qty:'',price:mem?mem.price:0,cat:mem?mem.cat:'ostalo',store:'',checked:false,id:Date.now()+Math.random(),priority:'normal',note:''});
-        added++;
-      });
-      if(added>0){saveItems();renderList();toast('🎤 Dodano '+added+' stavki');}
-      else toast('Sve je već na listi!');
-    }
-  };
-  recognition.onerror=()=>{stopVoice();toast('Greška sa mikrofonom');};
-  recognition.onend=()=>{stopVoice();};
-}
-function startVoice(){
-  if(!recognition){toast('Preglednik ne podržava glasovni unos');return;}
-  isRecording=true;
-  const btn=document.getElementById('voice-btn');
-  btn.classList.add('recording');btn.textContent='⏹';
-  const st=document.getElementById('voice-status');
-  st.textContent='🎤 Slušam… Recite namirnice';st.style.display='block';
-  recognition.start();
-}
-function stopVoice(){
-  isRecording=false;
-  const btn=document.getElementById('voice-btn');
-  if(btn){btn.classList.remove('recording');btn.textContent='🎤';}
-  const st=document.getElementById('voice-status');
-  if(st)st.style.display='none';
-  try{recognition.stop();}catch(e){}
-}
-function toggleVoice(){if(isRecording)stopVoice();else startVoice();}
-
-// ════════════════════════════════════════════════
 //  RECEIPT PHOTO SCAN (Tesseract OCR)
 // ════════════════════════════════════════════════
 let scanParsedItems=[];
@@ -2051,7 +1989,6 @@ function quickAdd(name){
 //  INIT
 // ════════════════════════════════════════════════
 applyTheme();
-initVoice();
 requestNotifPermission();
 checkUrl();
 renderList();
