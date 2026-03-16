@@ -800,11 +800,14 @@ body.light .suggestions-bar{background:linear-gradient(135deg,#e8f4fd,#dbeef8);b
     <div class="scan-add-row">
       <button class="scan-add-btn" onclick="scanAddRow()">+ Dodaj stavku ručno</button>
     </div>
-    <div class="field">
-      <label>Prodavnica</label>
-      <select id="scan-store">
-        <option value="">Bilo koja</option><option value="Bingo">🔵 Bingo</option><option value="DM">🔴 DM Drogerie</option><option value="Konzum">🟠 Konzum</option><option value="Mercator">🟢 Mercator</option><option value="Pijaca">🟡 Pijaca</option>
-      </select>
+    <div class="row2">
+      <div class="field"><label>TOTAL sa računa (KM)</label><input type="number" id="scan-total" placeholder="0.00" min="0" step="0.01"/></div>
+      <div class="field">
+        <label>Prodavnica</label>
+        <select id="scan-store">
+          <option value="">Bilo koja</option><option value="Bingo">🔵 Bingo</option><option value="DM">🔴 DM Drogerie</option><option value="Konzum">🟠 Konzum</option><option value="Mercator">🟢 Mercator</option><option value="Pijaca">🟡 Pijaca</option>
+        </select>
+      </div>
     </div>
     <div class="field"><label>Ko je platio?</label></div>
     <div class="rec-buyer-row">
@@ -1907,16 +1910,49 @@ function parseReceiptText(text){
     }
   }
 
-  // Calculate total and show summary
-  const total=scanParsedItems.reduce((s,it)=>s+it.price,0);
+  // Extract TOTAL from receipt (the authoritative amount)
+  let receiptTotal=0;
+  for(let i=0;i<lines.length;i++){
+    const l=lines[i].replace(/\s+/g,' ');
+    // Match "TOTAL: 64.44" or "TOTAL 64,44" or "UKUPNO: 64.44" etc.
+    const totalMatch=l.match(/(?:total|ukupno)[:\s]+(\d+[.,]\d{2})/i);
+    if(totalMatch){
+      receiptTotal=parseFloat(totalMatch[1].replace(',','.'));
+      break;
+    }
+  }
+  // Fill in the total field
+  const totalField=document.getElementById('scan-total');
+  if(receiptTotal>0){
+    totalField.value=receiptTotal.toFixed(2);
+  }else{
+    // Fallback: sum of parsed items
+    const sum=scanParsedItems.reduce((s,it)=>s+it.price,0);
+    if(sum>0) totalField.value=sum.toFixed(2);
+  }
+
+  // Auto-detect store from receipt text
+  const fullText=text.toLowerCase();
+  const storeSelect=document.getElementById('scan-store');
+  if(/bingo/.test(fullText)) storeSelect.value='Bingo';
+  else if(/\bdm\b|drogerie/.test(fullText)) storeSelect.value='DM';
+  else if(/konzum/.test(fullText)) storeSelect.value='Konzum';
+  else if(/mercator/.test(fullText)) storeSelect.value='Mercator';
+
+  // Show summary
+  const parsedSum=scanParsedItems.reduce((s,it)=>s+it.price,0);
   if(scanParsedItems.length===0){
     document.getElementById('scan-status').innerHTML='Nisam prepoznao stavke. Dodajte ih ručno koristeći dugme ispod.';
     document.getElementById('scan-status').style.display='block';
     document.getElementById('scan-status').style.color='var(--muted)';
   }else{
-    document.getElementById('scan-status').innerHTML='Prepoznato '+scanParsedItems.length+' stavki — ukupno '+total.toFixed(2)+' KM';
+    let msg='Prepoznato '+scanParsedItems.length+' stavki — zbir: '+parsedSum.toFixed(2)+' KM';
+    if(receiptTotal>0 && Math.abs(receiptTotal-parsedSum)>0.01){
+      msg+=' (TOTAL sa računa: '+receiptTotal.toFixed(2)+' KM)';
+    }
+    document.getElementById('scan-status').innerHTML=msg;
     document.getElementById('scan-status').style.display='block';
-    document.getElementById('scan-status').style.color='var(--accent)';
+    document.getElementById('scan-status').style.color=receiptTotal>0&&Math.abs(receiptTotal-parsedSum)>0.5?'var(--accent2)':'var(--accent)';
   }
   renderScanItems();
 }
@@ -2053,8 +2089,9 @@ function saveScanItems(){
     }
   });
 
-  // Save as receipt in Računi
-  if(totalAmount>0){
+  // Save as receipt in Računi — use TOTAL field (from receipt) not sum of parsed items
+  const receiptAmount=parseFloat(document.getElementById('scan-total').value)||totalAmount;
+  if(receiptAmount>0){
     const storeName=store||'Nepoznata';
     const title='Račun '+storeName+(itemNames.length?' ('+itemNames.length+' stavki)':'');
     const note=itemNames.join(', ');
@@ -2064,7 +2101,7 @@ function saveScanItems(){
       id:Date.now(),
       date:dateStr,
       title:title,
-      amount:Math.round(totalAmount*100)/100,
+      amount:Math.round(receiptAmount*100)/100,
       cat:'hrana',
       buyer:buyer,
       note:note
