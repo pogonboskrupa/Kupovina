@@ -1,0 +1,1829 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kupovina — Porodica Ćehić</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f0f0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Kupovina">
+<link rel="apple-touch-icon" href="icon-192.svg">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f0f0f;--surface:#181818;--surface2:#222;--surface3:#2a2a2a;
+  --accent:#c8f535;--accent2:#ff6b35;--accent3:#35c8f5;
+  --nedim:#c8f535;--azra:#ff6b9d;
+  --text:#f0f0f0;--muted:#666;--border:#2a2a2a;--checked:#1e2e06;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;flex-direction:column;max-width:480px;margin:0 auto}
+
+/* ── HEADER ── */
+.header{padding:20px 20px 6px;display:flex;align-items:flex-start;justify-content:space-between}
+.header h1{font-family:'Syne',sans-serif;font-size:1.65rem;font-weight:800;letter-spacing:-1px;line-height:1.1}
+.header h1 .ac{color:var(--accent)}
+.header h1 .fam{display:block;font-size:.65rem;font-weight:400;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-top:2px;font-family:'DM Sans',sans-serif}
+.header-avatars{display:flex;gap:-4px}
+.hav{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:.85rem;border:2px solid var(--bg);cursor:pointer;transition:all .2s;flex-shrink:0}
+.hav.n{background:var(--nedim);color:#000;margin-right:-8px}
+.hav.a{background:var(--azra);color:#fff}
+.hav:hover{transform:scale(1.1)}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:3px;padding:8px 10px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:20;overflow-x:auto}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:1;min-width:44px;padding:6px 2px;border:1px solid var(--border);border-radius:9px;background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.56rem;font-weight:500;cursor:pointer;transition:all .2s;text-align:center;white-space:nowrap}
+.tab.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700}
+.tab-icon{display:block;font-size:.84rem;margin-bottom:1px}
+.page{display:none;padding:14px 18px 80px;flex:1}
+.page.active{display:block}
+
+/* ── LIVE BAR ── */
+.live-bar{background:linear-gradient(135deg,#1a2a04,#111a00);border:1px solid var(--accent);border-radius:14px;padding:11px 15px;margin-bottom:11px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.lb-left{flex:1}
+.lb-label{font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:1px}
+.lb-amt{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--accent);letter-spacing:-.5px;line-height:1}
+.lb-amt span{font-size:.75rem;font-weight:400}
+.lb-right{text-align:right}
+.lb-rem-label{font-size:.58rem;color:var(--muted);margin-bottom:1px}
+.lb-rem-amt{font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;color:var(--muted)}
+.lb-bar{width:65px;height:3px;background:rgba(255,255,255,.07);border-radius:10px;margin-top:4px;margin-left:auto;overflow:hidden}
+.lb-fill{height:100%;background:var(--accent);border-radius:10px;transition:width .4s}
+
+/* ── BUYER BAR ── */
+.buyer-bar{display:flex;gap:7px;margin-bottom:11px}
+.buyer-btn{flex:1;padding:8px 8px;border-radius:11px;border:2px solid var(--border);background:transparent;color:var(--muted);font-family:'Syne',sans-serif;font-size:.72rem;font-weight:700;cursor:pointer;transition:all .22s;display:flex;align-items:center;justify-content:center;gap:6px}
+.buyer-btn.nedim-active{border-color:var(--nedim);background:rgba(200,245,53,.1);color:var(--nedim)}
+.buyer-btn.azra-active{border-color:var(--azra);background:rgba(255,107,157,.1);color:var(--azra)}
+.bav{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:800;background:var(--surface2);color:var(--muted);transition:all .22s;flex-shrink:0}
+.buyer-btn.nedim-active .bav{background:var(--nedim);color:#000}
+.buyer-btn.azra-active .bav{background:var(--azra);color:#fff}
+
+/* ── LIST ── */
+.list-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+.list-title{font-family:'Syne',sans-serif;font-size:.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.badge{background:var(--accent);color:#000;font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:20px}
+.hdr-btns{display:flex;gap:5px;align-items:center}
+.hdr-btn{padding:4px 9px;background:transparent;border:1px solid var(--border);border-radius:14px;color:var(--muted);font-size:.65rem;cursor:pointer;transition:all .2s}
+.hdr-btn:hover{border-color:var(--accent2);color:var(--accent2)}
+
+.cat-group{margin-bottom:12px}
+.cat-header{display:flex;align-items:center;gap:7px;margin-bottom:6px;cursor:pointer;user-select:none}
+.cat-icon{font-size:.95rem}
+.cat-name{font-family:'Syne',sans-serif;font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em}
+.cat-badge{font-size:.58rem;background:var(--surface2);border:1px solid var(--border);padding:2px 6px;border-radius:10px;color:var(--muted);margin-left:auto}
+.cat-toggle{color:var(--muted);font-size:.65rem;transition:transform .2s}
+.cat-toggle.collapsed{transform:rotate(-90deg)}
+.cat-items.collapsed{display:none}
+.item-card{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface);border-radius:11px;margin-bottom:6px;border:1px solid var(--border);transition:all .22s;cursor:pointer;user-select:none}
+.item-card.checked{background:var(--checked);border-color:rgba(200,245,53,.4);opacity:.85}
+.item-card.checked .item-name{text-decoration:line-through;color:var(--muted)}
+.chk{width:22px;height:22px;border:2px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.74rem;flex-shrink:0;transition:all .2s;background:var(--surface2)}
+.item-card.checked .chk{background:var(--accent);border-color:var(--accent);color:#000}
+.item-info{flex:1;min-width:0}
+.item-name{font-weight:500;font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-qty{font-size:.65rem;color:var(--muted);margin-top:1px}
+.item-store{font-size:.58rem;color:var(--muted);margin-top:1px;opacity:.7}
+.item-price-tag{font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;color:var(--accent);flex-shrink:0}
+.item-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.82rem;padding:3px;border-radius:5px;transition:all .15s;flex-shrink:0}
+.item-del:hover{color:var(--accent2)}
+.empty-state{text-align:center;padding:36px 20px;color:var(--muted)}
+.empty-state .icon{font-size:2.2rem;margin-bottom:8px}
+.empty-state p{font-size:.8rem}
+.finish-btn{width:100%;padding:12px;background:var(--accent);color:#000;border:none;border-radius:12px;font-family:'Syne',sans-serif;font-size:.88rem;font-weight:800;cursor:pointer;margin-top:10px;transition:transform .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.finish-btn:active{transform:scale(.98)}
+.finish-btn.hidden{display:none}
+
+/* ── ADD PAGE ── */
+.add-form{background:var(--surface);border-radius:15px;padding:16px;border:1px solid var(--border);margin-bottom:14px}
+.add-form h2{font-family:'Syne',sans-serif;font-size:.92rem;font-weight:700;margin-bottom:12px;color:var(--accent)}
+.field{margin-bottom:9px;position:relative}
+.field label{display:block;font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.field input,.field select,.field textarea{width:100%;padding:9px 11px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;transition:border-color .2s;appearance:none;-webkit-appearance:none}
+.field textarea{resize:vertical;min-height:60px}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent)}
+.field input::placeholder,.field textarea::placeholder{color:var(--muted)}
+.field select option{background:var(--surface2)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+.ac-list{position:absolute;top:100%;left:0;right:0;background:#1e1e1e;border:1px solid var(--accent);border-radius:9px;z-index:50;max-height:155px;overflow-y:auto;margin-top:2px;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.ac-item{padding:8px 11px;cursor:pointer;font-size:.83rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);transition:background .15s}
+.ac-item:last-child{border-bottom:none}
+.ac-item:hover,.ac-item.active{background:var(--surface2)}
+.ac-price{font-family:'Syne',sans-serif;font-size:.7rem;color:var(--accent);font-weight:700}
+.ac-sub{font-size:.63rem;color:var(--muted)}
+.mem-note{font-size:.65rem;color:var(--muted);margin-top:-4px;margin-bottom:7px}
+.mem-note span{color:var(--accent);font-weight:700}
+.btn-add{width:100%;padding:10px;background:var(--accent);color:#000;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:transform .15s}
+.btn-add:active{transform:scale(.98)}
+
+/* ── CATALOG ── */
+.cat-section{margin-bottom:18px}
+.cat-section-hdr{display:flex;align-items:center;gap:8px;margin-bottom:9px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.cat-section-icon{font-size:1.1rem}
+.cat-section-name{font-family:'Syne',sans-serif;font-size:.86rem;font-weight:700}
+.cat-section-store{margin-left:auto;font-size:.62rem;padding:3px 8px;border-radius:10px;font-weight:700}
+.store-dm{background:#d40511;color:#fff}
+.store-bingo{background:#1a5276;color:#fff}
+.store-both{background:var(--surface2);color:var(--muted);border:1px solid var(--border)}
+.cat-prod-grid{display:flex;flex-direction:column;gap:5px}
+.cat-prod{display:flex;align-items:center;gap:9px;padding:8px 11px;background:var(--surface);border-radius:9px;border:1px solid var(--border)}
+.cat-prod-info{flex:1;min-width:0}
+.cat-prod-name{font-size:.83rem;font-weight:500}
+.cat-prod-qty{font-size:.63rem;color:var(--muted);margin-top:1px}
+.cat-prod-price{font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;color:var(--accent);flex-shrink:0}
+.cat-prod-edit{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.78rem;padding:3px 5px;border-radius:5px;transition:all .15s;flex-shrink:0}
+.cat-prod-edit:hover{color:var(--accent);background:rgba(200,245,53,.1)}
+.cat-prod-add{background:var(--accent);color:#000;border:none;width:25px;height:25px;border-radius:6px;font-size:.88rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .15s}
+.cat-prod-add:active{transform:scale(.9)}
+
+/* ── PRICE PAGE ── */
+.price-hero{background:linear-gradient(135deg,#1a2a04,#0f1a00);border:1px solid var(--accent);border-radius:17px;padding:22px 18px;text-align:center;margin-bottom:14px;position:relative;overflow:hidden}
+.price-hero::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 50% 50%,rgba(200,245,53,.05),transparent 60%);pointer-events:none}
+.ph-label{font-size:.62rem;text-transform:uppercase;letter-spacing:.15em;color:var(--accent);margin-bottom:4px}
+.ph-amt{font-family:'Syne',sans-serif;font-size:2.6rem;font-weight:800;color:var(--accent);letter-spacing:-2px;line-height:1}
+.ph-cur{font-size:1.1rem}
+.ph-sub{font-size:.7rem;color:var(--muted);margin-top:4px}
+.prog-wrap{margin-bottom:14px}
+.prog-label{display:flex;justify-content:space-between;font-size:.62rem;color:var(--muted);margin-bottom:4px}
+.prog-bar{height:4px;background:var(--surface);border-radius:10px;overflow:hidden}
+.prog-fill{height:100%;background:var(--accent);border-radius:10px;transition:width .5s}
+.price-list h3{font-family:'Syne',sans-serif;font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px}
+.price-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:.8rem}
+.price-row:last-child{border-bottom:none}
+.pr-name{color:var(--text)}
+.pr-name.un{color:var(--muted)}
+.pr-amt{font-family:'Syne',sans-serif;font-weight:700}
+.pr-amt.ck{color:var(--accent)}
+.pr-amt.un{color:var(--muted)}
+.reset-btn{width:100%;padding:9px;background:transparent;border:1px solid var(--accent2);border-radius:10px;color:var(--accent2);font-family:'Syne',sans-serif;font-weight:700;font-size:.75rem;cursor:pointer;margin-top:14px;transition:all .2s}
+.reset-btn:hover{background:rgba(255,107,53,.1)}
+
+/* ══════════════════════════════════════
+   RAČUNI (RECEIPTS) PAGE
+══════════════════════════════════════ */
+.racuni-top{margin-bottom:14px}
+.racuni-top h2{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:800;letter-spacing:-.5px}
+.racuni-top p{font-size:.72rem;color:var(--muted);margin-top:3px}
+
+.rec-form{background:var(--surface);border-radius:15px;padding:16px;border:1px solid var(--border);margin-bottom:14px}
+.rec-form h3{font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;margin-bottom:12px;color:var(--accent3)}
+.rec-buyer-row{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:9px}
+.rb-btn{padding:10px 8px;border-radius:10px;border:2px solid var(--border);background:transparent;cursor:pointer;text-align:center;transition:all .22s;font-family:'Syne',sans-serif;font-size:.72rem;font-weight:700;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:6px}
+.rb-btn.rb-nedim{border-color:var(--nedim);background:rgba(200,245,53,.1);color:var(--nedim)}
+.rb-btn.rb-azra{border-color:var(--azra);background:rgba(255,107,157,.1);color:var(--azra)}
+.rb-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.rb-btn.rb-nedim .rb-dot{background:var(--nedim)}
+.rb-btn.rb-azra .rb-dot{background:var(--azra)}
+.btn-save-rec{width:100%;padding:10px;background:var(--accent3);color:#000;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:transform .15s;margin-top:8px}
+.btn-save-rec:active{transform:scale(.98)}
+
+.cat-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:2px}
+.cat-chip{padding:5px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;font-size:.66rem;cursor:pointer;transition:all .15s;color:var(--muted);white-space:nowrap}
+.cat-chip.active{background:var(--accent3);border-color:var(--accent3);color:#000;font-weight:700}
+
+/* receipt list */
+.rec-filter-bar{display:flex;gap:6px;margin-bottom:12px;align-items:center}
+.rec-filter-btn{padding:5px 11px;border:1px solid var(--border);border-radius:16px;background:transparent;color:var(--muted);font-size:.65rem;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+.rec-filter-btn.active{background:var(--accent);border-color:var(--accent);color:#000;font-weight:700}
+.rec-filter-btn.n-active{background:var(--nedim);border-color:var(--nedim);color:#000;font-weight:700}
+.rec-filter-btn.a-active{background:var(--azra);border-color:var(--azra);color:#fff;font-weight:700}
+
+.receipt-card{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:13px 14px;margin-bottom:8px;transition:all .2s}
+.receipt-card.nedim-rec{border-left:3px solid var(--nedim)}
+.receipt-card.azra-rec{border-left:3px solid var(--azra)}
+.rc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:5px}
+.rc-left{flex:1;min-width:0}
+.rc-title{font-weight:500;font-size:.88rem;line-height:1.3}
+.rc-meta{font-size:.62rem;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.rc-buyer-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+.rc-cat-tag{background:var(--surface2);border:1px solid var(--border);padding:2px 7px;border-radius:10px;font-size:.58rem}
+.rc-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.rc-amt{font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem}
+.rc-amt.nedim{color:var(--nedim)}
+.rc-amt.azra{color:var(--azra)}
+.rc-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.78rem;padding:3px;border-radius:5px;transition:all .15s}
+.rc-del:hover{color:var(--accent2)}
+.rc-note{font-size:.68rem;color:var(--muted);margin-top:4px;font-style:italic;line-height:1.4;border-top:1px solid var(--border);padding-top:5px}
+.rec-empty{text-align:center;padding:32px 20px;color:var(--muted)}
+.rec-empty .icon{font-size:2rem;margin-bottom:8px}
+
+/* ══════════════════════════════════════
+   PROFIL / DASHBOARD PAGE
+══════════════════════════════════════ */
+.profile-toggle{display:flex;gap:6px;margin-bottom:16px}
+.pt-btn{flex:1;padding:10px;border-radius:11px;border:2px solid var(--border);background:transparent;cursor:pointer;text-align:center;transition:all .22s;font-family:'Syne',sans-serif;font-size:.78rem;font-weight:700;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:8px}
+.pt-btn.pt-nedim{border-color:var(--nedim);background:rgba(200,245,53,.1);color:var(--nedim)}
+.pt-btn.pt-azra{border-color:var(--azra);background:rgba(255,107,157,.1);color:var(--azra)}
+.pt-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:.8rem}
+.pt-btn.pt-nedim .pt-avatar{background:var(--nedim);color:#000}
+.pt-btn.pt-azra .pt-avatar{background:var(--azra);color:#fff}
+
+.profile-hero{border-radius:18px;padding:22px 18px;margin-bottom:14px;position:relative;overflow:hidden}
+.profile-hero.ph-nedim{background:linear-gradient(135deg,#1a2a04,#0f1a00);border:1px solid rgba(200,245,53,.4)}
+.profile-hero.ph-azra{background:linear-gradient(135deg,#2a0a18,#1a0010);border:1px solid rgba(255,107,157,.4)}
+.prof-name{font-family:'Syne',sans-serif;font-size:.65rem;text-transform:uppercase;letter-spacing:.15em;margin-bottom:3px}
+.ph-nedim .prof-name{color:var(--nedim)}
+.ph-azra .prof-name{color:var(--azra)}
+.prof-total{font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;letter-spacing:-2px;line-height:1}
+.ph-nedim .prof-total{color:var(--nedim)}
+.ph-azra .prof-total{color:var(--azra)}
+.prof-sub{font-size:.7rem;color:var(--muted);margin-top:4px}
+
+.stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:14px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 10px;text-align:center}
+.stat-label{font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
+.stat-val{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--text)}
+.stat-val.n{color:var(--nedim)}
+.stat-val.a{color:var(--azra)}
+
+.profile-section-title{font-family:'Syne',sans-serif;font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:9px}
+
+.category-breakdown{background:var(--surface);border:1px solid var(--border);border-radius:13px;overflow:hidden;margin-bottom:14px}
+.cb-row{display:flex;align-items:center;gap:10px;padding:10px 13px;border-bottom:1px solid var(--border)}
+.cb-row:last-child{border-bottom:none}
+.cb-icon{font-size:.95rem;flex-shrink:0}
+.cb-info{flex:1;min-width:0}
+.cb-name{font-size:.8rem;font-weight:500}
+.cb-bar-wrap{height:3px;background:var(--border);border-radius:10px;margin-top:4px;overflow:hidden}
+.cb-bar-fill{height:100%;border-radius:10px;transition:width .5s}
+.nedim-bar{background:var(--nedim)}
+.azra-bar{background:var(--azra)}
+.cb-amt{font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;flex-shrink:0}
+
+.timeline-list{background:var(--surface);border:1px solid var(--border);border-radius:13px;overflow:hidden;margin-bottom:14px}
+.tl-item{display:flex;align-items:center;gap:10px;padding:10px 13px;border-bottom:1px solid var(--border)}
+.tl-item:last-child{border-bottom:none}
+.tl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.tl-info{flex:1;min-width:0}
+.tl-name{font-size:.8rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl-meta{font-size:.6rem;color:var(--muted);margin-top:1px}
+.tl-amt{font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;flex-shrink:0}
+
+/* ── REKAP ── */
+.rekap-header{margin-bottom:14px}
+.rekap-header h2{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:800;letter-spacing:-.5px}
+.rekap-header p{font-size:.7rem;color:var(--muted);margin-top:3px}
+.rekap-period-tabs{display:flex;gap:5px;margin-bottom:14px}
+.rp-tab{flex:1;padding:7px;border:1px solid var(--border);border-radius:9px;background:transparent;color:var(--muted);font-family:'Syne',sans-serif;font-size:.7rem;font-weight:700;cursor:pointer;text-align:center;transition:all .2s}
+.rp-tab.active{background:var(--accent);color:#000;border-color:var(--accent)}
+
+.rekap-total-card{border-radius:17px;padding:20px 18px;margin-bottom:14px;position:relative;overflow:hidden}
+.rekap-total-card.week{background:linear-gradient(135deg,#1a2a04,#111a00);border:1px solid var(--accent)}
+.rekap-total-card.month{background:linear-gradient(135deg,#1a1a2a,#0f0f1a);border:1px solid var(--accent3)}
+.rekap-total-card.year{background:linear-gradient(135deg,#2a1a0a,#1a0f00);border:1px solid var(--accent2)}
+.rtc-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.15em;margin-bottom:4px}
+.week .rtc-label{color:var(--accent)}
+.month .rtc-label{color:var(--accent3)}
+.year .rtc-label{color:var(--accent2)}
+.rtc-amt{font-family:'Syne',sans-serif;font-size:2.3rem;font-weight:800;letter-spacing:-2px;line-height:1}
+.week .rtc-amt{color:var(--accent)}
+.month .rtc-amt{color:var(--accent3)}
+.year .rtc-amt{color:var(--accent2)}
+.rtc-sub{font-size:.68rem;color:var(--muted);margin-top:3px}
+.rtc-row{display:flex;gap:14px;margin-top:12px}
+.rtc-mini{flex:1;text-align:center;padding:8px;background:rgba(0,0,0,.3);border-radius:10px}
+.rtc-mini-label{font-size:.56rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.week .rtc-mini-label{color:rgba(200,245,53,.6)}
+.month .rtc-mini-label{color:rgba(53,200,245,.6)}
+.year .rtc-mini-label{color:rgba(255,107,53,.6)}
+.rtc-mini-val{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:800}
+.week .rtc-mini-val{color:var(--accent)}
+.month .rtc-mini-val{color:var(--accent3)}
+.year .rtc-mini-val{color:var(--accent2)}
+
+.buyers-split{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.buyer-split-card{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:13px;text-align:center}
+.buyer-split-card.nedim-card{border-color:rgba(200,245,53,.3)}
+.buyer-split-card.azra-card{border-color:rgba(255,107,157,.3)}
+.bsc-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:.88rem;margin:0 auto 7px}
+.nedim-card .bsc-av{background:var(--nedim);color:#000}
+.azra-card .bsc-av{background:var(--azra);color:#fff}
+.bsc-name{font-family:'Syne',sans-serif;font-size:.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.bsc-amt{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:800}
+.nedim-card .bsc-amt{color:var(--nedim)}
+.azra-card .bsc-amt{color:var(--azra)}
+.bsc-count{font-size:.62rem;color:var(--muted);margin-top:1px}
+.bsc-bar{height:3px;background:var(--border);border-radius:10px;margin-top:7px;overflow:hidden}
+.bsc-bar-fill{height:100%;border-radius:10px;transition:width .5s}
+.nedim-card .bsc-bar-fill{background:var(--nedim)}
+.azra-card .bsc-bar-fill{background:var(--azra)}
+
+.rekap-sessions{background:var(--surface);border:1px solid var(--border);border-radius:13px;overflow:hidden}
+.rs-header{padding:11px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.rs-header span{font-family:'Syne',sans-serif;font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.session-item{padding:11px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px}
+.session-item:last-child{border-bottom:none}
+.si-buyer{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:.68rem;flex-shrink:0}
+.si-buyer.nedim{background:rgba(200,245,53,.15);color:var(--nedim);border:1px solid rgba(200,245,53,.3)}
+.si-buyer.azra{background:rgba(255,107,157,.15);color:var(--azra);border:1px solid rgba(255,107,157,.3)}
+.si-info{flex:1;min-width:0}
+.si-date{font-size:.7rem;font-weight:500}
+.si-items{font-size:.6rem;color:var(--muted);margin-top:1px}
+.si-type{font-size:.56rem;padding:1px 6px;border-radius:8px;margin-left:4px;font-weight:700}
+.si-type.shop{background:rgba(200,245,53,.15);color:var(--accent)}
+.si-type.rec{background:rgba(53,200,245,.15);color:var(--accent3)}
+.si-amt{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;color:var(--accent);flex-shrink:0}
+.si-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.72rem;padding:4px;border-radius:5px;flex-shrink:0}
+.si-del:hover{color:var(--accent2)}
+.rs-empty{padding:22px;text-align:center;color:var(--muted);font-size:.78rem}
+
+/* ── SHARE ── */
+.share-card{background:var(--surface);border:1px solid var(--border);border-radius:15px;padding:16px;margin-bottom:11px}
+.share-card h2{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;margin-bottom:4px}
+.share-card p{font-size:.76rem;color:var(--muted);margin-bottom:12px;line-height:1.5}
+.share-btn{display:block;width:100%;padding:10px;background:var(--accent);color:#000;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;text-align:center;margin-bottom:6px;transition:transform .15s}
+.share-btn:active{transform:scale(.98)}
+.share-btn.sec{background:transparent;border:1px solid var(--border);color:var(--muted);font-weight:500}
+.share-btn.sec:hover{border-color:var(--accent);color:var(--accent)}
+.link-box{display:none;margin-top:10px}
+.link-box.visible{display:block}
+.link-box label{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;display:block}
+.link-input{width:100%;padding:7px 10px;background:var(--surface2);border:1px solid var(--accent);border-radius:8px;color:var(--accent);font-size:.7rem;outline:none}
+.copy-btn{width:100%;margin-top:5px;padding:8px;background:transparent;border:1px solid var(--accent);border-radius:8px;color:var(--accent);font-family:'Syne',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;transition:all .2s}
+.copy-btn:hover{background:rgba(200,245,53,.1)}
+.imp-banner{background:linear-gradient(135deg,#1a2a04,#111a00);border:1px solid var(--accent);border-radius:10px;padding:10px 13px;margin-bottom:11px;font-size:.76rem;display:none}
+.imp-banner.visible{display:block}
+.imp-banner strong{color:var(--accent)}
+.prev-item{font-size:.76rem;padding:4px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between}
+.prev-item:last-child{border-bottom:none}
+.pi-p{color:var(--accent);font-family:'Syne',sans-serif;font-weight:700;font-size:.7rem}
+
+/* ── MODALS ── */
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:200;align-items:center;justify-content:center;padding:18px}
+.modal-ov.visible{display:flex}
+.modal{background:var(--surface);border:1px solid var(--accent);border-radius:17px;padding:22px;width:100%;max-width:400px}
+.modal h2{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:800;margin-bottom:5px}
+.modal h2 span{color:var(--accent)}
+.modal p{font-size:.76rem;color:var(--muted);margin-bottom:12px;line-height:1.5}
+.modal-prev{max-height:120px;overflow-y:auto;margin-bottom:12px}
+.modal-pi{font-size:.73rem;padding:4px 0;border-bottom:1px solid var(--border);color:var(--text);display:flex;justify-content:space-between}
+.modal-pi:last-child{border-bottom:none}
+.modal-pi .mp{color:var(--accent);font-family:'Syne',sans-serif;font-weight:700;font-size:.68rem}
+.modal-btns{display:flex;gap:7px}
+.modal-btn{flex:1;padding:10px;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer}
+.modal-btn.ok{background:var(--accent);color:#000}
+.modal-btn.cancel{background:var(--surface2);color:var(--muted)}
+
+.edit-modal{background:var(--surface);border:1px solid var(--accent3);border-radius:17px;padding:20px;width:100%;max-width:380px}
+.edit-modal h2{font-family:'Syne',sans-serif;font-size:.92rem;font-weight:800;margin-bottom:3px}
+.edit-modal h2 span{color:var(--accent3)}
+.edit-modal .sub{font-size:.7rem;color:var(--muted);margin-bottom:12px}
+.edit-save{width:100%;padding:10px;background:var(--accent3);color:#000;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;margin-top:9px}
+
+.finish-modal{background:var(--surface);border:1px solid var(--accent);border-radius:19px;padding:24px;width:100%;max-width:400px}
+.finish-modal h2{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:800;margin-bottom:4px}
+.finish-modal h2 span{color:var(--accent)}
+.finish-modal .sub{font-size:.73rem;color:var(--muted);margin-bottom:18px;line-height:1.5}
+.buyer-select-big{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:18px}
+.bsb{padding:14px 8px;border-radius:13px;border:2px solid var(--border);background:transparent;cursor:pointer;text-align:center;transition:all .22s}
+.bsb.sel-nedim{border-color:var(--nedim);background:rgba(200,245,53,.1)}
+.bsb.sel-azra{border-color:var(--azra);background:rgba(255,107,157,.1)}
+.bsb-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;margin:0 auto 7px;background:var(--surface2);color:var(--muted);transition:all .22s}
+.bsb.sel-nedim .bsb-avatar{background:var(--nedim);color:#000}
+.bsb.sel-azra .bsb-avatar{background:var(--azra);color:#fff}
+.bsb-name{font-family:'Syne',sans-serif;font-size:.78rem;font-weight:700;color:var(--muted)}
+.bsb.sel-nedim .bsb-name{color:var(--nedim)}
+.bsb.sel-azra .bsb-name{color:var(--azra)}
+.finish-total-row{display:flex;justify-content:space-between;align-items:center;padding:11px 13px;background:var(--surface2);border-radius:10px;margin-bottom:14px}
+.ftr-label{font-size:.7rem;color:var(--muted)}
+.ftr-amt{font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;color:var(--accent)}
+.finish-confirm-btn{flex:1;padding:11px;background:var(--accent);color:#000;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer}
+.finish-confirm-btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--accent);color:#000;padding:9px 18px;border-radius:26px;font-family:'Syne',sans-serif;font-weight:700;font-size:.75rem;z-index:300;transition:transform .3s;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ── PWA INSTALL BANNER ── */
+.pwa-install-banner{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:linear-gradient(135deg,#1a2a04,#111a00);border-top:2px solid var(--accent);padding:14px 18px;display:flex;align-items:center;gap:12px;z-index:500;animation:slideUp .4s ease}
+@keyframes slideUp{from{transform:translateX(-50%) translateY(100%)}to{transform:translateX(-50%) translateY(0)}}
+.pwa-install-banner .pwa-icon{font-size:1.8rem;flex-shrink:0}
+.pwa-install-banner .pwa-text{flex:1}
+.pwa-install-banner .pwa-title{font-family:'Syne',sans-serif;font-weight:800;font-size:.82rem;color:var(--accent)}
+.pwa-install-banner .pwa-desc{font-size:.68rem;color:var(--muted);margin-top:2px}
+.pwa-install-btn{padding:8px 16px;background:var(--accent);color:#000;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-weight:800;font-size:.78rem;cursor:pointer;flex-shrink:0;transition:transform .15s}
+.pwa-install-btn:active{transform:scale(.95)}
+.pwa-close-btn{background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:4px;flex-shrink:0}
+
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+/* ── SYNC STATUS ── */
+.sync-bar{display:flex;align-items:center;gap:7px;padding:5px 18px 5px;background:var(--surface);border-bottom:1px solid var(--border);font-size:.63rem;color:var(--muted);min-height:28px}
+.sync-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;transition:background .3s}
+.sync-dot.online{background:#4caf50;box-shadow:0 0 5px rgba(76,175,80,.6)}
+.sync-dot.syncing{background:var(--accent3);animation:sdpulse 1s infinite}
+.sync-dot.offline{background:var(--accent2)}
+.sync-dot.error{background:#f44336}
+@keyframes sdpulse{0%,100%{opacity:1}50%{opacity:.25}}
+.sync-btn{margin-left:auto;padding:3px 9px;background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--muted);font-size:.6rem;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+.sync-btn:hover{border-color:var(--accent3);color:var(--accent3)}
+
+/* ── ITEM NOTES ── */
+.item-note-text{font-size:.65rem;color:var(--accent3);margin-top:2px;font-style:italic;line-height:1.3;opacity:.8}
+
+/* ── PRIORITY ── */
+.item-card.urgent{border-left:3px solid var(--accent2);background:rgba(255,107,53,.05)}
+.item-card.urgent .item-name{color:var(--accent2)}
+.priority-tag{font-size:.5rem;background:var(--accent2);color:#fff;padding:1px 5px;border-radius:8px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;vertical-align:middle;margin-right:3px}
+.prio-toggle{display:flex;gap:5px}
+.prio-btn{flex:1;padding:7px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--muted);font-size:.72rem;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;text-align:center}
+.prio-btn.active-normal{border-color:var(--accent);color:var(--accent);background:rgba(200,245,53,.08)}
+.prio-btn.active-urgent{border-color:var(--accent2);color:var(--accent2);background:rgba(255,107,53,.08)}
+
+/* ── VOICE INPUT ── */
+.voice-btn{width:42px;height:42px;border-radius:50%;border:2px solid var(--accent3);background:transparent;color:var(--accent3);font-size:1.1rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.voice-btn:hover{background:rgba(53,200,245,.1)}
+.voice-btn.recording{border-color:var(--accent2);color:var(--accent2);background:rgba(255,107,53,.15);animation:vpulse 1s infinite}
+@keyframes vpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.voice-row{display:flex;gap:8px;align-items:flex-end;margin-bottom:9px}
+.voice-row .field{flex:1;margin-bottom:0}
+.voice-status{font-size:.65rem;color:var(--accent3);text-align:center;margin-bottom:6px}
+
+/* ── RECURRING ITEMS ── */
+.recurring-section{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:12px 14px;margin-bottom:11px}
+.recurring-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.recurring-title{font-family:'Syne',sans-serif;font-size:.74rem;font-weight:700;color:var(--accent3);text-transform:uppercase;letter-spacing:.07em}
+.recurring-add-all{padding:5px 11px;background:var(--accent3);color:#000;border:none;border-radius:8px;font-family:'Syne',sans-serif;font-size:.68rem;font-weight:700;cursor:pointer;transition:transform .15s}
+.recurring-add-all:active{transform:scale(.95)}
+.recurring-chips{display:flex;flex-wrap:wrap;gap:4px}
+.rec-chip{padding:4px 9px;background:var(--surface2);border:1px solid var(--border);border-radius:15px;font-size:.68rem;color:var(--text);display:flex;align-items:center;gap:4px}
+.rec-chip-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.7rem;padding:0 2px}
+.rec-chip-del:hover{color:var(--accent2)}
+.add-recurring-btn{padding:4px 9px;background:transparent;border:1px dashed var(--accent3);border-radius:15px;font-size:.68rem;color:var(--accent3);cursor:pointer;transition:all .15s}
+.add-recurring-btn:hover{background:rgba(53,200,245,.1)}
+
+/* ── SMART SUGGESTIONS ── */
+.suggestions-bar{background:linear-gradient(135deg,#0f1a2a,#0a1020);border:1px solid var(--accent3);border-radius:12px;padding:10px 13px;margin-bottom:11px;overflow:hidden}
+.sug-title{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--accent3);margin-bottom:7px;font-weight:700}
+.sug-scroll{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
+.sug-scroll::-webkit-scrollbar{display:none}
+.sug-chip{flex-shrink:0;padding:5px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px}
+.sug-chip:hover{border-color:var(--accent3);background:rgba(53,200,245,.08)}
+.sug-name{font-size:.72rem;color:var(--text);white-space:nowrap}
+.sug-days{font-size:.56rem;color:var(--muted);white-space:nowrap}
+
+/* ── PRESENCE ── */
+.presence-bar{display:flex;align-items:center;gap:6px;padding:2px 18px;min-height:0}
+.presence-bar:empty{display:none}
+.presence-indicator{display:flex;align-items:center;gap:5px;font-size:.6rem;color:var(--muted);padding:3px 8px;background:var(--surface);border:1px solid var(--border);border-radius:15px}
+.presence-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.presence-dot.shopping{background:#4caf50;box-shadow:0 0 5px rgba(76,175,80,.5);animation:pdot 1.5s infinite}
+@keyframes pdot{0%,100%{opacity:1}50%{opacity:.4}}
+.presence-dot.idle{background:var(--muted)}
+
+/* ── SWIPE ── */
+.item-card.swiping{transition:none}
+.item-card.snap-back{transition:transform .25s ease}
+
+/* ── THEME TOGGLE ── */
+.theme-toggle{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── LIGHT THEME ── */
+body.light{--bg:#f5f5f5;--surface:#fff;--surface2:#eee;--surface3:#e0e0e0;--text:#1a1a1a;--muted:#888;--border:#ddd;--checked:#e8f5e0}
+body.light .sync-bar{background:#fff;border-bottom-color:#ddd}
+body.light .tabs{background:#f5f5f5}
+body.light .suggestions-bar{background:linear-gradient(135deg,#e8f4fd,#dbeef8);border-color:var(--accent3)}
+
+/* ── BUDGET ── */
+.budget-bar{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 13px;margin-bottom:11px;display:flex;align-items:center;gap:10px}
+.budget-left{flex:1}
+.budget-label{font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:2px}
+.budget-amt{font-family:'Syne',sans-serif;font-size:.82rem;font-weight:800;color:var(--text)}
+.budget-remaining{font-size:.62rem;margin-top:1px}
+.budget-remaining.ok{color:var(--accent)}
+.budget-remaining.warn{color:var(--accent2)}
+.budget-remaining.over{color:#f44336}
+.budget-bar-wrap{flex:1;max-width:80px}
+.budget-prog{height:4px;background:var(--surface2);border-radius:10px;overflow:hidden}
+.budget-prog-fill{height:100%;border-radius:10px;transition:width .4s}
+.budget-prog-fill.ok{background:var(--accent)}
+.budget-prog-fill.warn{background:var(--accent2)}
+.budget-prog-fill.over{background:#f44336}
+.budget-edit-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:4px 8px;color:var(--muted);font-size:.6rem;cursor:pointer;transition:all .15s;flex-shrink:0}
+.budget-edit-btn:hover{border-color:var(--accent);color:var(--accent)}
+</style>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+</head>
+<body>
+
+<div class="sync-bar" id="sync-bar">
+  <span class="sync-dot offline" id="sync-dot"></span>
+  <span id="sync-label">Spajanje na cloud…</span>
+  <button class="sync-btn" onclick="manualSync()">↻ Sync</button>
+</div>
+<div class="presence-bar" id="presence-bar"></div>
+<div class="header">
+  <h1>🛒 Kupov<span class="ac">i</span>na
+    <span class="fam">Porodica Ćehić</span>
+  </h1>
+  <div class="header-avatars" style="gap:6px;align-items:center">
+    <button class="theme-toggle" onclick="toggleTheme()" title="Svijetli/tamni mod" id="theme-btn">☀️</button>
+    <div class="hav n" onclick="sw('profil');setProfile('Nedim')" title="Nedimov profil">N</div>
+    <div class="hav a" onclick="sw('profil');setProfile('Azra')"  title="Azrin profil">A</div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="sw('list')"><span class="tab-icon">📋</span>Lista</button>
+  <button class="tab" onclick="sw('add')"><span class="tab-icon">➕</span>Dodaj</button>
+  <button class="tab" onclick="sw('racuni')"><span class="tab-icon">🧾</span>Računi</button>
+  <button class="tab" onclick="sw('rekap')"><span class="tab-icon">📊</span>Rekap</button>
+  <button class="tab" onclick="sw('profil')"><span class="tab-icon">👤</span>Profil</button>
+  <button class="tab" onclick="sw('catalog')"><span class="tab-icon">🏪</span>Katalog</button>
+  <button class="tab" onclick="sw('share')"><span class="tab-icon">📤</span>Dijeli</button>
+</div>
+
+<!-- ═══ LIST ═══ -->
+<div class="page active" id="page-list">
+  <div class="imp-banner" id="imp-banner">
+    📥 <strong>Lista primljena!</strong> Uvezeno <span id="imp-count">0</span> novih namirnica.
+  </div>
+  <div class="buyer-bar">
+    <button class="buyer-btn" id="btn-nedim" onclick="selectBuyer('Nedim')">
+      <div class="bav">N</div>Nedim kupuje
+    </button>
+    <button class="buyer-btn" id="btn-azra" onclick="selectBuyer('Azra')">
+      <div class="bav">A</div>Azra kupuje
+    </button>
+  </div>
+  <div class="live-bar">
+    <div class="lb-left">
+      <div class="lb-label">✓ Kupljeno</div>
+      <div class="lb-amt"><span>KM </span><span id="lb-total">0.00</span></div>
+    </div>
+    <div class="lb-right">
+      <div class="lb-rem-label">Preostalo</div>
+      <div class="lb-rem-amt" id="lb-rem">0.00 KM</div>
+      <div class="lb-bar"><div class="lb-fill" id="lb-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div id="budget-section"></div>
+  <div id="suggestions-section"></div>
+  <div id="recurring-section"></div>
+  <div class="list-hdr">
+    <span class="list-title">Namirnice</span>
+    <div class="hdr-btns">
+      <button class="hdr-btn" onclick="sw('share')">📤 Pošalji</button>
+      <span class="badge" id="item-count">0</span>
+    </div>
+  </div>
+  <div id="shopping-list"></div>
+  <button class="finish-btn hidden" id="finish-btn" onclick="openFinish()">🏁 Završi kupovinu i sačuvaj</button>
+</div>
+
+<!-- ═══ ADD ═══ -->
+<div class="page" id="page-add">
+  <div class="add-form">
+    <h2>+ Nova namirnica</h2>
+    <div class="voice-row">
+      <div class="field">
+        <label>Naziv</label>
+        <input type="text" id="in-name" placeholder="npr. Mlijeko" autocomplete="off"
+          oninput="onNameInput()" onblur="hideAc()" onkeydown="onNameKey(event)"/>
+        <div class="ac-list" id="ac-list" style="display:none"></div>
+      </div>
+      <button class="voice-btn" id="voice-btn" onclick="toggleVoice()" title="Glasovni unos">🎤</button>
+    </div>
+    <div class="voice-status" id="voice-status" style="display:none"></div>
+    <div class="row2">
+      <div class="field"><label>Količina</label><input type="text" id="in-qty" placeholder="npr. 1 L"/></div>
+      <div class="field"><label>Cijena (KM)</label><input type="number" id="in-price" placeholder="0.00" min="0" step="0.01"/></div>
+    </div>
+    <div class="field">
+      <label>Kategorija</label>
+      <select id="in-cat">
+        <option value="ostalo">📦 Ostalo</option><option value="mlijeko">🥛 Mliječni</option><option value="meso">🥩 Meso i riba</option><option value="voce">🍎 Voće i povrće</option><option value="pekara">🍞 Pekara</option><option value="smrznuto">❄️ Smrznuto</option><option value="pice">🧃 Pića</option><option value="slatkisi">🍫 Slatkiši</option><option value="kozmetika">🧴 Kozmetika</option><option value="hemija">🧹 Hemija</option><option value="beba">👶 Beba</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Prodavnica</label>
+      <select id="in-store">
+        <option value="">Bilo koja</option><option value="Bingo">🔵 Bingo</option><option value="DM">🔴 DM Drogerie</option><option value="Konzum">🟠 Konzum</option><option value="Mercator">🟢 Mercator</option><option value="Pijaca">🟡 Pijaca</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Prioritet</label>
+      <div class="prio-toggle">
+        <button class="prio-btn active-normal" id="prio-normal" type="button" onclick="setPriority('normal')">Normalan</button>
+        <button class="prio-btn" id="prio-urgent" type="button" onclick="setPriority('urgent')">🔴 Hitno</button>
+      </div>
+    </div>
+    <div class="field">
+      <label>Napomena (opcionalno)</label>
+      <input type="text" id="in-note" placeholder="npr. Plavi paket, ne crveni"/>
+    </div>
+    <div class="mem-note" id="mem-note" style="display:none">💾 Zapamćena: <span id="mem-price-show">—</span> KM</div>
+    <button class="btn-add" onclick="addItem()">DODAJ NA LISTU</button>
+  </div>
+  <div style="margin-bottom:8px">
+    <div style="font-family:'Syne',sans-serif;font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px">⚡ Brzi odabir</div>
+    <div id="quick-chips" style="display:flex;flex-wrap:wrap;gap:5px"></div>
+  </div>
+</div>
+
+<!-- ═══ RAČUNI ═══ -->
+<div class="page" id="page-racuni">
+  <div class="racuni-top">
+    <h2>🧾 Ručni računi</h2>
+    <p>Dodaj troškove koji se ne prate kroz listu namirnica</p>
+  </div>
+
+  <div class="rec-form">
+    <h3>+ Novi trošak / račun</h3>
+    <div class="field">
+      <label>Naziv / Opis</label>
+      <input type="text" id="rec-title" placeholder="npr. Gorivo, Restoran, Apoteka…"/>
+    </div>
+    <div class="row2">
+      <div class="field"><label>Iznos (KM)</label><input type="number" id="rec-amount" placeholder="0.00" min="0" step="0.01"/></div>
+      <div class="field"><label>Datum</label><input type="date" id="rec-date"/></div>
+    </div>
+    <div class="field">
+      <label>Kategorija troška</label>
+      <div class="cat-chips" id="rec-cat-chips"></div>
+    </div>
+    <div class="field">
+      <label>Napomena (opcionalno)</label>
+      <textarea id="rec-note" placeholder="Detalji, broj računa…"></textarea>
+    </div>
+    <div class="field"><label>Ko je platio?</label></div>
+    <div class="rec-buyer-row">
+      <button class="rb-btn" id="rb-nedim" onclick="setRecBuyer('Nedim')">
+        <span class="rb-dot"></span>Nedim
+      </button>
+      <button class="rb-btn" id="rb-azra" onclick="setRecBuyer('Azra')">
+        <span class="rb-dot"></span>Azra
+      </button>
+    </div>
+    <button class="btn-save-rec" onclick="saveReceipt()">💾 Sačuvaj račun</button>
+  </div>
+
+  <div class="rec-filter-bar">
+    <button class="rec-filter-btn active" id="rf-all"   onclick="setRecFilter('all')">Svi</button>
+    <button class="rec-filter-btn"        id="rf-Nedim" onclick="setRecFilter('Nedim')">Nedim</button>
+    <button class="rec-filter-btn"        id="rf-Azra"  onclick="setRecFilter('Azra')">Azra</button>
+  </div>
+  <div id="receipts-list"></div>
+</div>
+
+<!-- ═══ REKAP ═══ -->
+<div class="page" id="page-rekap">
+  <div class="rekap-header">
+    <h2>📊 Rekap troškova</h2>
+    <p>Kupovine + računi zajedno</p>
+  </div>
+  <div class="rekap-period-tabs">
+    <button class="rp-tab active" id="rpt-week"  onclick="switchPeriod('week')">Sedmica</button>
+    <button class="rp-tab"       id="rpt-month" onclick="switchPeriod('month')">Mjesec</button>
+    <button class="rp-tab"       id="rpt-year"  onclick="switchPeriod('year')">Godina</button>
+  </div>
+  <div id="rekap-total-block"></div>
+  <div class="buyers-split" id="buyers-split"></div>
+  <div class="rekap-sessions">
+    <div class="rs-header">
+      <span>Sve aktivnosti</span>
+      <span id="rs-period-label" style="color:var(--accent);font-size:.62rem">ova sedmica</span>
+    </div>
+    <div id="sessions-list"></div>
+  </div>
+</div>
+
+<!-- ═══ PROFIL ═══ -->
+<div class="page" id="page-profil">
+  <div class="profile-toggle">
+    <button class="pt-btn" id="pt-nedim" onclick="setProfile('Nedim')">
+      <div class="pt-avatar">N</div>Nedim
+    </button>
+    <button class="pt-btn" id="pt-azra" onclick="setProfile('Azra')">
+      <div class="pt-avatar">A</div>Azra
+    </button>
+  </div>
+  <div id="profile-content"></div>
+</div>
+
+<!-- ═══ CATALOG ═══ -->
+<div class="page" id="page-catalog">
+  <div style="margin-bottom:11px;font-size:.7rem;color:var(--muted);line-height:1.5">
+    Klikni <strong style="color:var(--accent3)">✏️</strong> da urediš cijenu, <strong style="color:var(--accent)">+</strong> da dodaš na listu.
+  </div>
+  <div id="catalog-content"></div>
+</div>
+
+<!-- ═══ SHARE ═══ -->
+<div class="page" id="page-share">
+  <div class="share-card">
+    <h2>📤 Pošalji listu porodici</h2>
+    <p>Generiši link i pošalji putem WhatsAppa ili Vibera.</p>
+    <button class="share-btn" onclick="genLink()">🔗 Generiši link</button>
+    <button class="share-btn sec" onclick="shareWA()">💬 WhatsApp</button>
+    <button class="share-btn sec" onclick="shareViber()">📱 Viber</button>
+    <div class="link-box" id="link-box">
+      <label>Link:</label>
+      <input type="text" class="link-input" id="link-input" readonly onclick="this.select()"/>
+      <button class="copy-btn" onclick="copyLink()">📋 Kopiraj</button>
+    </div>
+  </div>
+  <div class="share-card">
+    <h2>📋 Pregled liste (<span id="prev-count">0</span> stavki)</h2>
+    <div id="share-prev"></div>
+  </div>
+</div>
+
+<!-- Import modal -->
+<div class="modal-ov" id="imp-modal">
+  <div class="modal">
+    <h2>📥 Primljena <span>lista!</span></h2>
+    <p>Primljeno <strong id="imp-modal-cnt">0</strong> namirnica.</p>
+    <div class="modal-prev" id="imp-modal-prev"></div>
+    <div class="modal-btns">
+      <button class="modal-btn cancel" onclick="dismissImp()">Otkaži</button>
+      <button class="modal-btn ok" onclick="importList()">✓ Uvezi</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit price modal -->
+<div class="modal-ov" id="edit-modal">
+  <div class="edit-modal">
+    <h2>✏️ Uredi <span id="edit-prod-name">—</span></h2>
+    <div class="sub">Ažuriraj cijenu ili količinu</div>
+    <div class="field"><label>Količina</label><input type="text" id="edit-qty" placeholder="npr. 1 L"/></div>
+    <div class="field"><label>Cijena (KM)</label><input type="number" id="edit-price" placeholder="0.00" min="0" step="0.01"/></div>
+    <div class="modal-btns" style="margin-top:10px">
+      <button class="modal-btn cancel" onclick="closeEdit()">Otkaži</button>
+      <button class="edit-save" onclick="saveEdit()">💾 Sačuvaj</button>
+    </div>
+  </div>
+</div>
+
+<!-- Finish shopping modal -->
+<div class="modal-ov" id="finish-modal">
+  <div class="finish-modal">
+    <h2>🏁 Završi <span>kupovinu</span></h2>
+    <div class="sub">Ko je obavio kupovinu? Sačuvaće se u Rekap i Profil.</div>
+    <div class="buyer-select-big">
+      <button class="bsb" id="bsb-nedim" onclick="selectFinishBuyer('Nedim')">
+        <div class="bsb-avatar">N</div><div class="bsb-name">Nedim</div>
+      </button>
+      <button class="bsb" id="bsb-azra" onclick="selectFinishBuyer('Azra')">
+        <div class="bsb-avatar">A</div><div class="bsb-name">Azra</div>
+      </button>
+    </div>
+    <div class="finish-total-row">
+      <span class="ftr-label">Ukupno potrošeno:</span>
+      <span class="ftr-amt" id="finish-total-show">0.00 KM</span>
+    </div>
+    <div style="display:flex;gap:7px">
+      <button class="modal-btn cancel" onclick="closeFinish()" style="flex:.55">Otkaži</button>
+      <button class="finish-confirm-btn" id="finish-confirm-btn" onclick="confirmFinish()" disabled>✓ Sačuvaj</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════════
+//  STORAGE KEYS
+// ════════════════════════════════════════════════
+const SK='kup_items_v3',MK='kup_mem_v3',CK='kup_cat_v3',HSK='kup_hist_v2',RSK='kup_receipts_v1',BK='kup_buyer_v1';
+const RCK='kup_recurring_v1',BGK='kup_budget_v1',THK='kup_theme_v1';
+
+// ════════════════════════════════════════════════
+//  CATEGORY META
+// ════════════════════════════════════════════════
+const CAT_META={mlijeko:{icon:'🥛',name:'Mliječni proizvodi'},meso:{icon:'🥩',name:'Meso i riba'},voce:{icon:'🍎',name:'Voće i povrće'},pekara:{icon:'🍞',name:'Pekara i žitarice'},smrznuto:{icon:'❄️',name:'Smrznuto'},pice:{icon:'🧃',name:'Pića'},slatkisi:{icon:'🍫',name:'Slatkiši'},kozmetika:{icon:'🧴',name:'Kozmetika'},hemija:{icon:'🧹',name:'Kućna hemija'},beba:{icon:'👶',name:'Beba i djeca'},ostalo:{icon:'📦',name:'Ostalo'}};
+
+// Receipt expense categories
+const REC_CATS=[{id:'hrana',icon:'🍽️',name:'Hrana/resto'},{id:'gorivo',icon:'⛽',name:'Gorivo'},{id:'apoteka',icon:'💊',name:'Apoteka'},{id:'odjeca',icon:'👗',name:'Odjeća'},{id:'kozmetika',icon:'💄',name:'Kozmetika'},{id:'racunali',icon:'💻',name:'Elektronika'},{id:'kuca',icon:'🏠',name:'Kuća'},{id:'zabava',icon:'🎬',name:'Zabava'},{id:'zdravlje',icon:'🏥',name:'Zdravlje'},{id:'transport',icon:'🚌',name:'Prevoz'},{id:'ostalo',icon:'📦',name:'Ostalo'}];
+
+// ════════════════════════════════════════════════
+//  CATALOG DEFAULTS
+// ════════════════════════════════════════════════
+const CD=[
+  {name:'Mlijeko',qty:'1 L',price:1.55,cat:'mlijeko',store:'Bingo'},{name:'Jogurt',qty:'500g',price:1.30,cat:'mlijeko',store:'Bingo'},{name:'Pavlaka',qty:'200ml',price:1.10,cat:'mlijeko',store:'Bingo'},{name:'Maslac',qty:'250g',price:2.60,cat:'mlijeko',store:'Bingo'},{name:'Sir bijeli',qty:'400g',price:3.20,cat:'mlijeko',store:'Bingo'},{name:'Gauda sir',qty:'250g',price:3.80,cat:'mlijeko',store:'Bingo'},{name:'Kefir',qty:'1 L',price:1.40,cat:'mlijeko',store:'Bingo'},{name:'Jaja L',qty:'12 kom',price:3.20,cat:'mlijeko',store:'Bingo'},{name:'Kajmak',qty:'300g',price:3.50,cat:'mlijeko',store:'Bingo'},
+  {name:'Piletina cijela',qty:'1 kg',price:5.90,cat:'meso',store:'Bingo'},{name:'Pileća prsa',qty:'1 kg',price:8.90,cat:'meso',store:'Bingo'},{name:'Juneće mleveno',qty:'500g',price:6.50,cat:'meso',store:'Bingo'},{name:'Svinjski kotlet',qty:'1 kg',price:7.20,cat:'meso',store:'Bingo'},{name:'Sudžuk',qty:'200g',price:3.40,cat:'meso',store:'Bingo'},{name:'Hrenovke',qty:'400g',price:2.80,cat:'meso',store:'Bingo'},{name:'Tunjevina',qty:'185g',price:2.20,cat:'meso',store:'Bingo'},{name:'Slanina',qty:'250g',price:3.20,cat:'meso',store:'Bingo'},
+  {name:'Paradajz',qty:'1 kg',price:1.80,cat:'voce',store:'Pijaca'},{name:'Krastavac',qty:'1 kg',price:1.20,cat:'voce',store:'Pijaca'},{name:'Paprika',qty:'1 kg',price:2.00,cat:'voce',store:'Pijaca'},{name:'Luk crni',qty:'1 kg',price:0.90,cat:'voce',store:'Pijaca'},{name:'Krompir',qty:'2 kg',price:1.60,cat:'voce',store:'Pijaca'},{name:'Mrkva',qty:'1 kg',price:1.00,cat:'voce',store:'Pijaca'},{name:'Banana',qty:'1 kg',price:1.60,cat:'voce',store:'Bingo'},{name:'Jabuka',qty:'1 kg',price:1.40,cat:'voce',store:'Pijaca'},{name:'Limun',qty:'3 kom',price:1.00,cat:'voce',store:'Bingo'},{name:'Brokula',qty:'500g',price:1.80,cat:'voce',store:'Bingo'},
+  {name:'Hljeb bijeli',qty:'700g',price:1.80,cat:'pekara',store:'Bingo'},{name:'Hljeb raženi',qty:'500g',price:2.10,cat:'pekara',store:'Bingo'},{name:'Brašno T-500',qty:'1 kg',price:1.20,cat:'pekara',store:'Bingo'},{name:'Riža',qty:'1 kg',price:1.50,cat:'pekara',store:'Bingo'},{name:'Tjestenina',qty:'500g',price:1.10,cat:'pekara',store:'Bingo'},{name:'Zobene pahulje',qty:'500g',price:1.40,cat:'pekara',store:'Bingo'},
+  {name:'Pizza smrznuta',qty:'400g',price:3.50,cat:'smrznuto',store:'Bingo'},{name:'Grašak smrznut',qty:'450g',price:1.40,cat:'smrznuto',store:'Bingo'},{name:'Pomfrit smrznut',qty:'750g',price:2.20,cat:'smrznuto',store:'Bingo'},
+  {name:'Voda 1.5L',qty:'1 boca',price:0.70,cat:'pice',store:'Bingo'},{name:'Sok jabuka',qty:'1 L',price:1.20,cat:'pice',store:'Bingo'},{name:'Coca-Cola',qty:'1.5 L',price:2.20,cat:'pice',store:'Bingo'},{name:'Kafa mljeven',qty:'200g',price:3.90,cat:'pice',store:'Bingo'},{name:'Čaj voćni',qty:'20 kes',price:1.50,cat:'pice',store:'Bingo'},
+  {name:'Čokolada',qty:'100g',price:1.60,cat:'slatkisi',store:'Bingo'},{name:'Nutella',qty:'400g',price:5.90,cat:'slatkisi',store:'Bingo'},{name:'Chipsy',qty:'150g',price:1.80,cat:'slatkisi',store:'Bingo'},{name:'Med',qty:'400g',price:6.50,cat:'slatkisi',store:'Bingo'},
+  {name:'Šampon Nivea',qty:'250ml',price:4.50,cat:'kozmetika',store:'DM'},{name:'Pasta za zube',qty:'75ml',price:2.20,cat:'kozmetika',store:'DM'},{name:'Četkica za zube',qty:'1 kom',price:1.80,cat:'kozmetika',store:'DM'},{name:'Dezodorans',qty:'150ml',price:3.50,cat:'kozmetika',store:'DM'},{name:'Krema za lice',qty:'50ml',price:5.90,cat:'kozmetika',store:'DM'},{name:'Gel za tuširanje',qty:'250ml',price:2.90,cat:'kozmetika',store:'DM'},{name:'Sapun tečni',qty:'300ml',price:2.20,cat:'kozmetika',store:'DM'},{name:'Maramice vlažne',qty:'72 kom',price:2.50,cat:'kozmetika',store:'DM'},{name:'Pelene Pampers',qty:'44 kom',price:14.90,cat:'kozmetika',store:'DM'},
+  {name:'Prašak Ariel',qty:'1.3 kg',price:8.90,cat:'hemija',store:'DM'},{name:'Omekšivač Lenor',qty:'1 L',price:5.90,cat:'hemija',store:'DM'},{name:'Gel za suđe',qty:'450ml',price:3.20,cat:'hemija',store:'DM'},{name:'Toaletni papir',qty:'8 rola',price:3.50,cat:'hemija',store:'Bingo'},{name:'Kuhinjski papir',qty:'2 role',price:1.80,cat:'hemija',store:'Bingo'},
+  {name:'Mlako za bebe',qty:'800g',price:18.90,cat:'beba',store:'DM'},{name:'Pelene Huggies',qty:'42 kom',price:15.90,cat:'beba',store:'DM'},
+  {name:'Sol',qty:'1 kg',price:0.70,cat:'ostalo',store:'Bingo'},{name:'Šećer',qty:'1 kg',price:1.40,cat:'ostalo',store:'Bingo'},{name:'Ulje suncokret',qty:'1 L',price:3.50,cat:'ostalo',store:'Bingo'},{name:'Kečap',qty:'500g',price:1.60,cat:'ostalo',store:'Bingo'},{name:'Majonezo',qty:'400g',price:2.20,cat:'ostalo',store:'Bingo'}
+];
+
+// ════════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════════
+let catalog=[];
+try{const s=JSON.parse(localStorage.getItem(CK)||'null');if(s&&s.length){catalog=s;CD.forEach(d=>{if(!catalog.find(c=>c.name.toLowerCase()===d.name.toLowerCase()))catalog.push({...d});});}else catalog=CD.map(d=>({...d}));}catch(e){catalog=CD.map(d=>({...d}));}
+
+let priceMemory={};
+try{priceMemory=JSON.parse(localStorage.getItem(MK)||'{}');}catch(e){}
+catalog.forEach(p=>{const k=p.name.toLowerCase();if(!priceMemory[k])priceMemory[k]={name:p.name,price:p.price,qty:p.qty,cat:p.cat};});
+
+let items=[];try{items=JSON.parse(localStorage.getItem(SK)||'[]');}catch(e){}
+// history entries: {id, date, buyer, total, itemCount, items[], type:'shop'}
+let history=[];try{history=JSON.parse(localStorage.getItem(HSK)||'[]');}catch(e){}
+// receipts: {id, date, title, amount, cat, buyer, note}
+let receipts=[];try{receipts=JSON.parse(localStorage.getItem(RSK)||'[]');}catch(e){}
+
+let activeBuyer=localStorage.getItem(BK)||'';
+let pendingImport=null,editKey=null,collapsedCats=new Set(),currentPeriod='week',finishBuyer='',recBuyer='',recCatSel='ostalo',recFilter='all',activeProfile='Nedim';
+let addPriority='normal',justSwiped=false;
+let recurringItems=[];try{recurringItems=JSON.parse(localStorage.getItem(RCK)||'[]');}catch(e){}
+let weeklyBudget=parseFloat(localStorage.getItem(BGK))||0;
+let currentTheme=localStorage.getItem(THK)||'dark';
+let notifPermission=false;
+
+
+// ════════════════════════════════════════════════
+//  FIREBASE INIT
+// ════════════════════════════════════════════════
+const firebaseConfig = {
+  apiKey: "AIzaSyCZL2mXvMKZVlMlcdl2Quf-bw3nboGNolo",
+  authDomain: "kupovina-cehic.firebaseapp.com",
+  databaseURL: "https://kupovina-cehic-default-rtdb.firebaseio.com",
+  projectId: "kupovina-cehic",
+  storageBucket: "kupovina-cehic.firebasestorage.app",
+  messagingSenderId: "664140526247",
+  appId: "1:664140526247:web:0230a26c8222e3a56ba182"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const ROOT = 'porodica_cehic';
+
+let syncEnabled = false;
+let _syncTimeout = null;
+
+function setSyncStatus(status, label) {
+  const dot = document.getElementById('sync-dot');
+  const lbl = document.getElementById('sync-label');
+  dot.className = 'sync-dot ' + status;
+  lbl.textContent = label;
+}
+
+// ── LOCAL SAVES (always keep localStorage as offline fallback) ──
+function saveCatalog(){localStorage.setItem(CK,JSON.stringify(catalog))}
+function saveItems(){localStorage.setItem(SK,JSON.stringify(items));schedulePush();}
+function saveMem(){localStorage.setItem(MK,JSON.stringify(priceMemory))}
+function saveHistory(){localStorage.setItem(HSK,JSON.stringify(history));schedulePush();}
+function saveReceipts(){localStorage.setItem(RSK,JSON.stringify(receipts));schedulePush();}
+function saveBuyer(){localStorage.setItem(BK,activeBuyer)}
+
+// ── DEBOUNCED PUSH TO FIREBASE ──
+function schedulePush() {
+  if (!syncEnabled) return;
+  clearTimeout(_syncTimeout);
+  setSyncStatus('syncing', 'Čuvanje…');
+  _syncTimeout = setTimeout(pushToFirebase, 800);
+}
+
+async function pushToFirebase() {
+  if (!syncEnabled) return;
+  try {
+    await db.ref(ROOT).update({
+      items: items.length ? items : null,
+      history: history.length ? history : null,
+      receipts: receipts.length ? receipts : null,
+      lastUpdated: Date.now(),
+      lastDevice: navigator.userAgent.includes('Mobile') ? 'Mobitel' : 'Računar'
+    });
+    setSyncStatus('online', '☁️ Sačuvano · ' + new Date().toLocaleTimeString('bs',{hour:'2-digit',minute:'2-digit'}));
+  } catch(e) {
+    setSyncStatus('error', '⚠️ Greška pri čuvanju');
+    console.error('Firebase push error:', e);
+  }
+}
+
+async function manualSync() {
+  setSyncStatus('syncing', 'Sinkronizacija…');
+  try {
+    const snap = await db.ref(ROOT).get();
+    if (snap.exists()) {
+      const d = snap.val();
+      if (d.items)    { items    = d.items;    saveItemsLocal(); }
+      if (d.history)  { history  = d.history;  saveHistoryLocal(); }
+      if (d.receipts) { receipts = d.receipts; saveReceiptsLocal(); }
+      renderList();
+      const page = document.querySelector('.page.active');
+      if (page) {
+        const id = page.id.replace('page-','');
+        if (id==='rekap') renderRekap();
+        else if (id==='profil') renderProfile();
+        else if (id==='racuni') renderReceiptPage();
+      }
+      const when = d.lastUpdated ? new Date(d.lastUpdated).toLocaleTimeString('bs',{hour:'2-digit',minute:'2-digit'}) : '—';
+      const who = d.lastDevice || '';
+      setSyncStatus('online', '✓ Sync · ' + when + (who?' · '+who:''));
+      toast('✓ Podaci ažurirani!');
+    } else {
+      setSyncStatus('online', '☁️ Baza prazna — čuvam lokalne podatke');
+      await pushToFirebase();
+    }
+  } catch(e) {
+    setSyncStatus('error', '⚠️ Nema veze');
+    toast('⚠️ Nije moguće spojiti se');
+  }
+}
+
+// Local-only saves (no push) used during sync pull
+function saveItemsLocal(){localStorage.setItem(SK,JSON.stringify(items))}
+function saveHistoryLocal(){localStorage.setItem(HSK,JSON.stringify(history))}
+function saveReceiptsLocal(){localStorage.setItem(RSK,JSON.stringify(receipts))}
+
+// ── REAL-TIME LISTENER ──
+function startRealtimeSync() {
+  db.ref(ROOT).on('value', snap => {
+    if (!snap.exists()) return;
+    const d = snap.val();
+    // Only update if remote data is newer than what we last pushed
+    const remote = d.lastUpdated || 0;
+    const local = parseInt(localStorage.getItem('kup_lastpush')||'0');
+    if (remote > local + 2000) {
+      // Remote is newer — pull it in
+      const oldLen=items.length;
+      if (d.items)    { items    = d.items;    saveItemsLocal(); }
+      if (d.history)  { history  = d.history;  saveHistoryLocal(); }
+      if (d.receipts) { receipts = d.receipts; saveReceiptsLocal(); }
+      if (d.items&&d.items.length>oldLen) showNotification('Kupovina 🛒',(d.items.length-oldLen)+' novih namirnica dodano na listu!');
+      renderList();
+      const page = document.querySelector('.page.active');
+      if (page) {
+        const id = page.id.replace('page-','');
+        if (id==='rekap') renderRekap();
+        else if (id==='profil') renderProfile();
+        else if (id==='racuni') renderReceiptPage();
+      }
+      const when = new Date(remote).toLocaleTimeString('bs',{hour:'2-digit',minute:'2-digit'});
+      setSyncStatus('online', '🔄 Ažurirano · ' + when);
+    }
+  }, err => {
+    setSyncStatus('offline', '📴 Offline — lokalni podaci');
+  });
+}
+
+// ── INIT FIREBASE CONNECTION ──
+async function initFirebase() {
+  try {
+    const snap = await db.ref(ROOT + '/lastUpdated').get();
+    syncEnabled = true;
+    if (snap.exists()) {
+      // There is cloud data — pull it
+      await manualSync();
+    } else {
+      // First time — push local data to cloud
+      await pushToFirebase();
+      setSyncStatus('online', '☁️ Inicijalno čuvanje završeno');
+    }
+    startRealtimeSync();
+    listenPresence();
+    if(activeBuyer)updatePresence(false);
+  } catch(e) {
+    setSyncStatus('offline', '📴 Offline — lokalni podaci');
+    console.log('Firebase offline, using localStorage');
+  }
+}
+
+// Track last push time
+const _origPush = pushToFirebase;
+async function pushToFirebaseTracked() {
+  await _origPush();
+  localStorage.setItem('kup_lastpush', Date.now().toString());
+}
+function remem(name,price,qty,cat){priceMemory[name.toLowerCase()]={name,price:parseFloat(price),qty:qty||'',cat:cat||'ostalo'};saveMem();}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function fmtDate(iso){const d=new Date(iso);const days=['Ned','Pon','Uto','Sri','Čet','Pet','Sub'];return`${days[d.getDay()]} ${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}`;}
+function fmtTime(iso){const d=new Date(iso);return d.toLocaleTimeString('bs',{hour:'2-digit',minute:'2-digit'});}
+
+// ════════════════════════════════════════════════
+//  TABS
+// ════════════════════════════════════════════════
+function sw(tab){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const tabs=['list','add','racuni','rekap','profil','catalog','share'];
+  document.querySelectorAll('.tab')[tabs.indexOf(tab)].classList.add('active');
+  document.getElementById('page-'+tab).classList.add('active');
+  if(tab==='list')renderList();
+  else if(tab==='racuni')renderReceiptPage();
+  else if(tab==='rekap')renderRekap();
+  else if(tab==='profil')renderProfile();
+  else if(tab==='catalog')renderCatalog();
+  else if(tab==='share')renderSharePrev();
+}
+
+// ════════════════════════════════════════════════
+//  BUYER
+// ════════════════════════════════════════════════
+function selectBuyer(b){activeBuyer=b;saveBuyer();updateBuyerUI();updatePresence(true);toast((b==='Nedim'?'💚 Nedim':'💗 Azra')+' je aktivan kupac');}
+function updateBuyerUI(){
+  document.getElementById('btn-nedim').className='buyer-btn'+(activeBuyer==='Nedim'?' nedim-active':'');
+  document.getElementById('btn-azra').className='buyer-btn'+(activeBuyer==='Azra'?' azra-active':'');
+  document.getElementById('finish-btn').classList.toggle('hidden',!(items.length>0&&activeBuyer));
+}
+
+// ════════════════════════════════════════════════
+//  LIST
+// ════════════════════════════════════════════════
+function renderList(){
+  const c=document.getElementById('shopping-list');
+  document.getElementById('item-count').textContent=items.length;
+  updateBuyerUI();
+  const ci=items.filter(i=>i.checked);
+  const tC=ci.reduce((s,i)=>s+(parseFloat(i.price)||0),0);
+  const tA=items.reduce((s,i)=>s+(parseFloat(i.price)||0),0);
+  document.getElementById('lb-total').textContent=tC.toFixed(2);
+  document.getElementById('lb-rem').textContent=(tA-tC).toFixed(2)+' KM';
+  const pct=tA>0?Math.round(tC/tA*100):(items.length>0?Math.round(ci.length/items.length*100):0);
+  document.getElementById('lb-fill').style.width=pct+'%';
+  renderBudget();renderSuggestions();renderRecurring();
+  if(!items.length){c.innerHTML='<div class="empty-state"><div class="icon">🛒</div><p>Lista je prazna.<br>Dodaj namirnice ili ih odaberi iz Kataloga!</p></div>';return;}
+  const groups={};
+  items.forEach((item,i)=>{const cat=item.cat||'ostalo';if(!groups[cat])groups[cat]=[];groups[cat].push({item,i});});
+  let html='';
+  Object.entries(groups).forEach(([cat,entries])=>{
+    entries.sort((a,b)=>{const pa=(a.item.priority==='urgent')?0:1;const pb=(b.item.priority==='urgent')?0:1;return pa-pb;});
+    const m=CAT_META[cat]||CAT_META.ostalo,col=collapsedCats.has(cat);
+    html+=`<div class="cat-group"><div class="cat-header" onclick="toggleCat('${cat}')"><span class="cat-icon">${m.icon}</span><span class="cat-name" style="color:var(--muted)">${m.name}</span><span class="cat-badge">${entries.length}</span><span class="cat-toggle ${col?'collapsed':''}">▼</span></div><div class="cat-items ${col?'collapsed':''}">`;
+    entries.forEach(({item,i})=>{
+      const isU=item.priority==='urgent';
+      html+=`<div class="item-card ${item.checked?'checked':''} ${isU?'urgent':''}" data-idx="${i}" onclick="toggleItem(${i})"><div class="chk">${item.checked?'✓':''}</div><div class="item-info"><div class="item-name">${isU?'<span class="priority-tag">HITNO</span> ':''}${esc(item.name)}</div>${item.qty?`<div class="item-qty">${esc(item.qty)}</div>`:''}${item.store?`<div class="item-store">${esc(item.store)}</div>`:''}${item.note?`<div class="item-note-text">💬 ${esc(item.note)}</div>`:''}</div>${item.price?`<div class="item-price-tag">${parseFloat(item.price).toFixed(2)} KM</div>`:''}<button class="item-del" onclick="delItem(event,${i})">✕</button></div>`;
+    });
+    html+=`</div></div>`;
+  });
+  c.innerHTML=html;
+  c.querySelectorAll('.item-card').forEach(el=>{const idx=parseInt(el.dataset.idx);if(!isNaN(idx))initSwipe(el,idx);});
+}
+function toggleCat(cat){collapsedCats.has(cat)?collapsedCats.delete(cat):collapsedCats.add(cat);renderList();}
+function toggleItem(i){if(justSwiped)return;items[i].checked=!items[i].checked;saveItems();renderList();}
+function delItem(e,i){e.stopPropagation();items.splice(i,1);saveItems();renderList();}
+
+// ════════════════════════════════════════════════
+//  FINISH SHOPPING
+// ════════════════════════════════════════════════
+function openFinish(){
+  finishBuyer=activeBuyer||'';
+  document.getElementById('finish-total-show').textContent=items.reduce((s,i)=>s+(parseFloat(i.price)||0),0).toFixed(2)+' KM';
+  applyFinishBuyerUI();
+  document.getElementById('finish-modal').classList.add('visible');
+}
+function closeFinish(){document.getElementById('finish-modal').classList.remove('visible');}
+function selectFinishBuyer(b){finishBuyer=b;applyFinishBuyerUI();}
+function applyFinishBuyerUI(){
+  document.getElementById('bsb-nedim').className='bsb'+(finishBuyer==='Nedim'?' sel-nedim':'');
+  document.getElementById('bsb-azra').className='bsb'+(finishBuyer==='Azra'?' sel-azra':'');
+  document.getElementById('finish-confirm-btn').disabled=!finishBuyer;
+}
+function confirmFinish(){
+  if(!finishBuyer)return;
+  const total=items.reduce((s,i)=>s+(parseFloat(i.price)||0),0);
+  history.unshift({id:Date.now(),date:new Date().toISOString(),buyer:finishBuyer,total,itemCount:items.length,items:items.map(i=>({name:i.name,price:parseFloat(i.price)||0,cat:i.cat||'ostalo'})),type:'shop'});
+  saveHistory();activeBuyer=finishBuyer;saveBuyer();items=[];saveItems();closeFinish();renderList();
+  updatePresence(false);
+  toast('✅ Kupovina sačuvana! '+(finishBuyer==='Nedim'?'💚':'💗'));
+}
+
+// ════════════════════════════════════════════════
+//  RECEIPTS PAGE
+// ════════════════════════════════════════════════
+function initRecForm(){
+  // Set today's date
+  document.getElementById('rec-date').value=new Date().toISOString().split('T')[0];
+  // Build cat chips
+  const chips=document.getElementById('rec-cat-chips');
+  chips.innerHTML=REC_CATS.map(c=>`<div class="cat-chip${recCatSel===c.id?' active':''}" onclick="setRecCat('${c.id}')">${c.icon} ${c.name}</div>`).join('');
+}
+function setRecCat(id){
+  recCatSel=id;
+  document.querySelectorAll('.cat-chip').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.cat-chip').forEach(el=>{if(el.textContent.trim().startsWith(REC_CATS.find(c=>c.id===id).icon))el.classList.add('active');});
+}
+function setRecBuyer(b){
+  recBuyer=b;
+  document.getElementById('rb-nedim').className='rb-btn'+(b==='Nedim'?' rb-nedim':'');
+  document.getElementById('rb-azra').className='rb-btn'+(b==='Azra'?' rb-azra':'');
+}
+function saveReceipt(){
+  const title=document.getElementById('rec-title').value.trim();
+  const amount=parseFloat(document.getElementById('rec-amount').value)||0;
+  const date=document.getElementById('rec-date').value||new Date().toISOString().split('T')[0];
+  const note=document.getElementById('rec-note').value.trim();
+  if(!title){toast('Upiši naziv troška!');return;}
+  if(amount<=0){toast('Upiši iznos!');return;}
+  if(!recBuyer){toast('Odaberi ko je platio!');return;}
+  receipts.unshift({id:Date.now(),date:date+'T'+new Date().toTimeString().slice(0,8),title,amount,cat:recCatSel,buyer:recBuyer,note});
+  saveReceipts();
+  document.getElementById('rec-title').value='';
+  document.getElementById('rec-amount').value='';
+  document.getElementById('rec-note').value='';
+  renderReceiptList();
+  toast('💾 Račun sačuvan!');
+}
+function setRecFilter(f){
+  recFilter=f;
+  document.getElementById('rf-all').className='rec-filter-btn'+(f==='all'?' active':'');
+  document.getElementById('rf-Nedim').className='rec-filter-btn'+(f==='Nedim'?' n-active':'');
+  document.getElementById('rf-Azra').className='rec-filter-btn'+(f==='Azra'?' a-active':'');
+  renderReceiptList();
+}
+function deleteReceipt(id){receipts=receipts.filter(r=>r.id!==id);saveReceipts();renderReceiptList();toast('🗑️ Obrisano');}
+function renderReceiptList(){
+  const el=document.getElementById('receipts-list');
+  const filtered=recFilter==='all'?receipts:receipts.filter(r=>r.buyer===recFilter);
+  if(!filtered.length){el.innerHTML='<div class="rec-empty"><div class="icon">🧾</div><p>Nema računa za ovaj filter.<br>Dodaj prvi trošak gore!</p></div>';return;}
+  const catMap=Object.fromEntries(REC_CATS.map(c=>[c.id,c]));
+  el.innerHTML=filtered.map(r=>{
+    const cm=catMap[r.cat]||catMap['ostalo'];
+    const bClass=r.buyer==='Nedim'?'nedim':'azra';
+    return`<div class="receipt-card ${bClass}-rec">
+      <div class="rc-top">
+        <div class="rc-left">
+          <div class="rc-title">${esc(r.title)}</div>
+          <div class="rc-meta">
+            <span class="rc-buyer-dot" style="background:var(--${r.buyer.toLowerCase()})"></span>
+            <span>${esc(r.buyer)}</span>
+            <span>·</span>
+            <span>${fmtDate(r.date)}</span>
+            <span class="rc-cat-tag">${cm.icon} ${cm.name}</span>
+          </div>
+        </div>
+        <div class="rc-right">
+          <span class="rc-amt ${bClass}">${r.amount.toFixed(2)} KM</span>
+          <button class="rc-del" onclick="deleteReceipt(${r.id})">✕</button>
+        </div>
+      </div>
+      ${r.note?`<div class="rc-note">${esc(r.note)}</div>`:''}
+    </div>`;
+  }).join('');
+}
+function renderReceiptPage(){initRecForm();renderReceiptList();}
+
+// ════════════════════════════════════════════════
+//  PROFILE / DASHBOARD
+// ════════════════════════════════════════════════
+function setProfile(p){
+  activeProfile=p;
+  document.getElementById('pt-nedim').className='pt-btn'+(p==='Nedim'?' pt-nedim':'');
+  document.getElementById('pt-azra').className='pt-btn'+(p==='Azra'?' pt-azra':'');
+  renderProfileContent();
+}
+function renderProfile(){
+  setProfile(activeProfile);
+}
+function renderProfileContent(){
+  const p=activeProfile,pLow=p.toLowerCase();
+  const heroClass=p==='Nedim'?'ph-nedim':'ph-azra';
+  const colorVar=`var(--${pLow})`;
+  const barClass=p==='Nedim'?'nedim-bar':'azra-bar';
+
+  // Gather all spending for this user
+  const myShops=history.filter(h=>h.buyer===p);
+  const myRecs=receipts.filter(r=>r.buyer===p);
+  const shopTotal=myShops.reduce((s,h)=>s+h.total,0);
+  const recTotal=myRecs.reduce((s,r)=>s+r.amount,0);
+  const allTotal=shopTotal+recTotal;
+
+  // This month
+  const now=new Date();
+  const mFrom=new Date(now.getFullYear(),now.getMonth(),1);
+  const monthShops=myShops.filter(h=>new Date(h.date)>=mFrom);
+  const monthRecs=myRecs.filter(r=>new Date(r.date)>=mFrom);
+  const monthTotal=monthShops.reduce((s,h)=>s+h.total,0)+monthRecs.reduce((s,r)=>s+r.amount,0);
+
+  // This week
+  const wDay=now.getDay()||7;
+  const wFrom=new Date(now);wFrom.setDate(now.getDate()-(wDay-1));wFrom.setHours(0,0,0,0);
+  const weekShops=myShops.filter(h=>new Date(h.date)>=wFrom);
+  const weekRecs=myRecs.filter(r=>new Date(r.date)>=wFrom);
+  const weekTotal=weekShops.reduce((s,h)=>s+h.total,0)+weekRecs.reduce((s,r)=>s+r.amount,0);
+
+  // Category breakdown from shop history
+  const catTotals={};
+  myShops.forEach(h=>{
+    (h.items||[]).forEach(it=>{
+      const cat=it.cat||'ostalo';
+      catTotals[cat]=(catTotals[cat]||0)+(it.price||0);
+    });
+  });
+  // Add receipt categories (mapped to their own)
+  myRecs.forEach(r=>{
+    const key='rec_'+r.cat;
+    catTotals[key]=(catTotals[key]||0)+r.amount;
+  });
+
+  const catMax=Math.max(...Object.values(catTotals),0.01);
+  const catOrder=[...Object.keys(CAT_META)];
+  let catHtml='';
+  catOrder.forEach(cat=>{
+    if(!catTotals[cat])return;
+    const m=CAT_META[cat]||CAT_META.ostalo;
+    const pct=(catTotals[cat]/catMax*100).toFixed(0);
+    catHtml+=`<div class="cb-row"><span class="cb-icon">${m.icon}</span><div class="cb-info"><div class="cb-name">${m.name}</div><div class="cb-bar-wrap"><div class="cb-bar-fill ${barClass}" style="width:${pct}%"></div></div></div><span class="cb-amt" style="color:${colorVar}">${catTotals[cat].toFixed(2)} KM</span></div>`;
+  });
+  // Receipt cats
+  const recCatMap=Object.fromEntries(REC_CATS.map(c=>[c.id,c]));
+  Object.entries(catTotals).filter(([k])=>k.startsWith('rec_')).sort((a,b)=>b[1]-a[1]).forEach(([k,v])=>{
+    const rid=k.replace('rec_','');
+    const cm=recCatMap[rid]||recCatMap['ostalo'];
+    const pct=(v/catMax*100).toFixed(0);
+    catHtml+=`<div class="cb-row"><span class="cb-icon">${cm.icon}</span><div class="cb-info"><div class="cb-name">${cm.name} <span style="font-size:.58rem;color:var(--muted)">(račun)</span></div><div class="cb-bar-wrap"><div class="cb-bar-fill ${barClass}" style="width:${pct}%"></div></div></div><span class="cb-amt" style="color:${colorVar}">${v.toFixed(2)} KM</span></div>`;
+  });
+  if(!catHtml)catHtml='<div style="padding:14px;color:var(--muted);font-size:.78rem;text-align:center">Nema podataka za kategorije.</div>';
+
+  // Recent activity (last 8 combined)
+  const allActivity=[
+    ...myShops.map(h=>({date:h.date,name:'Kupovina ('+h.itemCount+' stavki)',amount:h.total,type:'shop'})),
+    ...myRecs.map(r=>({date:r.date,name:r.title,amount:r.amount,type:'rec',cat:r.cat}))
+  ].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,10);
+
+  let tlHtml='';
+  allActivity.forEach(a=>{
+    const cm=a.type==='rec'?(recCatMap[a.cat]||recCatMap['ostalo']):null;
+    tlHtml+=`<div class="tl-item"><div class="tl-dot" style="background:${colorVar}"></div><div class="tl-info"><div class="tl-name">${esc(a.name)}</div><div class="tl-meta">${fmtDate(a.date)} · ${a.type==='shop'?'🛒 Kupovina':(cm?cm.icon+' '+cm.name:'Račun')}</div></div><span class="tl-amt" style="color:${colorVar}">${a.amount.toFixed(2)} KM</span></div>`;
+  });
+  if(!tlHtml)tlHtml='<div style="padding:14px;color:var(--muted);font-size:.78rem;text-align:center">Još nema aktivnosti.</div>';
+
+  document.getElementById('profile-content').innerHTML=`
+    <div class="profile-hero ${heroClass}">
+      <div class="prof-name">${p} · Ukupno potrošeno</div>
+      <div class="prof-total">KM ${allTotal.toFixed(2)}</div>
+      <div class="prof-sub">${myShops.length} kupovina · ${myRecs.length} računa</div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-label">Sedmično</div><div class="stat-val ${pLow}">${weekTotal.toFixed(2)}</div></div>
+      <div class="stat-card"><div class="stat-label">Mjesečno</div><div class="stat-val ${pLow}">${monthTotal.toFixed(2)}</div></div>
+      <div class="stat-card"><div class="stat-label">Kupovine</div><div class="stat-val">${myShops.length+myRecs.length}</div></div>
+    </div>
+    <div class="profile-section-title">Troškovi po kategoriji</div>
+    <div class="category-breakdown">${catHtml}</div>
+    <div class="profile-section-title">Nedavna aktivnost</div>
+    <div class="timeline-list">${tlHtml}</div>
+  `;
+}
+
+// ════════════════════════════════════════════════
+//  REKAP
+// ════════════════════════════════════════════════
+function switchPeriod(p){
+  currentPeriod=p;
+  document.querySelectorAll('.rp-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('rpt-'+p).classList.add('active');
+  renderRekap();
+}
+function getDateRange(period){
+  const now=new Date(),to=new Date(now);to.setHours(23,59,59,999);
+  const from=new Date(now);
+  if(period==='week'){const day=now.getDay()||7;from.setDate(now.getDate()-(day-1));from.setHours(0,0,0,0);}
+  else if(period==='month'){from.setDate(1);from.setHours(0,0,0,0);}
+  else{from.setMonth(0,1);from.setHours(0,0,0,0);}
+  return{from,to};
+}
+function renderRekap(){
+  const{from,to}=getDateRange(currentPeriod);
+  const fHist=history.filter(s=>new Date(s.date)>=from&&new Date(s.date)<=to);
+  const fRecs=receipts.filter(r=>new Date(r.date)>=from&&new Date(r.date)<=to);
+  const shopTotal=fHist.reduce((s,h)=>s+h.total,0);
+  const recTotal=fRecs.reduce((s,r)=>s+r.amount,0);
+  const total=shopTotal+recTotal;
+
+  const nShop=fHist.filter(h=>h.buyer==='Nedim').reduce((s,h)=>s+h.total,0);
+  const aShop=fHist.filter(h=>h.buyer==='Azra').reduce((s,h)=>s+h.total,0);
+  const nRec=fRecs.filter(r=>r.buyer==='Nedim').reduce((s,r)=>s+r.amount,0);
+  const aRec=fRecs.filter(r=>r.buyer==='Azra').reduce((s,r)=>s+r.amount,0);
+  const nTotal=nShop+nRec,aTotal=aShop+aRec;
+  const maxAmt=Math.max(nTotal,aTotal,0.01);
+
+  const pLabels={week:'ova sedmica',month:'ovaj mjesec',year:'ova godina'};
+  const pName={week:'Sedmično',month:'Mjesečno',year:'Godišnje'}[currentPeriod];
+  document.getElementById('rs-period-label').textContent=pLabels[currentPeriod];
+
+  document.getElementById('rekap-total-block').innerHTML=`
+    <div class="rekap-total-card ${currentPeriod}">
+      <div class="rtc-label">${pName} · ${pLabels[currentPeriod]}</div>
+      <div class="rtc-amt">KM ${total.toFixed(2)}</div>
+      <div class="rtc-sub">${fHist.length} kupovina · ${fRecs.length} računa</div>
+      <div class="rtc-row">
+        <div class="rtc-mini"><div class="rtc-mini-label">Namirnice</div><div class="rtc-mini-val">${shopTotal.toFixed(2)} KM</div></div>
+        <div class="rtc-mini"><div class="rtc-mini-label">Računi</div><div class="rtc-mini-val">${recTotal.toFixed(2)} KM</div></div>
+        <div class="rtc-mini"><div class="rtc-mini-label">Aktivnosti</div><div class="rtc-mini-val">${fHist.length+fRecs.length}</div></div>
+      </div>
+    </div>`;
+
+  document.getElementById('buyers-split').innerHTML=`
+    <div class="buyer-split-card nedim-card">
+      <div class="bsc-av">N</div><div class="bsc-name">Nedim</div>
+      <div class="bsc-amt">KM ${nTotal.toFixed(2)}</div>
+      <div class="bsc-count">${fHist.filter(h=>h.buyer==='Nedim').length+fRecs.filter(r=>r.buyer==='Nedim').length} aktivnosti</div>
+      <div class="bsc-bar"><div class="bsc-bar-fill" style="width:${(nTotal/maxAmt*100).toFixed(0)}%"></div></div>
+    </div>
+    <div class="buyer-split-card azra-card">
+      <div class="bsc-av">A</div><div class="bsc-name">Azra</div>
+      <div class="bsc-amt">KM ${aTotal.toFixed(2)}</div>
+      <div class="bsc-count">${fHist.filter(h=>h.buyer==='Azra').length+fRecs.filter(r=>r.buyer==='Azra').length} aktivnosti</div>
+      <div class="bsc-bar"><div class="bsc-bar-fill" style="width:${(aTotal/maxAmt*100).toFixed(0)}%"></div></div>
+    </div>`;
+
+  // Combined timeline
+  const recCatMap=Object.fromEntries(REC_CATS.map(c=>[c.id,c]));
+  const combined=[
+    ...fHist.map(h=>({...h,_type:'shop'})),
+    ...fRecs.map(r=>({...r,_type:'rec',total:r.amount}))
+  ].sort((a,b)=>new Date(b.date)-new Date(a.date));
+
+  const sl=document.getElementById('sessions-list');
+  if(!combined.length){sl.innerHTML='<div class="rs-empty">Nema aktivnosti za ovaj period.</div>';return;}
+  sl.innerHTML=combined.map(s=>{
+    const bc=s.buyer==='Nedim'?'nedim':'azra';
+    const typeLabel=s._type==='shop'?`<span class="si-type shop">🛒 Lista</span>`:`<span class="si-type rec">🧾 Račun</span>`;
+    const name=s._type==='shop'?`Kupovina (${s.itemCount} stavki)`:esc(s.title);
+    const cm=s._type==='rec'?(recCatMap[s.cat]||recCatMap['ostalo']):null;
+    const sub=s._type==='shop'?fmtDate(s.date)+' u '+fmtTime(s.date):(cm?cm.icon+' '+cm.name+' · '+fmtDate(s.date):fmtDate(s.date));
+    return`<div class="session-item"><div class="si-buyer ${bc}">${s.buyer[0]}</div><div class="si-info"><div class="si-date">${esc(s.buyer)} ${typeLabel}</div><div class="si-items">${name} · ${sub}</div></div><div class="si-amt">${s.total.toFixed(2)} KM</div><button class="si-del" onclick="deleteSess(${s.id},'${s._type}')">✕</button></div>`;
+  }).join('');
+}
+function deleteSess(id,type){
+  if(type==='shop')history=history.filter(h=>h.id!==id);
+  else receipts=receipts.filter(r=>r.id!==id);
+  if(type==='shop')saveHistory();else saveReceipts();
+  renderRekap();toast('🗑️ Obrisano');
+}
+
+// ════════════════════════════════════════════════
+//  AUTOCOMPLETE
+// ════════════════════════════════════════════════
+let acIdx=-1,acMatches=[];
+function onNameInput(){
+  const val=document.getElementById('in-name').value.trim().toLowerCase();
+  const list=document.getElementById('ac-list'),note=document.getElementById('mem-note');
+  if(!val){list.style.display='none';note.style.display='none';return;}
+  acMatches=Object.values(priceMemory).filter(m=>m.name.toLowerCase().startsWith(val));acIdx=-1;
+  if(!acMatches.length)list.style.display='none';
+  else{list.innerHTML=acMatches.slice(0,7).map((m,idx)=>`<div class="ac-item" id="ac${idx}" onmousedown="pickAc(${idx})" onmouseover="acIdx=${idx};hiAc()"><span>${esc(m.name)} <span class="ac-sub">${m.qty||''}</span></span><span class="ac-price">${m.price.toFixed(2)} KM</span></div>`).join('');list.style.display='block';}
+  const ex=priceMemory[val];
+  if(ex){note.style.display='block';document.getElementById('mem-price-show').textContent=ex.price.toFixed(2);document.getElementById('in-price').value=ex.price;if(ex.qty&&!document.getElementById('in-qty').value)document.getElementById('in-qty').value=ex.qty;if(ex.cat)document.getElementById('in-cat').value=ex.cat;}
+  else note.style.display='none';
+}
+function onNameKey(e){
+  const list=document.getElementById('ac-list');if(list.style.display==='none')return;
+  if(e.key==='ArrowDown'){acIdx=Math.min(acIdx+1,acMatches.length-1);hiAc();e.preventDefault();}
+  else if(e.key==='ArrowUp'){acIdx=Math.max(acIdx-1,-1);hiAc();e.preventDefault();}
+  else if(e.key==='Enter'&&acIdx>=0){pickAc(acIdx);e.preventDefault();}
+  else if(e.key==='Escape')list.style.display='none';
+}
+function hiAc(){document.querySelectorAll('.ac-item').forEach((el,i)=>el.classList.toggle('active',i===acIdx));}
+function pickAc(idx){
+  const m=acMatches[idx];if(!m)return;
+  document.getElementById('in-name').value=m.name;document.getElementById('in-price').value=m.price;
+  if(m.qty)document.getElementById('in-qty').value=m.qty;if(m.cat)document.getElementById('in-cat').value=m.cat;
+  document.getElementById('ac-list').style.display='none';document.getElementById('mem-note').style.display='block';document.getElementById('mem-price-show').textContent=m.price.toFixed(2);
+}
+function hideAc(){setTimeout(()=>document.getElementById('ac-list').style.display='none',170);}
+
+// ════════════════════════════════════════════════
+//  ADD ITEM
+// ════════════════════════════════════════════════
+function addItem(){
+  const name=document.getElementById('in-name').value.trim();
+  const qty=document.getElementById('in-qty').value.trim();
+  const price=parseFloat(document.getElementById('in-price').value)||0;
+  const cat=document.getElementById('in-cat').value||'ostalo';
+  const store=document.getElementById('in-store').value||'';
+  const note=document.getElementById('in-note').value.trim();
+  if(!name){toast('Upiši naziv!');return;}
+  items.push({name,qty,price,cat,store,checked:false,id:Date.now(),priority:addPriority,note});saveItems();
+  if(price>0)remem(name,price,qty,cat);
+  document.getElementById('in-name').value='';document.getElementById('in-qty').value='';document.getElementById('in-price').value='';document.getElementById('in-note').value='';
+  document.getElementById('mem-note').style.display='none';document.getElementById('ac-list').style.display='none';
+  setPriority('normal');
+  toast('✓ '+name+' dodano!');
+}
+function addFromCatalog(idx){
+  const p=catalog[idx];
+  if(items.find(i=>i.name.toLowerCase()===p.name.toLowerCase()&&!i.checked)){toast('⚠️ Već na listi!');return;}
+  items.push({name:p.name,qty:p.qty,price:p.price,cat:p.cat,store:p.store||'',checked:false,id:Date.now(),priority:'normal',note:''});saveItems();toast('✓ '+p.name);
+  const btn=document.getElementById('cat-add-'+idx);if(btn){btn.textContent='✓';setTimeout(()=>btn.textContent='+',1200);}
+}
+
+// ════════════════════════════════════════════════
+//  CATALOG
+// ════════════════════════════════════════════════
+function renderCatalog(){
+  const container=document.getElementById('catalog-content');
+  const groups={};catalog.forEach((p,i)=>{if(!groups[p.cat])groups[p.cat]=[];groups[p.cat].push({p,i});});
+  const catOrder=['mlijeko','meso','voce','pekara','smrznuto','pice','slatkisi','kozmetika','hemija','beba','ostalo'];
+  let html='';
+  catOrder.forEach(cat=>{
+    if(!groups[cat]||!groups[cat].length)return;
+    const m=CAT_META[cat]||CAT_META.ostalo;
+    const stores=[...new Set(groups[cat].map(e=>e.p.store))];
+    let sl='Više prodavnica',sc='store-both';
+    if(stores.length===1&&stores[0]==='DM'){sl='DM';sc='store-dm';}
+    else if(stores.length===1&&stores[0]==='Bingo'){sl='Bingo';sc='store-bingo';}
+    html+=`<div class="cat-section"><div class="cat-section-hdr"><span class="cat-section-icon">${m.icon}</span><span class="cat-section-name">${m.name}</span><span class="cat-section-store ${sc}">${sl}</span></div><div class="cat-prod-grid">`;
+    groups[cat].forEach(({p,i})=>{html+=`<div class="cat-prod"><div class="cat-prod-info"><div class="cat-prod-name">${esc(p.name)}</div><div class="cat-prod-qty">${esc(p.qty||'')}${p.store?' · '+esc(p.store):''}</div></div><span class="cat-prod-price">${p.price.toFixed(2)} KM</span><button class="cat-prod-edit" onclick="openEdit(${i})">✏️</button><button class="cat-prod-add" id="cat-add-${i}" onclick="addFromCatalog(${i})">+</button></div>`;});
+    html+=`</div></div>`;
+  });
+  container.innerHTML=html;
+}
+function openEdit(idx){const p=catalog[idx];editKey=idx;document.getElementById('edit-prod-name').textContent=p.name;document.getElementById('edit-qty').value=p.qty||'';document.getElementById('edit-price').value=p.price;document.getElementById('edit-modal').classList.add('visible');}
+function closeEdit(){document.getElementById('edit-modal').classList.remove('visible');editKey=null;}
+function saveEdit(){
+  if(editKey===null)return;const p=catalog[editKey];
+  catalog[editKey].qty=document.getElementById('edit-qty').value.trim();catalog[editKey].price=parseFloat(document.getElementById('edit-price').value)||0;
+  saveCatalog();remem(p.name,catalog[editKey].price,catalog[editKey].qty,p.cat);closeEdit();renderCatalog();toast('💾 Ažurirano!');
+}
+
+// ════════════════════════════════════════════════
+//  SHARE
+// ════════════════════════════════════════════════
+function renderSharePrev(){
+  document.getElementById('prev-count').textContent=items.length;
+  const el=document.getElementById('share-prev');
+  if(!items.length){el.innerHTML='<div style="color:var(--muted);font-size:.76rem;padding:6px 0">Nema stavki.</div>';return;}
+  el.innerHTML=items.map(i=>`<div class="prev-item"><span>${esc(i.name)}${i.qty?` <span style="color:var(--muted);font-size:.65rem">(${esc(i.qty)})</span>`:''}</span><span class="pi-p">${i.price?parseFloat(i.price).toFixed(2)+' KM':'—'}</span></div>`).join('');
+}
+function buildUrl(){
+  if(!items.length)return null;
+  const data=JSON.stringify(items.map(i=>({n:i.name,q:i.qty||'',p:i.price||0,c:i.cat||'ostalo',s:i.store||''})));
+  return window.location.href.split('?')[0].split('#')[0]+'?lista='+btoa(unescape(encodeURIComponent(data)));
+}
+function genLink(){const url=buildUrl();if(!url){toast('Nema stavki!');return;}document.getElementById('link-input').value=url;document.getElementById('link-box').classList.add('visible');toast('🔗 Link generisan!');}
+function copyLink(){const input=document.getElementById('link-input');input.select();navigator.clipboard.writeText(input.value).then(()=>toast('📋 Kopirano!')).catch(()=>{document.execCommand('copy');toast('📋 Kopirano!');});}
+function shareWA(){const url=buildUrl();if(!url){toast('Nema stavki!');return;}const total=items.reduce((s,i)=>s+(parseFloat(i.price)||0),0);window.open('https://wa.me/?text='+encodeURIComponent(`🛒 *Kupovina — Porodica Ćehić*\n\n${items.length} namirnica (~${total.toFixed(2)} KM)\n\n${url}`),'_blank');}
+function shareViber(){const url=buildUrl();if(!url){toast('Nema stavki!');return;}const total=items.reduce((s,i)=>s+(parseFloat(i.price)||0),0);window.open('viber://forward?text='+encodeURIComponent(`🛒 Kupovina — Porodica Ćehić\n${items.length} namirnica (~${total.toFixed(2)} KM)\n${url}`),'_blank');}
+
+// ════════════════════════════════════════════════
+//  IMPORT
+// ════════════════════════════════════════════════
+function checkUrl(){
+  const lista=new URLSearchParams(window.location.search).get('lista');if(!lista)return;
+  try{
+    const raw=JSON.parse(decodeURIComponent(escape(atob(lista))));
+    pendingImport=raw.map(i=>({name:i.n,qty:i.q,price:parseFloat(i.p)||0,cat:i.c||'ostalo',store:i.s||'',checked:false,id:Date.now()+Math.random(),priority:'normal',note:''}));
+    document.getElementById('imp-modal-cnt').textContent=pendingImport.length;
+    document.getElementById('imp-modal-prev').innerHTML=pendingImport.slice(0,8).map(i=>`<div class="modal-pi"><span>${esc(i.name)}</span><span class="mp">${i.price?i.price.toFixed(2)+' KM':'—'}</span></div>`).join('')+(pendingImport.length>8?`<div style="color:var(--muted);font-size:.68rem;padding:3px 0">...i još ${pendingImport.length-8}</div>`:'');
+    document.getElementById('imp-modal').classList.add('visible');
+    window.history.replaceState({},'',window.location.pathname);
+  }catch(e){console.log('Invalid link');}
+}
+function importList(){
+  if(!pendingImport)return;
+  const ex=new Set(items.map(i=>i.name.toLowerCase()));
+  const newOnes=pendingImport.filter(i=>!ex.has(i.name.toLowerCase()));
+  items=[...items,...newOnes];saveItems();newOnes.forEach(i=>{if(i.price>0)remem(i.name,i.price,i.qty,i.cat);});
+  document.getElementById('imp-modal').classList.remove('visible');
+  document.getElementById('imp-banner').classList.add('visible');
+  document.getElementById('imp-count').textContent=newOnes.length;
+  pendingImport=null;renderList();toast('✓ Uvezeno '+newOnes.length+' stavki!');
+}
+function dismissImp(){document.getElementById('imp-modal').classList.remove('visible');pendingImport=null;}
+
+// ════════════════════════════════════════════════
+//  TOAST
+// ════════════════════════════════════════════════
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
+// ════════════════════════════════════════════════
+//  THEME (Dark/Light)
+// ════════════════════════════════════════════════
+function applyTheme(){
+  document.body.classList.toggle('light',currentTheme==='light');
+  const btn=document.getElementById('theme-btn');
+  if(btn)btn.textContent=currentTheme==='light'?'🌙':'☀️';
+}
+function toggleTheme(){
+  currentTheme=currentTheme==='dark'?'light':'dark';
+  localStorage.setItem(THK,currentTheme);
+  applyTheme();
+  toast(currentTheme==='light'?'☀️ Svijetli mod':'🌙 Tamni mod');
+}
+
+// ════════════════════════════════════════════════
+//  PRIORITY
+// ════════════════════════════════════════════════
+function setPriority(p){
+  addPriority=p;
+  document.getElementById('prio-normal').className='prio-btn'+(p==='normal'?' active-normal':'');
+  document.getElementById('prio-urgent').className='prio-btn'+(p==='urgent'?' active-urgent':'');
+}
+
+// ════════════════════════════════════════════════
+//  BUDGET
+// ════════════════════════════════════════════════
+function renderBudget(){
+  const el=document.getElementById('budget-section');if(!el)return;
+  if(!weeklyBudget){
+    el.innerHTML='<div class="budget-bar"><div class="budget-left"><div class="budget-label">Sedmični budžet</div><div class="budget-amt" style="color:var(--muted);font-size:.72rem">Nije postavljen</div></div><button class="budget-edit-btn" onclick="editBudget()">Postavi</button></div>';
+    return;
+  }
+  const now=new Date(),wDay=now.getDay()||7,wFrom=new Date(now);wFrom.setDate(now.getDate()-(wDay-1));wFrom.setHours(0,0,0,0);
+  const weekShops=history.filter(h=>new Date(h.date)>=wFrom).reduce((s,h)=>s+h.total,0);
+  const weekRecs=receipts.filter(r=>new Date(r.date)>=wFrom).reduce((s,r)=>s+r.amount,0);
+  const currentSpent=items.filter(i=>i.checked).reduce((s,i)=>s+(parseFloat(i.price)||0),0);
+  const spent=weekShops+weekRecs+currentSpent;
+  const remaining=weeklyBudget-spent;
+  const pct=Math.min((spent/weeklyBudget)*100,100);
+  const status=pct>=100?'over':pct>=75?'warn':'ok';
+  el.innerHTML=`<div class="budget-bar"><div class="budget-left"><div class="budget-label">Sedmični budžet</div><div class="budget-amt">${spent.toFixed(2)} / ${weeklyBudget.toFixed(2)} KM</div><div class="budget-remaining ${status}">${remaining>=0?'Preostalo: '+remaining.toFixed(2)+' KM':'Prekoračeno: '+Math.abs(remaining).toFixed(2)+' KM'}</div></div><div class="budget-bar-wrap"><div class="budget-prog"><div class="budget-prog-fill ${status}" style="width:${pct}%"></div></div></div><button class="budget-edit-btn" onclick="editBudget()">✏️</button></div>`;
+}
+function editBudget(){
+  const val=prompt('Sedmični budžet (KM):',weeklyBudget||'');
+  if(val===null)return;
+  weeklyBudget=parseFloat(val)||0;
+  localStorage.setItem(BGK,weeklyBudget);
+  renderBudget();
+  toast(weeklyBudget>0?'💰 Budžet: '+weeklyBudget.toFixed(2)+' KM':'Budžet uklonjen');
+}
+
+// ════════════════════════════════════════════════
+//  RECURRING ITEMS
+// ════════════════════════════════════════════════
+function saveRecurring(){localStorage.setItem(RCK,JSON.stringify(recurringItems));}
+function renderRecurring(){
+  const el=document.getElementById('recurring-section');if(!el)return;
+  if(!recurringItems.length){
+    el.innerHTML='<div class="recurring-section"><div class="recurring-hdr"><span class="recurring-title">🔄 Sedmične namirnice</span></div><div style="font-size:.68rem;color:var(--muted);margin-bottom:6px">Dodaj artikle koje kupuješ svake sedmice.</div><button class="add-recurring-btn" onclick="addRecurringPrompt()">+ Dodaj sedmičnu</button></div>';
+    return;
+  }
+  el.innerHTML='<div class="recurring-section"><div class="recurring-hdr"><span class="recurring-title">🔄 Sedmične ('+recurringItems.length+')</span><button class="recurring-add-all" onclick="addAllRecurring()">+ Dodaj sve na listu</button></div><div class="recurring-chips">'+recurringItems.map((r,i)=>'<span class="rec-chip">'+esc(r.name)+'<button class="rec-chip-del" onclick="removeRecurring('+i+')">✕</button></span>').join('')+'<button class="add-recurring-btn" onclick="addRecurringPrompt()">+</button></div></div>';
+}
+function addRecurringPrompt(){
+  const name=prompt('Naziv namirnice za sedmičnu listu:');
+  if(!name||!name.trim())return;
+  const n=name.trim();
+  if(recurringItems.find(r=>r.name.toLowerCase()===n.toLowerCase())){toast('Već postoji!');return;}
+  const mem=priceMemory[n.toLowerCase()];
+  recurringItems.push({name:mem?mem.name:n,qty:mem?mem.qty:'',price:mem?mem.price:0,cat:mem?mem.cat:'ostalo'});
+  saveRecurring();renderRecurring();toast('🔄 '+n+' dodano u sedmične');
+}
+function removeRecurring(i){recurringItems.splice(i,1);saveRecurring();renderRecurring();}
+function addAllRecurring(){
+  let added=0;
+  recurringItems.forEach(r=>{
+    if(items.find(i=>i.name.toLowerCase()===r.name.toLowerCase()&&!i.checked))return;
+    items.push({name:r.name,qty:r.qty||'',price:r.price||0,cat:r.cat||'ostalo',store:'',checked:false,id:Date.now()+Math.random(),priority:'normal',note:''});
+    added++;
+  });
+  if(added>0){saveItems();renderList();toast('🔄 Dodano '+added+' sedmičnih');}
+  else toast('Sve sedmične su već na listi!');
+}
+
+// ════════════════════════════════════════════════
+//  SMART SUGGESTIONS
+// ════════════════════════════════════════════════
+function getSuggestions(){
+  const itemFreq={};const now=new Date();
+  history.forEach(h=>{
+    (h.items||[]).forEach(it=>{
+      const key=it.name.toLowerCase();
+      if(!itemFreq[key])itemFreq[key]={name:it.name,dates:[],count:0,cat:it.cat,lastPrice:it.price};
+      itemFreq[key].dates.push(new Date(h.date));
+      itemFreq[key].count++;
+      if(it.price)itemFreq[key].lastPrice=it.price;
+    });
+  });
+  const currentNames=new Set(items.map(i=>i.name.toLowerCase()));
+  return Object.values(itemFreq)
+    .filter(f=>f.count>=2&&!currentNames.has(f.name.toLowerCase()))
+    .map(f=>{
+      const lastDate=f.dates.sort((a,b)=>b-a)[0];
+      const daysSince=Math.floor((now-lastDate)/(1000*60*60*24));
+      const avgInterval=f.dates.length>1?f.dates.sort((a,b)=>a-b).reduce((sum,d,i,arr)=>i===0?0:sum+(d-arr[i-1])/(1000*60*60*24),0)/(f.dates.length-1):30;
+      return{...f,daysSince,avgInterval,score:daysSince/Math.max(avgInterval,1)};
+    })
+    .filter(f=>f.daysSince>=3)
+    .sort((a,b)=>b.score-a.score)
+    .slice(0,8);
+}
+function renderSuggestions(){
+  const el=document.getElementById('suggestions-section');if(!el)return;
+  const suggestions=getSuggestions();
+  if(!suggestions.length){el.innerHTML='';return;}
+  el.innerHTML='<div class="suggestions-bar"><div class="sug-title">💡 Možda trebate</div><div class="sug-scroll">'+suggestions.map(s=>'<div class="sug-chip" onclick="addSuggestion(\''+esc(s.name).replace(/'/g,"\\'")+'\')">'+'<span class="sug-name">'+esc(s.name)+'</span><span class="sug-days">'+s.daysSince+'d</span></div>').join('')+'</div></div>';
+}
+function addSuggestion(name){
+  const mem=priceMemory[name.toLowerCase()];
+  if(items.find(i=>i.name.toLowerCase()===name.toLowerCase()&&!i.checked)){toast('Već na listi!');return;}
+  items.push({name:mem?mem.name:name,qty:mem?mem.qty:'',price:mem?mem.price:0,cat:mem?mem.cat:'ostalo',store:'',checked:false,id:Date.now(),priority:'normal',note:''});
+  saveItems();renderList();toast('✓ '+name);
+}
+
+// ════════════════════════════════════════════════
+//  PRESENCE (Who is shopping)
+// ════════════════════════════════════════════════
+function updatePresence(isShopping){
+  if(!syncEnabled||!activeBuyer)return;
+  db.ref(ROOT+'/presence/'+activeBuyer.toLowerCase()).set({
+    active:true,shopping:isShopping,lastSeen:Date.now(),
+    device:navigator.userAgent.includes('Mobile')?'Mobitel':'Računar'
+  }).catch(()=>{});
+}
+function listenPresence(){
+  if(!syncEnabled)return;
+  db.ref(ROOT+'/presence').on('value',snap=>{
+    const el=document.getElementById('presence-bar');if(!el)return;
+    if(!snap.exists()){el.innerHTML='';return;}
+    const data=snap.val(),now=Date.now();
+    let html='';
+    Object.entries(data).forEach(([user,info])=>{
+      if(now-info.lastSeen>5*60*1000)return;
+      const name=user.charAt(0).toUpperCase()+user.slice(1);
+      const colorVar=user==='nedim'?'var(--nedim)':'var(--azra)';
+      html+='<div class="presence-indicator" style="border-color:'+(info.shopping?colorVar:'var(--border)')+'"><span class="presence-dot '+(info.shopping?'shopping':'idle')+'"></span><span style="color:'+colorVar+';font-weight:700">'+name+'</span><span>'+(info.shopping?'🛒 kupuje':'online')+'</span></div>';
+    });
+    el.innerHTML=html;
+  });
+}
+
+// ════════════════════════════════════════════════
+//  NOTIFICATIONS (Browser API)
+// ════════════════════════════════════════════════
+function requestNotifPermission(){
+  if(!('Notification' in window))return;
+  if(Notification.permission==='granted'){notifPermission=true;return;}
+  if(Notification.permission!=='denied'){
+    Notification.requestPermission().then(p=>{notifPermission=p==='granted';});
+  }
+}
+function showNotification(title,body){
+  if(!notifPermission||document.hasFocus())return;
+  try{new Notification(title,{body,icon:'icon-192.svg',tag:'kupovina-update'});}catch(e){}
+}
+
+// ════════════════════════════════════════════════
+//  VOICE INPUT (Web Speech API)
+// ════════════════════════════════════════════════
+let recognition=null,isRecording=false;
+function initVoice(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){const vb=document.getElementById('voice-btn');if(vb)vb.style.display='none';return;}
+  recognition=new SR();
+  recognition.lang='bs-BA';
+  recognition.continuous=false;
+  recognition.interimResults=false;
+  recognition.onresult=(e)=>{
+    const text=e.results[0][0].transcript;
+    stopVoice();
+    const parts=text.split(/[,i]+/).map(s=>s.trim()).filter(s=>s);
+    if(parts.length===1){
+      document.getElementById('in-name').value=parts[0];
+      onNameInput();
+      toast('🎤 '+parts[0]);
+    }else{
+      let added=0;
+      parts.forEach(name=>{
+        if(!name)return;
+        const mem=priceMemory[name.toLowerCase()];
+        const itemName=mem?mem.name:name.charAt(0).toUpperCase()+name.slice(1);
+        if(items.find(i=>i.name.toLowerCase()===itemName.toLowerCase()&&!i.checked))return;
+        items.push({name:itemName,qty:mem?mem.qty:'',price:mem?mem.price:0,cat:mem?mem.cat:'ostalo',store:'',checked:false,id:Date.now()+Math.random(),priority:'normal',note:''});
+        added++;
+      });
+      if(added>0){saveItems();renderList();toast('🎤 Dodano '+added+' stavki');}
+      else toast('Sve je već na listi!');
+    }
+  };
+  recognition.onerror=()=>{stopVoice();toast('Greška sa mikrofonom');};
+  recognition.onend=()=>{stopVoice();};
+}
+function startVoice(){
+  if(!recognition){toast('Preglednik ne podržava glasovni unos');return;}
+  isRecording=true;
+  const btn=document.getElementById('voice-btn');
+  btn.classList.add('recording');btn.textContent='⏹';
+  const st=document.getElementById('voice-status');
+  st.textContent='🎤 Slušam… Recite namirnice';st.style.display='block';
+  recognition.start();
+}
+function stopVoice(){
+  isRecording=false;
+  const btn=document.getElementById('voice-btn');
+  if(btn){btn.classList.remove('recording');btn.textContent='🎤';}
+  const st=document.getElementById('voice-status');
+  if(st)st.style.display='none';
+  try{recognition.stop();}catch(e){}
+}
+function toggleVoice(){if(isRecording)stopVoice();else startVoice();}
+
+// ════════════════════════════════════════════════
+//  SWIPE GESTURES
+// ════════════════════════════════════════════════
+function initSwipe(el,idx){
+  let sx=0,sy=0,sw=false;
+  el.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY;sw=false;},{passive:true});
+  el.addEventListener('touchmove',e=>{
+    const dx=e.touches[0].clientX-sx,dy=e.touches[0].clientY-sy;
+    if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>15){sw=true;el.style.transform='translateX('+dx+'px)';el.classList.add('swiping');e.preventDefault();}
+  },{passive:false});
+  el.addEventListener('touchend',e=>{
+    if(!sw)return;
+    const dx=e.changedTouches[0].clientX-sx;
+    el.classList.remove('swiping');el.classList.add('snap-back');
+    if(dx>80){justSwiped=true;setTimeout(()=>justSwiped=false,300);toggleItem(idx);}
+    else if(dx<-80){justSwiped=true;setTimeout(()=>justSwiped=false,300);items.splice(idx,1);saveItems();renderList();}
+    else{el.style.transform='';}
+    setTimeout(()=>{if(el)el.classList.remove('snap-back');},250);
+    sw=false;
+  });
+}
+
+// ════════════════════════════════════════════════
+//  QUICK CHIPS
+// ════════════════════════════════════════════════
+const QN=['Hljeb bijeli','Mlijeko','Jaja L','Maslac','Šećer','Ulje suncokret','Jogurt','Sir bijeli','Piletina cijela','Banana','Kafa mljeven','Krompir','Paradajz','Pasta za zube','Prašak Ariel'];
+document.getElementById('quick-chips').innerHTML=QN.map(name=>`<div style="padding:5px 11px;background:var(--surface);border:1px solid var(--border);border-radius:20px;font-size:.72rem;cursor:pointer;transition:all .15s;color:var(--text)" onclick="quickAdd('${esc(name)}')" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text)'">${name}</div>`).join('');
+function quickAdd(name){
+  const mem=priceMemory[name.toLowerCase()];if(!mem){toast('Dodaj ručno');return;}
+  if(items.find(i=>i.name.toLowerCase()===name.toLowerCase()&&!i.checked)){toast('⚠️ Već na listi!');return;}
+  items.push({name:mem.name||name,qty:mem.qty||'',price:mem.price||0,cat:mem.cat||'ostalo',store:'',checked:false,id:Date.now(),priority:'normal',note:''});
+  saveItems();toast('✓ '+name);
+  if(document.getElementById('page-list').classList.contains('active'))renderList();
+}
+
+// ════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════
+applyTheme();
+initVoice();
+requestNotifPermission();
+checkUrl();
+renderList();
+updateBuyerUI();
+setRecBuyer('');
+document.getElementById('pt-nedim').className='pt-btn pt-nedim';
+document.getElementById('pt-azra').className='pt-btn';
+// Start Firebase
+initFirebase();
+// Presence heartbeat
+setInterval(()=>{if(activeBuyer&&syncEnabled)updatePresence(items.some(i=>i.checked));},60000);
+
+// ════════════════════════════════════════════════
+//  PWA — Service Worker & Install Prompt
+// ════════════════════════════════════════════════
+let deferredPrompt = null;
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js')
+    .then(reg => console.log('SW registered:', reg.scope))
+    .catch(err => console.log('SW error:', err));
+}
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  showInstallBanner();
+});
+
+function showInstallBanner() {
+  if (document.getElementById('pwa-banner')) return;
+  const banner = document.createElement('div');
+  banner.className = 'pwa-install-banner';
+  banner.id = 'pwa-banner';
+  banner.innerHTML = `
+    <span class="pwa-icon">📲</span>
+    <div class="pwa-text">
+      <div class="pwa-title">Instaliraj aplikaciju</div>
+      <div class="pwa-desc">Dodaj Kupovinu na svoj ekran</div>
+    </div>
+    <button class="pwa-install-btn" id="pwa-install-btn">Instaliraj</button>
+    <button class="pwa-close-btn" id="pwa-close-btn">&times;</button>
+  `;
+  document.body.appendChild(banner);
+
+  document.getElementById('pwa-install-btn').addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const result = await deferredPrompt.userChoice;
+    if (result.outcome === 'accepted') {
+      toast('Aplikacija instalirana!');
+    }
+    deferredPrompt = null;
+    banner.remove();
+  });
+
+  document.getElementById('pwa-close-btn').addEventListener('click', () => {
+    banner.remove();
+  });
+}
+
+window.addEventListener('appinstalled', () => {
+  deferredPrompt = null;
+  const b = document.getElementById('pwa-banner');
+  if (b) b.remove();
+  toast('Kupovina je instalirana!');
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <rect width="192" height="192" rx="32" fill="#0f0f0f"/>
+  <g transform="translate(96,88)" fill="none" stroke="#c8f535" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="-20" cy="38" r="6" fill="#c8f535" stroke="none"/>
+    <circle cx="20" cy="38" r="6" fill="#c8f535" stroke="none"/>
+    <path d="M-48-30h12l8 50h56l8-34h-54"/>
+  </g>
+  <text x="96" y="150" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="22" fill="#c8f535">K</text>
+</svg>
