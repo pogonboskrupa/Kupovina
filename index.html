@@ -446,6 +446,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .voice-status{font-size:.65rem;color:var(--accent3);text-align:center;margin-bottom:6px}
 .cam-btn{width:42px;height:42px;border-radius:50%;border:2px solid var(--accent2);background:transparent;color:var(--accent2);font-size:1.1rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .cam-btn:hover{background:rgba(255,107,53,.1)}
+.cam-btn[style*="accent3"]:hover{background:rgba(53,200,245,.1)}
 
 /* ── RECEIPT SCAN MODAL ── */
 .scan-modal{background:var(--surface);border:1px solid var(--accent2);border-radius:17px;padding:20px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto}
@@ -619,7 +620,9 @@ body.light .suggestions-bar{background:linear-gradient(135deg,#e8f4fd,#dbeef8);b
       </div>
       <button class="voice-btn" id="voice-btn" onclick="toggleVoice()" title="Glasovni unos">🎤</button>
       <button class="cam-btn" id="cam-btn" onclick="openReceiptCamera()" title="Uslikaj račun">📷</button>
-      <input type="file" id="receipt-file" accept="image/*" capture="environment" style="display:none" onchange="onReceiptPhoto(event)"/>
+      <button class="cam-btn" id="gallery-btn" onclick="openReceiptGallery()" title="Učitaj iz galerije" style="border-color:var(--accent3);color:var(--accent3)">🖼️</button>
+      <input type="file" id="receipt-file-cam" accept="image/*" capture="environment" style="display:none" onchange="onReceiptPhoto(event)"/>
+      <input type="file" id="receipt-file-gal" accept="image/*" style="display:none" onchange="onReceiptPhoto(event)"/>
     </div>
     <div class="voice-status" id="voice-status" style="display:none"></div>
     <div class="row2">
@@ -797,7 +800,7 @@ body.light .suggestions-bar{background:linear-gradient(135deg,#e8f4fd,#dbeef8);b
 <div class="modal-ov" id="scan-modal">
   <div class="scan-modal">
     <h2>📷 <span>Skeniraj račun</span></h2>
-    <div class="sub">Uslikajte račun — stavke i cijene će biti prepoznate</div>
+    <div class="sub">Stavke i cijene će biti prepoznate i dodane na listu i u račune</div>
     <img id="scan-preview" class="scan-preview" style="display:none"/>
     <div class="scan-status" id="scan-status" style="display:none"></div>
     <div class="scan-items" id="scan-items"></div>
@@ -809,6 +812,11 @@ body.light .suggestions-bar{background:linear-gradient(135deg,#e8f4fd,#dbeef8);b
       <select id="scan-store">
         <option value="">Bilo koja</option><option value="Bingo">🔵 Bingo</option><option value="DM">🔴 DM Drogerie</option><option value="Konzum">🟠 Konzum</option><option value="Mercator">🟢 Mercator</option><option value="Pijaca">🟡 Pijaca</option>
       </select>
+    </div>
+    <div class="field"><label>Ko je platio?</label></div>
+    <div class="rec-buyer-row">
+      <button class="rb-btn" id="scan-buy-n" type="button" onclick="setScanBuyer('Nedim')"><span class="rb-dot"></span> Nedim</button>
+      <button class="rb-btn" id="scan-buy-a" type="button" onclick="setScanBuyer('Azra')"><span class="rb-dot"></span> Azra</button>
     </div>
     <div class="scan-btns">
       <button class="scan-btn cancel" onclick="closeScan()">Otkaži</button>
@@ -1774,9 +1782,20 @@ function toggleVoice(){if(isRecording)stopVoice();else startVoice();}
 //  RECEIPT PHOTO SCAN (Tesseract OCR)
 // ════════════════════════════════════════════════
 let scanParsedItems=[];
+let scanBuyer='';
 
 function openReceiptCamera(){
-  document.getElementById('receipt-file').click();
+  document.getElementById('receipt-file-cam').click();
+}
+
+function openReceiptGallery(){
+  document.getElementById('receipt-file-gal').click();
+}
+
+function setScanBuyer(b){
+  scanBuyer=b;
+  document.getElementById('scan-buy-n').className='rb-btn'+(b==='Nedim'?' rb-nedim':'');
+  document.getElementById('scan-buy-a').className='rb-btn'+(b==='Azra'?' rb-azra':'');
 }
 
 function onReceiptPhoto(e){
@@ -1790,6 +1809,8 @@ function onReceiptPhoto(e){
     document.getElementById('scan-modal').classList.add('visible');
     document.getElementById('scan-items').innerHTML='';
     scanParsedItems=[];
+    // Pre-select active buyer
+    setScanBuyer(activeBuyer||'');
     startOCR(ev.target.result);
   };
   reader.readAsDataURL(file);
@@ -1928,12 +1949,20 @@ function saveScanItems(){
   });
 
   const store=document.getElementById('scan-store').value;
+  const buyer=scanBuyer;
+  if(!buyer){toast('Odaberi ko je platio!');return;}
+
   let added=0;
+  let totalAmount=0;
+  const itemNames=[];
+
   scanParsedItems.forEach(item=>{
     if(!item.name)return;
-    // Check for duplicate on list
+    totalAmount+=item.price;
+    itemNames.push(item.name);
+
+    // Add to shopping list (or update price if duplicate)
     if(items.find(i=>i.name.toLowerCase()===item.name.toLowerCase()&&!i.checked)){
-      // Update price if already exists
       const existing=items.find(i=>i.name.toLowerCase()===item.name.toLowerCase()&&!i.checked);
       if(item.price>0){existing.price=item.price;}
     }else{
@@ -1956,9 +1985,29 @@ function saveScanItems(){
     }
   });
 
+  // Save as receipt in Računi
+  if(totalAmount>0){
+    const storeName=store||'Nepoznata';
+    const title='Račun '+storeName+(itemNames.length?' ('+itemNames.length+' stavki)':'');
+    const note=itemNames.join(', ');
+    const now=new Date();
+    const dateStr=now.toISOString().split('T')[0]+'T'+now.toTimeString().slice(0,8);
+    receipts.unshift({
+      id:Date.now(),
+      date:dateStr,
+      title:title,
+      amount:Math.round(totalAmount*100)/100,
+      cat:'hrana',
+      buyer:buyer,
+      note:note
+    });
+    saveReceipts();
+    renderReceiptList();
+  }
+
   if(added>0||scanParsedItems.length>0){
     saveItems();renderList();
-    toast('📷 Dodano '+added+' stavki, cijene ažurirane!');
+    toast('📷 Dodano '+added+' stavki + račun sačuvan!');
   }
   closeScan();
 }
