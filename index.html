@@ -468,17 +468,6 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .scan-btn.cancel{background:var(--surface2);color:var(--muted)}
 
 /* ── RECURRING ITEMS ── */
-.recurring-section{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:12px 14px;margin-bottom:11px}
-.recurring-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.recurring-title{font-family:'Syne',sans-serif;font-size:.74rem;font-weight:700;color:var(--accent3);text-transform:uppercase;letter-spacing:.07em}
-.recurring-add-all{padding:5px 11px;background:var(--accent3);color:#000;border:none;border-radius:8px;font-family:'Syne',sans-serif;font-size:.68rem;font-weight:700;cursor:pointer;transition:transform .15s}
-.recurring-add-all:active{transform:scale(.95)}
-.recurring-chips{display:flex;flex-wrap:wrap;gap:4px}
-.rec-chip{padding:4px 9px;background:var(--surface2);border:1px solid var(--border);border-radius:15px;font-size:.68rem;color:var(--text);display:flex;align-items:center;gap:4px}
-.rec-chip-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.7rem;padding:0 2px}
-.rec-chip-del:hover{color:var(--accent2)}
-.add-recurring-btn{padding:4px 9px;background:transparent;border:1px dashed var(--accent3);border-radius:15px;font-size:.68rem;color:var(--accent3);cursor:pointer;transition:all .15s}
-.add-recurring-btn:hover{background:rgba(53,200,245,.1)}
 
 /* ── SMART SUGGESTIONS ── */
 .suggestions-bar{background:linear-gradient(135deg,#0f1a2a,#0a1020);border:1px solid var(--accent3);border-radius:12px;padding:10px 13px;margin-bottom:11px;overflow:hidden}
@@ -590,7 +579,6 @@ body.light .suggestions-bar{background:linear-gradient(135deg,#e8f4fd,#dbeef8);b
   </div>
   <div id="budget-section"></div>
   <div id="suggestions-section"></div>
-  <div id="recurring-section"></div>
   <div class="list-search" style="position:relative;margin-bottom:10px">
     <input type="text" id="list-search" placeholder="Pretraži katalog i dodaj..." autocomplete="off" oninput="onListSearch()" onblur="setTimeout(()=>document.getElementById('ls-results').style.display='none',200)" style="width:100%;padding:9px 11px 9px 32px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;transition:border-color .2s" onfocus="onListSearch()"/>
     <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:.9rem;pointer-events:none">🔍</span>
@@ -1110,7 +1098,7 @@ function renderList(){
   document.getElementById('lb-rem').textContent=(tA-tC).toFixed(2)+' KM';
   const pct=tA>0?Math.round(tC/tA*100):(items.length>0?Math.round(ci.length/items.length*100):0);
   document.getElementById('lb-fill').style.width=pct+'%';
-  renderBudget();renderSuggestions();renderRecurring();
+  renderBudget();renderSuggestions();
   if(!items.length){c.innerHTML='<div class="empty-state"><div class="icon">🛒</div><p>Lista je prazna.<br>Dodaj namirnice ili ih odaberi iz Kataloga!</p></div>';return;}
   const groups={};
   items.forEach((item,i)=>{const cat=item.cat||'ostalo';if(!groups[cat])groups[cat]=[];groups[cat].push({item,i});});
@@ -1661,34 +1649,6 @@ function editBudget(){
 //  RECURRING ITEMS
 // ════════════════════════════════════════════════
 function saveRecurring(){localStorage.setItem(RCK,JSON.stringify(recurringItems));}
-function renderRecurring(){
-  const el=document.getElementById('recurring-section');if(!el)return;
-  if(!recurringItems.length){
-    el.innerHTML='<div class="recurring-section"><div class="recurring-hdr"><span class="recurring-title">🔄 Sedmične namirnice</span></div><div style="font-size:.68rem;color:var(--muted);margin-bottom:6px">Dodaj artikle koje kupuješ svake sedmice.</div><button class="add-recurring-btn" onclick="addRecurringPrompt()">+ Dodaj sedmičnu</button></div>';
-    return;
-  }
-  el.innerHTML='<div class="recurring-section"><div class="recurring-hdr"><span class="recurring-title">🔄 Sedmične ('+recurringItems.length+')</span><button class="recurring-add-all" onclick="addAllRecurring()">+ Dodaj sve na listu</button></div><div class="recurring-chips">'+recurringItems.map((r,i)=>'<span class="rec-chip">'+esc(r.name)+'<button class="rec-chip-del" onclick="removeRecurring('+i+')">✕</button></span>').join('')+'<button class="add-recurring-btn" onclick="addRecurringPrompt()">+</button></div></div>';
-}
-function addRecurringPrompt(){
-  const name=prompt('Naziv namirnice za sedmičnu listu:');
-  if(!name||!name.trim())return;
-  const n=name.trim();
-  if(recurringItems.find(r=>r.name.toLowerCase()===n.toLowerCase())){toast('Već postoji!');return;}
-  const mem=priceMemory[n.toLowerCase()];
-  recurringItems.push({name:mem?mem.name:n,qty:mem?mem.qty:'',price:mem?mem.price:0,cat:mem?mem.cat:'ostalo'});
-  saveRecurring();renderRecurring();toast('🔄 '+n+' dodano u sedmične');
-}
-function removeRecurring(i){recurringItems.splice(i,1);saveRecurring();renderRecurring();}
-function addAllRecurring(){
-  let added=0;
-  recurringItems.forEach(r=>{
-    if(items.find(i=>i.name.toLowerCase()===r.name.toLowerCase()&&!i.checked))return;
-    items.push({name:r.name,qty:r.qty||'',price:r.price||0,cat:r.cat||'ostalo',store:'',checked:false,id:Date.now()+Math.random(),priority:'normal',note:''});
-    added++;
-  });
-  if(added>0){saveItems();renderList();toast('🔄 Dodano '+added+' sedmičnih');}
-  else toast('Sve sedmične su već na listi!');
-}
 
 // ════════════════════════════════════════════════
 //  SMART SUGGESTIONS
