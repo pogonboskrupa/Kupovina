@@ -591,6 +591,11 @@ body.light .suggestions-bar{background:linear-gradient(135deg,#e8f4fd,#dbeef8);b
   <div id="budget-section"></div>
   <div id="suggestions-section"></div>
   <div id="recurring-section"></div>
+  <div class="list-search" style="position:relative;margin-bottom:10px">
+    <input type="text" id="list-search" placeholder="Pretraži katalog i dodaj..." autocomplete="off" oninput="onListSearch()" onblur="setTimeout(()=>document.getElementById('ls-results').style.display='none',200)" style="width:100%;padding:9px 11px 9px 32px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;transition:border-color .2s" onfocus="onListSearch()"/>
+    <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:.9rem;pointer-events:none">🔍</span>
+    <div id="ls-results" style="display:none;position:absolute;top:100%;left:0;right:0;background:#1e1e1e;border:1px solid var(--accent);border-radius:9px;z-index:50;max-height:220px;overflow-y:auto;margin-top:2px;box-shadow:0 8px 24px rgba(0,0,0,.5)"></div>
+  </div>
   <div class="list-hdr">
     <span class="list-title">Namirnice</span>
     <div class="hdr-btns">
@@ -1471,6 +1476,48 @@ function addFromCatalog(idx){
   if(items.find(i=>i.name.toLowerCase()===p.name.toLowerCase()&&!i.checked)){toast('⚠️ Već na listi!');return;}
   items.push({name:p.name,qty:p.qty,price:p.price,cat:p.cat,store:p.store||'',checked:false,id:Date.now(),priority:'normal',note:''});saveItems();toast('✓ '+p.name);
   const btn=document.getElementById('cat-add-'+idx);if(btn){btn.textContent='✓';setTimeout(()=>btn.textContent='+',1200);}
+}
+
+// ════════════════════════════════════════════════
+//  LIST SEARCH (search catalog from Lista tab)
+// ════════════════════════════════════════════════
+function onListSearch(){
+  const q=document.getElementById('list-search').value.trim().toLowerCase();
+  const box=document.getElementById('ls-results');
+  if(q.length<1){box.style.display='none';return;}
+  // Search catalog + price memory
+  const seen=new Set();
+  const results=[];
+  catalog.forEach((p,i)=>{
+    if(p.name.toLowerCase().includes(q)){
+      results.push({name:p.name,qty:p.qty,price:p.price,cat:p.cat,store:p.store,idx:i,src:'cat'});
+      seen.add(p.name.toLowerCase());
+    }
+  });
+  for(const key in priceMemory){
+    if(key.includes(q)&&!seen.has(key)){
+      const m=priceMemory[key];
+      results.push({name:m.name,qty:m.qty,price:m.price,cat:m.cat,store:'',idx:-1,src:'mem'});
+      seen.add(key);
+    }
+  }
+  if(!results.length){box.innerHTML='<div style="padding:10px;font-size:.78rem;color:var(--muted);text-align:center">Nema rezultata</div>';box.style.display='block';return;}
+  box.innerHTML=results.slice(0,15).map(r=>{
+    const onList=items.find(i=>i.name.toLowerCase()===r.name.toLowerCase()&&!i.checked);
+    return `<div style="padding:8px 11px;cursor:pointer;font-size:.83rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);transition:background .15s" onmousedown="addFromSearch('${esc(r.name)}',${r.price},'${esc(r.qty||'')}','${r.cat||'ostalo'}','${esc(r.store||'')}')">
+      <div><span style="font-weight:500">${esc(r.name)}</span><br><span style="font-size:.63rem;color:var(--muted)">${esc(r.qty||'')}${r.store?' · '+esc(r.store):''}</span></div>
+      <div style="text-align:right"><span style="font-family:'Syne',sans-serif;font-size:.75rem;color:var(--accent);font-weight:700">${r.price.toFixed(2)} KM</span>${onList?'<br><span style="font-size:.55rem;color:var(--accent2)">već na listi</span>':''}</div>
+    </div>`;
+  }).join('');
+  box.style.display='block';
+}
+function addFromSearch(name,price,qty,cat,store){
+  if(items.find(i=>i.name.toLowerCase()===name.toLowerCase()&&!i.checked)){toast('⚠️ Već na listi!');return;}
+  items.push({name,qty,price,cat,store,checked:false,id:Date.now(),priority:'normal',note:''});
+  saveItems();renderList();
+  document.getElementById('list-search').value='';
+  document.getElementById('ls-results').style.display='none';
+  toast('✓ '+name+' dodano!');
 }
 
 // ════════════════════════════════════════════════
