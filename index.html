@@ -1780,47 +1780,161 @@ async function startOCR(imageData){
 }
 
 function parseReceiptText(text){
-  const lines=text.split('\n').map(l=>l.trim()).filter(l=>l.length>2);
+  console.log('OCR raw text:\n'+text);
+  const lines=text.split('\n').map(l=>l.trim()).filter(l=>l.length>0);
   scanParsedItems=[];
-  // Common receipt patterns: item name followed by price
-  // Patterns: "Mlijeko 1.55", "MLIJEKO   1,55", "Mlijeko......1.55", "Mlijeko  1.55 KM"
-  const priceRegex=/^(.+?)\s{2,}[\.…]*\s*(\d+[.,]\d{2})\s*(KM|BAM)?$/i;
-  const priceRegex2=/^(.+?)[\.…]+\s*(\d+[.,]\d{2})\s*(KM|BAM)?$/i;
-  const priceRegex3=/^(.+?)\s+(\d+[.,]\d{2})\s*(KM|BAM)?$/i;
 
-  // Skip common header/footer words
-  const skipWords=['ukupno','total','pdv','gotovina','kartica','povrat','hvala','fiskalni','id','jib','pib','datum','vrijeme','račun','racun','br.','porez','visa','mastercard','subtotal','cash','change'];
+  // Bosnian fiscal receipt format (two-line per item):
+  //   Line 1: [CODE] PRODUCT NAME
+  //   Line 2: [QTY]x    [UNIT_PRICE]    [TOTAL]E
+  // Right column may have total like "2.74E" or "10,15E"
+  // Also handle single-line formats as fallback
 
-  lines.forEach(line=>{
-    const lower=line.toLowerCase();
-    if(skipWords.some(w=>lower.includes(w)))return;
-    if(/^\d+[.,]\d{2}$/.test(line.trim()))return; // just a price
-    if(line.length<3)return;
+  // Skip words for header/footer lines
+  const skipWords=['ukupno','total','pdv','gotovina','kartica','povrat','hvala','fiskalni',
+    'jib','pib','datum','vrijeme','racun','račun','porez','visa','mastercard','uplaceno',
+    'uplaćeno','osn','subtotal','cash','change','bf:','ve:','----','====','****'];
 
-    let match=line.match(priceRegex)||line.match(priceRegex2)||line.match(priceRegex3);
-    if(match){
-      let name=match[1].replace(/[\.…]+$/,'').trim();
-      let price=parseFloat(match[2].replace(',','.'));
-      if(name.length>=2 && price>0 && price<9999){
-        // Try to match with price memory for better name/category
-        const memMatch=findMemoryMatch(name);
+  function shouldSkip(line){
+    const l=line.toLowerCase();
+    return skipWords.some(w=>l.includes(w));
+  }
+
+  // Pattern for product line: starts with alphanumeric code (3-6 chars) then product name
+  const productLineRe=/^([A-Z0-9]{3,7})\s+(.+)/i;
+
+  // Pattern for qty/price line: starts with qty like "1.000x" or "0.498x"
+  const qtyLineRe=/^(\d+[.,]\d+)\s*[xX×]\s+(\d+[.,]\d+)/;
+
+  // Pattern for right-column total price (e.g. "2.74E" or "10,15E" at end of line)
+  const totalRightRe=/(\d+[.,]\d{2})\s*E?\s*$/i;
+
+  // Pattern for standalone price line with E suffix (right column picked up separately)
+  const standaloneTotalRe=/^\s*(\d+[.,]\d{2})\s*E\s*$/i;
+
+  // Single-line fallback: "PRODUCT NAME   PRICE"
+  const singleLineRe=/^(.{3,}?)\s{2,}(\d+[.,]\d{2})\s*$/;
+
+  let pendingProduct=null;
+
+  for(let i=0;i<lines.length;i++){
+    const line=lines[i];
+    if(shouldSkip(line))continue;
+    if(line.length<2)continue;
+
+    // Check if this is a product code line
+    const prodMatch=line.match(productLineRe);
+    if(prodMatch){
+      // Extract product name (remove trailing price if right-column is on same line)
+      let rawName=prodMatch[2];
+      let inlineTotal=0;
+      const inlineTotalMatch=rawName.match(/\s+(\d+[.,]\d{2})\s*E?\s*$/i);
+      if(inlineTotalMatch){
+        // Sometimes OCR puts the right-column total on the product name line
+        // Only treat as price if it's after a gap (not part of product name like "250G")
+        const beforePrice=rawName.substring(0,rawName.length-inlineTotalMatch[0].length);
+        if(beforePrice.length>=3){
+          inlineTotal=parseFloat(inlineTotalMatch[1].replace(',','.'));
+          rawName=beforePrice.trim();
+        }
+      }
+      pendingProduct={name:rawName.trim(),inlineTotal:inlineTotal};
+      continue;
+    }
+
+    // Check if this is a quantity/price line
+    const qtyMatch=line.match(qtyLineRe);
+    if(qtyMatch && pendingProduct){
+      const qty=parseFloat(qtyMatch[1].replace(',','.'));
+      const unitPrice=parseFloat(qtyMatch[2].replace(',','.'));
+
+      // Look for total on this line or use inline total from product line
+      let lineTotal=0;
+      const rightMatch=line.match(/(\d+[.,]\d{2})\s*E?\s*$/i);
+      if(rightMatch){
+        const candidate=parseFloat(rightMatch[1].replace(',','.'));
+        // Make sure it's not the unit price itself
+        if(Math.abs(candidate-unitPrice)>0.005){
+          lineTotal=candidate;
+        }
+      }
+
+      // Determine final price: prefer right-column total, then inline total, then qty*unit
+      let finalPrice=lineTotal || pendingProduct.inlineTotal || Math.round(qty*unitPrice*100)/100;
+      // For qty=1, unit price equals total
+      if(Math.abs(qty-1)<0.01) finalPrice=unitPrice;
+
+      if(finalPrice>0 && finalPrice<9999 && pendingProduct.name.length>=2){
+        const cleanName=pendingProduct.name
+          .replace(/^\d+\s*/,'') // remove leading numbers if code wasn't caught
+          .trim();
+        const memMatch=findMemoryMatch(cleanName);
+        const qtyStr=qty!==1?(qty+'x'):'';
         scanParsedItems.push({
-          name: memMatch?memMatch.name:titleCase(name),
-          price: price,
-          qty: memMatch?memMatch.qty:'',
-          cat: memMatch?memMatch.cat:'ostalo',
+          name: memMatch?memMatch.name:titleCase(cleanName),
+          price: finalPrice,
+          qty: memMatch?memMatch.qty:qtyStr,
+          cat: memMatch?memMatch.cat:guessCategory(cleanName),
           matched: !!memMatch
         });
       }
+      pendingProduct=null;
+      continue;
     }
-  });
 
+    // Check for standalone total (right column on its own line) — skip these
+    if(line.match(standaloneTotalRe)){
+      continue;
+    }
+
+    // Fallback: single-line format "NAME   PRICE"
+    if(!pendingProduct){
+      const slMatch=line.match(singleLineRe);
+      if(slMatch && !shouldSkip(slMatch[1])){
+        const name=slMatch[1].trim();
+        const price=parseFloat(slMatch[2].replace(',','.'));
+        if(name.length>=2 && price>0 && price<9999){
+          const memMatch=findMemoryMatch(name);
+          scanParsedItems.push({
+            name: memMatch?memMatch.name:titleCase(name),
+            price: price,
+            qty: memMatch?memMatch.qty:'',
+            cat: memMatch?memMatch.cat:guessCategory(name),
+            matched: !!memMatch
+          });
+        }
+      }
+    }
+  }
+
+  // Calculate total and show summary
+  const total=scanParsedItems.reduce((s,it)=>s+it.price,0);
   if(scanParsedItems.length===0){
     document.getElementById('scan-status').innerHTML='Nisam prepoznao stavke. Dodajte ih ručno koristeći dugme ispod.';
     document.getElementById('scan-status').style.display='block';
     document.getElementById('scan-status').style.color='var(--muted)';
+  }else{
+    document.getElementById('scan-status').innerHTML='Prepoznato '+scanParsedItems.length+' stavki — ukupno '+total.toFixed(2)+' KM';
+    document.getElementById('scan-status').style.display='block';
+    document.getElementById('scan-status').style.color='var(--accent)';
   }
   renderScanItems();
+}
+
+function guessCategory(name){
+  const n=name.toLowerCase();
+  if(/mlijeko|jogurt|sir\b|kajmak|pavlak|kefir|surutka|krem za kuh|maslac/.test(n))return 'mlijeko';
+  if(/pilet|juneć|svinjsk|meso|salama|slanina|pljeskav|hrenovk|sudžuk|tenders/.test(n))return 'meso';
+  if(/salata|paradajz|krastavac|paprik|luk\b|krompir|mrkva|banana|jabuk|limun|brokul|voće|povrće/.test(n))return 'voce';
+  if(/hljeb|hleb|brašno|riža|tjestenin|pasta\b|zobene|pekara/.test(n))return 'pekara';
+  if(/smrzn|pizza smr|grašak smr|pomfrit/.test(n))return 'smrznuto';
+  if(/sok\b|voda\b|coca|kafa|čaj|piće|pića/.test(n))return 'pice';
+  if(/čokolad|nutel|chipsy|med\b|slatkiš|bananic|keks/.test(n))return 'slatkisi';
+  if(/šampon|pasta za zu|četkic|dezodor|krema|gel za tuš|sapun|maram/.test(n))return 'kozmetika';
+  if(/prašak|omekšiv|gel za su[dđ]|toaletn|kuhinjs|hemij|ariel|lenor/.test(n))return 'hemija';
+  if(/beba|pelen|huggies|pampers/.test(n))return 'beba';
+  if(/supa\b|majonez|kečap|ulje\b|sol\b|šećer|začin/.test(n))return 'ostalo';
+  return 'ostalo';
 }
 
 function findMemoryMatch(name){
@@ -1846,7 +1960,7 @@ function renderScanItems(){
   scanParsedItems.forEach((item,i)=>{
     html+=`<div class="scan-item" id="si-${i}">
       <input type="text" value="${esc(item.name)}" onchange="scanParsedItems[${i}].name=this.value" placeholder="Naziv"/>
-      <input type="number" value="${item.price.toFixed(2)}" step="0.01" min="0" style="width:75px" onchange="scanParsedItems[${i}].price=parseFloat(this.value)||0" placeholder="KM"/>
+      <input type="number" value="${item.price.toFixed(2)}" step="0.01" min="0" style="width:75px" onchange="scanParsedItems[${i}].price=parseFloat(this.value)||0;updateScanTotal()" placeholder="KM"/>
       <button class="si-del" onclick="scanRemoveRow(${i})">✕</button>
     </div>`;
     if(item.matched){
@@ -1854,6 +1968,22 @@ function renderScanItems(){
     }
   });
   container.innerHTML=html;
+  updateScanTotal();
+}
+
+function updateScanTotal(){
+  const rows=document.querySelectorAll('.scan-item');
+  let total=0;
+  rows.forEach((row,i)=>{
+    const p=row.querySelector('input[type="number"]');
+    if(p)total+=parseFloat(p.value)||0;
+  });
+  const st=document.getElementById('scan-status');
+  if(scanParsedItems.length>0){
+    st.innerHTML='Stavki: '+scanParsedItems.length+' — Ukupno: '+total.toFixed(2)+' KM';
+    st.style.display='block';
+    st.style.color='var(--accent)';
+  }
 }
 
 function scanAddRow(){
