@@ -963,6 +963,7 @@ async function pushToFirebase() {
       items: items.length ? items : null,
       history: history.length ? history : null,
       receipts: receipts.length ? receipts : null,
+      savGoals: savGoals.length ? savGoals : null,
       lastUpdated: Date.now(),
       lastDevice: navigator.userAgent.includes('Mobile') ? 'Mobitel' : 'Računar'
     });
@@ -982,6 +983,7 @@ async function manualSync() {
       if (d.items)    { items    = d.items;    saveItemsLocal(); }
       if (d.history)  { history  = d.history;  saveHistoryLocal(); }
       if (d.receipts) { receipts = d.receipts; saveReceiptsLocal(); }
+      if (d.savGoals) { savGoals = d.savGoals; saveGoalsLocal(); }
       renderList();
       const page = document.querySelector('.page.active');
       if (page) {
@@ -989,6 +991,7 @@ async function manualSync() {
         if (id==='rekap') renderRekap();
         else if (id==='profil') renderProfile();
         else if (id==='racuni') renderReceiptPage();
+        else if (id==='stednja') renderStednja();
       }
       const when = d.lastUpdated ? new Date(d.lastUpdated).toLocaleTimeString('bs',{hour:'2-digit',minute:'2-digit'}) : '—';
       const who = d.lastDevice || '';
@@ -1008,6 +1011,7 @@ async function manualSync() {
 function saveItemsLocal(){localStorage.setItem(SK,JSON.stringify(items))}
 function saveHistoryLocal(){localStorage.setItem(HSK,JSON.stringify(history))}
 function saveReceiptsLocal(){localStorage.setItem(RSK,JSON.stringify(receipts))}
+function saveGoalsLocal(){localStorage.setItem(SVK,JSON.stringify(savGoals))}
 
 // ── REAL-TIME LISTENER ──
 function startRealtimeSync() {
@@ -1023,6 +1027,7 @@ function startRealtimeSync() {
       if (d.items)    { items    = d.items;    saveItemsLocal(); }
       if (d.history)  { history  = d.history;  saveHistoryLocal(); }
       if (d.receipts) { receipts = d.receipts; saveReceiptsLocal(); }
+      if (d.savGoals) { savGoals = d.savGoals; saveGoalsLocal(); }
       if (d.items&&d.items.length>oldLen) showNotification('Kupovina 🛒',(d.items.length-oldLen)+' novih namirnica dodano na listu!');
       renderList();
       const page = document.querySelector('.page.active');
@@ -1031,6 +1036,7 @@ function startRealtimeSync() {
         if (id==='rekap') renderRekap();
         else if (id==='profil') renderProfile();
         else if (id==='racuni') renderReceiptPage();
+        else if (id==='stednja') renderStednja();
       }
       const when = new Date(remote).toLocaleTimeString('bs',{hour:'2-digit',minute:'2-digit'});
       setSyncStatus('online', '🔄 Ažurirano · ' + when);
@@ -1572,7 +1578,7 @@ function saveEdit(){
 let savGoals=[];try{savGoals=JSON.parse(localStorage.getItem(SVK)||'[]');}catch(e){}
 let goalPriSel='medium';
 
-function saveSavGoals(){localStorage.setItem(SVK,JSON.stringify(savGoals));}
+function saveSavGoals(){saveGoalsLocal();schedulePush();}
 
 function setGoalPri(p){
   goalPriSel=p;
