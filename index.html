@@ -980,10 +980,10 @@ async function manualSync() {
     const snap = await db.ref(ROOT).get();
     if (snap.exists()) {
       const d = snap.val();
-      if (d.items)    { items    = d.items;    saveItemsLocal(); }
-      if (d.history)  { history  = d.history;  saveHistoryLocal(); }
-      if (d.receipts) { receipts = d.receipts; saveReceiptsLocal(); }
-      if (d.savGoals) { savGoals = d.savGoals; saveGoalsLocal(); }
+      if (d.items)    { items    = fbArr(d.items);    saveItemsLocal(); }
+      if (d.history)  { history  = fbArr(d.history);  saveHistoryLocal(); }
+      if (d.receipts) { receipts = fbArr(d.receipts); saveReceiptsLocal(); }
+      if (d.savGoals) { savGoals = fbArr(d.savGoals).map(g=>({...g,contribs:fbArr(g.contribs)})); saveGoalsLocal(); }
       renderList();
       const page = document.querySelector('.page.active');
       if (page) {
@@ -1012,6 +1012,7 @@ function saveItemsLocal(){localStorage.setItem(SK,JSON.stringify(items))}
 function saveHistoryLocal(){localStorage.setItem(HSK,JSON.stringify(history))}
 function saveReceiptsLocal(){localStorage.setItem(RSK,JSON.stringify(receipts))}
 function saveGoalsLocal(){localStorage.setItem(SVK,JSON.stringify(savGoals))}
+function fbArr(v){if(!v)return[];if(Array.isArray(v))return v;return Object.values(v);}
 
 // ── REAL-TIME LISTENER ──
 function startRealtimeSync() {
@@ -1024,11 +1025,11 @@ function startRealtimeSync() {
     if (remote > local + 2000) {
       // Remote is newer — pull it in
       const oldLen=items.length;
-      if (d.items)    { items    = d.items;    saveItemsLocal(); }
-      if (d.history)  { history  = d.history;  saveHistoryLocal(); }
-      if (d.receipts) { receipts = d.receipts; saveReceiptsLocal(); }
-      if (d.savGoals) { savGoals = d.savGoals; saveGoalsLocal(); }
-      if (d.items&&d.items.length>oldLen) showNotification('Kupovina 🛒',(d.items.length-oldLen)+' novih namirnica dodano na listu!');
+      if (d.items)    { items    = fbArr(d.items);    saveItemsLocal(); }
+      if (d.history)  { history  = fbArr(d.history);  saveHistoryLocal(); }
+      if (d.receipts) { receipts = fbArr(d.receipts); saveReceiptsLocal(); }
+      if (d.savGoals) { savGoals = fbArr(d.savGoals).map(g=>({...g,contribs:fbArr(g.contribs)})); saveGoalsLocal(); }
+      if (d.items&&fbArr(d.items).length>oldLen) showNotification('Kupovina 🛒',(d.items.length-oldLen)+' novih namirnica dodano na listu!');
       renderList();
       const page = document.querySelector('.page.active');
       if (page) {
