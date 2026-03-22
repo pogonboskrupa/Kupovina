@@ -332,25 +332,45 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .rs-empty{padding:22px;text-align:center;color:var(--muted);font-size:.78rem}
 
 /* ── SHARE ── */
-/* ── STATISTIKA ── */
-.stat-period{display:flex;gap:5px;margin-bottom:14px}
-.stat-period-btn{flex:1;padding:7px 4px;border:1px solid var(--border);border-radius:10px;background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:500;cursor:pointer;transition:all .2s;text-align:center}
-.stat-period-btn.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 15px;margin-bottom:11px}
-.stat-card h3{font-family:'Syne',sans-serif;font-size:.78rem;font-weight:700;margin-bottom:10px;color:var(--accent3);text-transform:uppercase;letter-spacing:.07em}
-.stat-total-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)}
-.stat-total-row:last-child{border-bottom:none}
-.stat-month{font-size:.8rem;font-weight:500}
-.stat-amt{font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;color:var(--accent)}
-.stat-cnt{font-size:.6rem;color:var(--muted);margin-left:6px}
-.stat-bar{height:6px;background:var(--surface2);border-radius:4px;margin-top:4px;overflow:hidden}
-.stat-bar-fill{height:100%;border-radius:4px;transition:width .4s}
-.stat-item-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:.8rem}
-.stat-item-row:last-child{border-bottom:none}
-.stat-item-name{flex:1;min-width:0;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.stat-item-count{font-family:'Syne',sans-serif;font-weight:700;font-size:.72rem;color:var(--accent3);margin:0 8px;flex-shrink:0}
-.stat-item-total{font-family:'Syne',sans-serif;font-weight:700;font-size:.75rem;color:var(--accent);flex-shrink:0}
-.stat-empty{text-align:center;padding:20px;color:var(--muted);font-size:.78rem}
+/* ── ŠTEDNJA ── */
+.sav-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.sav-header h2{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:800;letter-spacing:-.5px}
+.sav-add-btn{padding:7px 14px;background:var(--accent);color:#000;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer}
+.sav-summary{display:flex;gap:8px;margin-bottom:14px}
+.sav-sum-card{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px;text-align:center}
+.sav-sum-label{font-size:.55rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:3px}
+.sav-sum-amt{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;letter-spacing:-.5px}
+.sav-goal{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;position:relative}
+.sav-goal.pri-high{border-left:3px solid var(--accent2)}
+.sav-goal.pri-medium{border-left:3px solid var(--accent3)}
+.sav-goal.pri-low{border-left:3px solid var(--muted)}
+.sav-goal-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.sav-goal-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;flex:1;min-width:0}
+.sav-goal-menu{background:none;border:none;color:var(--muted);font-size:1rem;cursor:pointer;padding:0 4px}
+.sav-goal-target{font-size:.68rem;color:var(--muted);margin-bottom:6px}
+.sav-goal-target strong{color:var(--accent);font-family:'Syne',sans-serif}
+.sav-goal-deadline{font-size:.62rem;color:var(--accent2);margin-bottom:8px}
+.sav-goal-deadline.ok{color:var(--accent3)}
+.sav-bar{height:8px;background:var(--surface2);border-radius:5px;overflow:hidden;margin-bottom:8px}
+.sav-bar-fill{height:100%;border-radius:5px;transition:width .5s}
+.sav-pct{font-family:'Syne',sans-serif;font-size:.65rem;font-weight:700;color:var(--accent);position:absolute;right:14px;top:46px}
+.sav-contribs{margin-top:4px}
+.sav-contrib-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);font-size:.72rem}
+.sav-contrib-row:last-child{border-bottom:none}
+.sav-contrib-who{font-weight:500}
+.sav-contrib-amt{font-family:'Syne',sans-serif;font-weight:700;font-size:.72rem}
+.sav-contrib-date{font-size:.58rem;color:var(--muted)}
+.sav-add-contrib{display:flex;gap:5px;margin-top:8px}
+.sav-add-contrib select,.sav-add-contrib input{padding:6px 8px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.72rem;font-family:'DM Sans',sans-serif}
+.sav-add-contrib input{flex:1;min-width:0}
+.sav-add-contrib button{padding:6px 12px;background:var(--accent);color:#000;border:none;border-radius:8px;font-family:'Syne',sans-serif;font-size:.7rem;font-weight:700;cursor:pointer;white-space:nowrap}
+.sav-empty{text-align:center;padding:30px 10px;color:var(--muted);font-size:.78rem}
+.sav-pri-badge{font-size:.55rem;padding:2px 6px;border-radius:6px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-left:6px}
+.sav-pri-badge.high{background:rgba(255,107,53,.15);color:var(--accent2)}
+.sav-pri-badge.medium{background:rgba(53,200,245,.15);color:var(--accent3)}
+.sav-pri-badge.low{background:rgba(102,102,102,.15);color:var(--muted)}
+.sav-goal-actions{display:flex;gap:4px;position:absolute;top:12px;right:10px}
+.sav-goal-actions button{background:none;border:none;color:var(--muted);font-size:.82rem;cursor:pointer;padding:2px}
 
 /* ── MODALS ── */
 .modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:200;align-items:center;justify-content:center;padding:18px}
@@ -550,7 +570,7 @@ body.light .suggestions-bar{background:linear-gradient(135deg,#e8f4fd,#dbeef8);b
   <button class="tab" onclick="sw('rekap')"><span class="tab-icon">📊</span>Rekap</button>
   <button class="tab" onclick="sw('profil')"><span class="tab-icon">👤</span>Profil</button>
   <button class="tab" onclick="sw('catalog')"><span class="tab-icon">🏪</span>Katalog</button>
-  <button class="tab" onclick="sw('stat')"><span class="tab-icon">📈</span>Statistika</button>
+  <button class="tab" onclick="sw('stednja')"><span class="tab-icon">🐷</span>Štednja</button>
 </div>
 
 <!-- ═══ LIST ═══ -->
@@ -731,17 +751,37 @@ body.light .suggestions-bar{background:linear-gradient(135deg,#e8f4fd,#dbeef8);b
   <div id="catalog-content"></div>
 </div>
 
-<!-- ═══ STATISTIKA ═══ -->
-<div class="page" id="page-stat">
-  <h2 style="font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:800;letter-spacing:-.5px;margin-bottom:4px">📈 Statistika kupovine</h2>
-  <p style="font-size:.72rem;color:var(--muted);margin-bottom:12px">Pregled potrošnje i najčešćih artikala</p>
-  <div class="stat-period">
-    <button class="stat-period-btn active" id="sp-30" onclick="setStatPeriod(30)">30 dana</button>
-    <button class="stat-period-btn" id="sp-90" onclick="setStatPeriod(90)">3 mjeseca</button>
-    <button class="stat-period-btn" id="sp-365" onclick="setStatPeriod(365)">Godina</button>
-    <button class="stat-period-btn" id="sp-0" onclick="setStatPeriod(0)">Sve</button>
+<!-- ═══ ŠTEDNJA ═══ -->
+<div class="page" id="page-stednja">
+  <div class="sav-header">
+    <h2>🐷 Štednja</h2>
+    <button class="sav-add-btn" onclick="openGoalModal()">+ Novi cilj</button>
   </div>
-  <div id="stat-content"></div>
+  <div class="sav-summary" id="sav-summary"></div>
+  <div id="sav-goals"></div>
+</div>
+
+<!-- Goal modal -->
+<div class="modal-ov" id="goal-modal">
+  <div class="modal">
+    <h2>🎯 <span id="goal-modal-title">Novi cilj</span></h2>
+    <p>Unesite detalje cilja štednje</p>
+    <input type="hidden" id="goal-edit-id">
+    <input type="text" id="goal-name" placeholder="Naziv cilja (npr. Peleti 2 tone)" style="width:100%;padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:.8rem;margin-bottom:8px;font-family:'DM Sans',sans-serif">
+    <input type="number" id="goal-amount" placeholder="Ciljani iznos (KM)" step="0.01" style="width:100%;padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:.8rem;margin-bottom:8px;font-family:'DM Sans',sans-serif">
+    <label style="font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:3px">Rok za prikupljanje</label>
+    <input type="date" id="goal-deadline" style="width:100%;padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:.8rem;margin-bottom:8px;font-family:'DM Sans',sans-serif">
+    <label style="font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:3px">Prioritet</label>
+    <div style="display:flex;gap:6px;margin-bottom:12px">
+      <button type="button" class="share-btn sec" id="pri-high" onclick="setGoalPri('high')" style="flex:1;padding:8px;border-radius:8px;font-size:.72rem">🔴 Visok</button>
+      <button type="button" class="share-btn sec" id="pri-medium" onclick="setGoalPri('medium')" style="flex:1;padding:8px;border-radius:8px;font-size:.72rem">🟡 Srednji</button>
+      <button type="button" class="share-btn sec" id="pri-low" onclick="setGoalPri('low')" style="flex:1;padding:8px;border-radius:8px;font-size:.72rem">🟢 Nizak</button>
+    </div>
+    <div class="modal-btns">
+      <button class="modal-btn cancel" onclick="closeGoalModal()">Otkaži</button>
+      <button class="modal-btn ok" onclick="saveGoal()">✓ Spremi</button>
+    </div>
+  </div>
 </div>
 
 <!-- Edit price modal -->
@@ -822,7 +862,7 @@ body.light .suggestions-bar{background:linear-gradient(135deg,#e8f4fd,#dbeef8);b
 //  STORAGE KEYS
 // ════════════════════════════════════════════════
 const SK='kup_items_v3',MK='kup_mem_v3',CK='kup_cat_v3',HSK='kup_hist_v2',RSK='kup_receipts_v1',BK='kup_buyer_v1';
-const RCK='kup_recurring_v1',BGK='kup_budget_v1',THK='kup_theme_v1';
+const RCK='kup_recurring_v1',BGK='kup_budget_v1',THK='kup_theme_v1',SVK='kup_stednja_v1';
 
 // ════════════════════════════════════════════════
 //  CATEGORY META
@@ -1039,7 +1079,7 @@ function fmtTime(iso){const d=new Date(iso);return d.toLocaleTimeString('bs',{ho
 function sw(tab){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  const tabs=['list','add','racuni','rekap','profil','catalog','stat'];
+  const tabs=['list','add','racuni','rekap','profil','catalog','stednja'];
   document.querySelectorAll('.tab')[tabs.indexOf(tab)].classList.add('active');
   document.getElementById('page-'+tab).classList.add('active');
   if(tab==='list')renderList();
@@ -1047,7 +1087,7 @@ function sw(tab){
   else if(tab==='rekap')renderRekap();
   else if(tab==='profil')renderProfile();
   else if(tab==='catalog')renderCatalog();
-  else if(tab==='stat')renderStatistika();
+  else if(tab==='stednja')renderStednja();
 }
 
 // ════════════════════════════════════════════════
@@ -1527,141 +1567,179 @@ function saveEdit(){
 }
 
 // ════════════════════════════════════════════════
-//  SHARE
+//  ŠTEDNJA (Savings Goals)
 // ════════════════════════════════════════════════
-// ════════════════════════════════════════════════
-//  STATISTIKA
-// ════════════════════════════════════════════════
-let statPeriod=30;
-const MONTH_NAMES=['Januar','Februar','Mart','April','Maj','Juni','Juli','August','Septembar','Oktobar','Novembar','Decembar'];
+let savGoals=[];try{savGoals=JSON.parse(localStorage.getItem(SVK)||'[]');}catch(e){}
+let goalPriSel='medium';
 
-function setStatPeriod(days){
-  statPeriod=days;
-  document.querySelectorAll('.stat-period-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('sp-'+days).classList.add('active');
-  renderStatistika();
+function saveSavGoals(){localStorage.setItem(SVK,JSON.stringify(savGoals));}
+
+function setGoalPri(p){
+  goalPriSel=p;
+  ['high','medium','low'].forEach(x=>{
+    const el=document.getElementById('pri-'+x);
+    if(x===p){el.style.borderColor='var(--accent)';el.style.color='var(--accent)';}
+    else{el.style.borderColor='var(--border)';el.style.color='var(--muted)';}
+  });
 }
 
-function renderStatistika(){
-  const now=new Date();
-  const cutoff=statPeriod>0?new Date(now.getTime()-statPeriod*86400000):new Date(0);
-  const container=document.getElementById('stat-content');
+function openGoalModal(editId){
+  const m=document.getElementById('goal-modal');
+  document.getElementById('goal-edit-id').value=editId||'';
+  if(editId){
+    const g=savGoals.find(x=>x.id==editId);
+    if(!g)return;
+    document.getElementById('goal-modal-title').textContent='Uredi cilj';
+    document.getElementById('goal-name').value=g.name;
+    document.getElementById('goal-amount').value=g.target;
+    document.getElementById('goal-deadline').value=g.deadline||'';
+    goalPriSel=g.priority||'medium';
+  }else{
+    document.getElementById('goal-modal-title').textContent='Novi cilj';
+    document.getElementById('goal-name').value='';
+    document.getElementById('goal-amount').value='';
+    document.getElementById('goal-deadline').value='';
+    goalPriSel='medium';
+  }
+  setGoalPri(goalPriSel);
+  m.classList.add('visible');
+}
+function closeGoalModal(){document.getElementById('goal-modal').classList.remove('visible');}
 
-  // Gather all data: history (shop) + receipts
-  const filteredHistory=history.filter(h=>new Date(h.date)>=cutoff);
-  const filteredReceipts=receipts.filter(r=>new Date(r.date)>=cutoff);
+function saveGoal(){
+  const name=document.getElementById('goal-name').value.trim();
+  const target=parseFloat(document.getElementById('goal-amount').value)||0;
+  const deadline=document.getElementById('goal-deadline').value;
+  const editId=document.getElementById('goal-edit-id').value;
+  if(!name||target<=0){toast('Unesite naziv i iznos!');return;}
+  if(editId){
+    const g=savGoals.find(x=>x.id==editId);
+    if(g){g.name=name;g.target=target;g.deadline=deadline;g.priority=goalPriSel;}
+  }else{
+    savGoals.push({id:Date.now(),name,target,deadline,priority:goalPriSel,contribs:[]});
+  }
+  saveSavGoals();closeGoalModal();renderStednja();
+  toast(editId?'✓ Cilj ažuriran!':'✓ Cilj dodan!');
+}
 
-  // ── Monthly receipt totals ──
-  const monthlyTotals={};
-  // From receipts
-  filteredReceipts.forEach(r=>{
-    const d=new Date(r.date);
-    const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
-    if(!monthlyTotals[key])monthlyTotals[key]={total:0,count:0,year:d.getFullYear(),month:d.getMonth()};
-    monthlyTotals[key].total+=r.amount;
-    monthlyTotals[key].count++;
+function deleteGoal(id){
+  if(!confirm('Obrisati ovaj cilj?'))return;
+  savGoals=savGoals.filter(g=>g.id!=id);
+  saveSavGoals();renderStednja();toast('Cilj obrisan.');
+}
+
+function addContrib(goalId){
+  const g=savGoals.find(x=>x.id==goalId);if(!g)return;
+  const who=document.getElementById('c-who-'+goalId).value;
+  const amt=parseFloat(document.getElementById('c-amt-'+goalId).value)||0;
+  if(amt<=0){toast('Unesite iznos!');return;}
+  g.contribs.push({who,amount:amt,date:new Date().toISOString()});
+  saveSavGoals();renderStednja();
+  toast('✓ '+who+' uštedio/la '+amt.toFixed(2)+' KM');
+}
+
+function deleteContrib(goalId,idx){
+  const g=savGoals.find(x=>x.id==goalId);if(!g)return;
+  g.contribs.splice(idx,1);
+  saveSavGoals();renderStednja();
+}
+
+function renderStednja(){
+  // Summary
+  let totalSaved=0,totalTarget=0;
+  const perPerson={Nedim:0,Azra:0};
+  savGoals.forEach(g=>{
+    totalTarget+=g.target;
+    (g.contribs||[]).forEach(c=>{totalSaved+=c.amount;if(perPerson[c.who]!==undefined)perPerson[c.who]+=c.amount;});
   });
-  // From history (finished shopping)
-  filteredHistory.forEach(h=>{
-    const d=new Date(h.date);
-    const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
-    if(!monthlyTotals[key])monthlyTotals[key]={total:0,count:0,year:d.getFullYear(),month:d.getMonth()};
-    monthlyTotals[key].total+=h.total||0;
-    monthlyTotals[key].count++;
-  });
-
-  const monthKeys=Object.keys(monthlyTotals).sort().reverse();
-  const grandTotal=Object.values(monthlyTotals).reduce((s,m)=>s+m.total,0);
-  const totalRecCount=filteredReceipts.length+filteredHistory.length;
-  const maxMonth=Math.max(...Object.values(monthlyTotals).map(m=>m.total),1);
-
-  // ── Item frequency ──
-  const itemFreq={};
-  filteredHistory.forEach(h=>{
-    (h.items||[]).forEach(it=>{
-      const key=it.name.toLowerCase();
-      if(!itemFreq[key])itemFreq[key]={name:it.name,count:0,totalSpent:0};
-      itemFreq[key].count++;
-      itemFreq[key].totalSpent+=(it.price||0);
-    });
-  });
-  const topItems=Object.values(itemFreq).sort((a,b)=>b.count-a.count);
-  const maxCount=topItems.length?topItems[0].count:1;
-
-  // ── Build HTML ──
-  let html='';
-
-  // Summary card
-  html+=`<div class="stat-card">
-    <h3>Ukupna potrošnja</h3>
-    <div style="text-align:center;padding:8px 0">
-      <div style="font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--accent);letter-spacing:-1px">${grandTotal.toFixed(2)} <span style="font-size:1rem">KM</span></div>
-      <div style="font-size:.7rem;color:var(--muted);margin-top:4px">${totalRecCount} račun${totalRecCount===1?'':'a'} u odabranom periodu</div>
+  document.getElementById('sav-summary').innerHTML=`
+    <div class="sav-sum-card">
+      <div class="sav-sum-label">Ukupno ušteđeno</div>
+      <div class="sav-sum-amt" style="color:var(--accent)">${totalSaved.toFixed(2)} KM</div>
     </div>
-  </div>`;
+    <div class="sav-sum-card">
+      <div class="sav-sum-label" style="color:var(--nedim)">Nedim</div>
+      <div class="sav-sum-amt" style="color:var(--nedim)">${perPerson.Nedim.toFixed(2)}</div>
+    </div>
+    <div class="sav-sum-card">
+      <div class="sav-sum-label" style="color:var(--azra)">Azra</div>
+      <div class="sav-sum-amt" style="color:var(--azra)">${perPerson.Azra.toFixed(2)}</div>
+    </div>
+  `;
 
-  // Monthly breakdown
-  if(monthKeys.length){
-    html+=`<div class="stat-card"><h3>Računi po mjesecima</h3>`;
-    monthKeys.forEach(key=>{
-      const m=monthlyTotals[key];
-      const pct=Math.round((m.total/maxMonth)*100);
-      const colors=['var(--accent)','var(--accent3)','var(--accent2)','var(--nedim)','var(--azra)'];
-      const ci=m.month%colors.length;
-      html+=`<div class="stat-total-row">
-        <div>
-          <span class="stat-month">${MONTH_NAMES[m.month]} ${m.year}</span>
-          <span class="stat-cnt">(${m.count} rač.)</span>
-        </div>
-        <span class="stat-amt">${m.total.toFixed(2)} KM</span>
+  const container=document.getElementById('sav-goals');
+  if(!savGoals.length){container.innerHTML='<div class="sav-empty">Nema ciljeva štednje.<br>Dodajte prvi cilj pritiskom na "+ Novi cilj".</div>';return;}
+
+  // Sort by priority
+  const priOrder={high:0,medium:1,low:2};
+  const sorted=[...savGoals].sort((a,b)=>(priOrder[a.priority]||1)-(priOrder[b.priority]||1));
+
+  let html='';
+  sorted.forEach(g=>{
+    const saved=(g.contribs||[]).reduce((s,c)=>s+c.amount,0);
+    const pct=Math.min(100,Math.round((saved/g.target)*100));
+    const remaining=Math.max(0,g.target-saved);
+    const priLabel={high:'Visok',medium:'Srednji',low:'Nizak'}[g.priority]||'Srednji';
+    const barColor={high:'var(--accent2)',medium:'var(--accent3)',low:'var(--accent)'}[g.priority]||'var(--accent3)';
+
+    // Deadline info
+    let deadlineHtml='';
+    if(g.deadline){
+      const dl=new Date(g.deadline);
+      const now=new Date();
+      const daysLeft=Math.ceil((dl-now)/(86400000));
+      if(daysLeft<0)deadlineHtml=`<div class="sav-goal-deadline">⚠️ Rok istekao ${Math.abs(daysLeft)} dana</div>`;
+      else if(daysLeft<=7)deadlineHtml=`<div class="sav-goal-deadline">⏰ Još ${daysLeft} dana (${dl.toLocaleDateString('bs')})</div>`;
+      else deadlineHtml=`<div class="sav-goal-deadline ok">📅 Rok: ${dl.toLocaleDateString('bs')} (${daysLeft} dana)</div>`;
+    }
+
+    // Per-person for this goal
+    const gPerson={Nedim:0,Azra:0};
+    (g.contribs||[]).forEach(c=>{if(gPerson[c.who]!==undefined)gPerson[c.who]+=c.amount;});
+
+    html+=`<div class="sav-goal pri-${g.priority}">
+      <div class="sav-goal-actions">
+        <button onclick="openGoalModal(${g.id})" title="Uredi">✏️</button>
+        <button onclick="deleteGoal(${g.id})" title="Obriši">🗑️</button>
       </div>
-      <div class="stat-bar"><div class="stat-bar-fill" style="width:${pct}%;background:${colors[ci]}"></div></div>`;
-    });
-    html+=`</div>`;
-  }
-
-  // Top items
-  if(topItems.length){
-    html+=`<div class="stat-card"><h3>Najčešće kupljeno</h3>`;
-    topItems.slice(0,30).forEach(it=>{
-      html+=`<div class="stat-item-row">
-        <span class="stat-item-name">${esc(it.name)}</span>
-        <span class="stat-item-count">${it.count}x</span>
-        <span class="stat-item-total">${it.totalSpent.toFixed(2)} KM</span>
+      <div class="sav-goal-top">
+        <span class="sav-goal-name">${esc(g.name)}<span class="sav-pri-badge ${g.priority}">${priLabel}</span></span>
+      </div>
+      <div class="sav-goal-target">Cilj: <strong>${g.target.toFixed(2)} KM</strong> · Ušteđeno: <strong>${saved.toFixed(2)} KM</strong> · Preostalo: ${remaining.toFixed(2)} KM</div>
+      ${deadlineHtml}
+      <div class="sav-bar"><div class="sav-bar-fill" style="width:${pct}%;background:${barColor}"></div></div>
+      <span class="sav-pct">${pct}%</span>
+      <div style="display:flex;gap:10px;font-size:.65rem;color:var(--muted);margin-bottom:6px">
+        <span style="color:var(--nedim)">Nedim: ${gPerson.Nedim.toFixed(2)} KM</span>
+        <span style="color:var(--azra)">Azra: ${gPerson.Azra.toFixed(2)} KM</span>
       </div>`;
-    });
+
+    // Contributions list
+    if(g.contribs&&g.contribs.length){
+      html+=`<div class="sav-contribs">`;
+      g.contribs.slice().reverse().forEach((c,ri)=>{
+        const idx=g.contribs.length-1-ri;
+        const d=new Date(c.date);
+        const color=c.who==='Nedim'?'var(--nedim)':'var(--azra)';
+        html+=`<div class="sav-contrib-row">
+          <span class="sav-contrib-who" style="color:${color}">${c.who}</span>
+          <span class="sav-contrib-date">${d.toLocaleDateString('bs')}</span>
+          <span class="sav-contrib-amt" style="color:${color}">${c.amount.toFixed(2)} KM</span>
+          <button onclick="deleteContrib(${g.id},${idx})" style="background:none;border:none;color:var(--muted);font-size:.7rem;cursor:pointer;padding:0 2px">✕</button>
+        </div>`;
+      });
+      html+=`</div>`;
+    }
+
+    // Add contribution form
+    html+=`<div class="sav-add-contrib">
+      <select id="c-who-${g.id}"><option value="Nedim">Nedim</option><option value="Azra">Azra</option></select>
+      <input type="number" id="c-amt-${g.id}" placeholder="Iznos KM" step="0.01">
+      <button onclick="addContrib(${g.id})">+ Dodaj</button>
+    </div>`;
+
     html+=`</div>`;
-  }
-
-  // Per-buyer breakdown
-  const buyerTotals={};
-  filteredReceipts.forEach(r=>{
-    if(!r.buyer)return;
-    if(!buyerTotals[r.buyer])buyerTotals[r.buyer]=0;
-    buyerTotals[r.buyer]+=r.amount;
   });
-  filteredHistory.forEach(h=>{
-    if(!h.buyer)return;
-    if(!buyerTotals[h.buyer])buyerTotals[h.buyer]=0;
-    buyerTotals[h.buyer]+=(h.total||0);
-  });
-  if(Object.keys(buyerTotals).length){
-    html+=`<div class="stat-card"><h3>Po osobi</h3>`;
-    Object.entries(buyerTotals).forEach(([buyer,total])=>{
-      const color=buyer==='Nedim'?'var(--nedim)':'var(--azra)';
-      const pctOfTotal=grandTotal>0?Math.round((total/grandTotal)*100):0;
-      html+=`<div class="stat-total-row">
-        <span class="stat-month" style="color:${color}">${buyer}</span>
-        <span class="stat-amt" style="color:${color}">${total.toFixed(2)} KM <span style="font-size:.6rem;color:var(--muted)">(${pctOfTotal}%)</span></span>
-      </div>`;
-    });
-    html+=`</div>`;
-  }
-
-  if(!monthKeys.length && !topItems.length){
-    html+=`<div class="stat-empty">Nema podataka za odabrani period.</div>`;
-  }
-
   container.innerHTML=html;
 }
 
