@@ -332,25 +332,45 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .rs-empty{padding:22px;text-align:center;color:var(--muted);font-size:.78rem}
 
 /* ── SHARE ── */
-.share-card{background:var(--surface);border:1px solid var(--border);border-radius:15px;padding:16px;margin-bottom:11px}
-.share-card h2{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;margin-bottom:4px}
-.share-card p{font-size:.76rem;color:var(--muted);margin-bottom:12px;line-height:1.5}
-.share-btn{display:block;width:100%;padding:10px;background:var(--accent);color:#000;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;text-align:center;margin-bottom:6px;transition:transform .15s}
-.share-btn:active{transform:scale(.98)}
-.share-btn.sec{background:transparent;border:1px solid var(--border);color:var(--muted);font-weight:500}
-.share-btn.sec:hover{border-color:var(--accent);color:var(--accent)}
-.link-box{display:none;margin-top:10px}
-.link-box.visible{display:block}
-.link-box label{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;display:block}
-.link-input{width:100%;padding:7px 10px;background:var(--surface2);border:1px solid var(--accent);border-radius:8px;color:var(--accent);font-size:.7rem;outline:none}
-.copy-btn{width:100%;margin-top:5px;padding:8px;background:transparent;border:1px solid var(--accent);border-radius:8px;color:var(--accent);font-family:'Syne',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;transition:all .2s}
-.copy-btn:hover{background:rgba(200,245,53,.1)}
-.imp-banner{background:linear-gradient(135deg,#1a2a04,#111a00);border:1px solid var(--accent);border-radius:10px;padding:10px 13px;margin-bottom:11px;font-size:.76rem;display:none}
-.imp-banner.visible{display:block}
-.imp-banner strong{color:var(--accent)}
-.prev-item{font-size:.76rem;padding:4px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between}
-.prev-item:last-child{border-bottom:none}
-.pi-p{color:var(--accent);font-family:'Syne',sans-serif;font-weight:700;font-size:.7rem}
+/* ── ŠTEDNJA ── */
+.sav-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.sav-header h2{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:800;letter-spacing:-.5px}
+.sav-add-btn{padding:7px 14px;background:var(--accent);color:#000;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer}
+.sav-summary{display:flex;gap:8px;margin-bottom:14px}
+.sav-sum-card{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px;text-align:center}
+.sav-sum-label{font-size:.55rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:3px}
+.sav-sum-amt{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;letter-spacing:-.5px}
+.sav-goal{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;position:relative}
+.sav-goal.pri-high{border-left:3px solid var(--accent2)}
+.sav-goal.pri-medium{border-left:3px solid var(--accent3)}
+.sav-goal.pri-low{border-left:3px solid var(--muted)}
+.sav-goal-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.sav-goal-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;flex:1;min-width:0}
+.sav-goal-menu{background:none;border:none;color:var(--muted);font-size:1rem;cursor:pointer;padding:0 4px}
+.sav-goal-target{font-size:.68rem;color:var(--muted);margin-bottom:6px}
+.sav-goal-target strong{color:var(--accent);font-family:'Syne',sans-serif}
+.sav-goal-deadline{font-size:.62rem;color:var(--accent2);margin-bottom:8px}
+.sav-goal-deadline.ok{color:var(--accent3)}
+.sav-bar{height:8px;background:var(--surface2);border-radius:5px;overflow:hidden;margin-bottom:8px}
+.sav-bar-fill{height:100%;border-radius:5px;transition:width .5s}
+.sav-pct{font-family:'Syne',sans-serif;font-size:.65rem;font-weight:700;color:var(--accent);position:absolute;right:14px;top:46px}
+.sav-contribs{margin-top:4px}
+.sav-contrib-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);font-size:.72rem}
+.sav-contrib-row:last-child{border-bottom:none}
+.sav-contrib-who{font-weight:500}
+.sav-contrib-amt{font-family:'Syne',sans-serif;font-weight:700;font-size:.72rem}
+.sav-contrib-date{font-size:.58rem;color:var(--muted)}
+.sav-add-contrib{display:flex;gap:5px;margin-top:8px}
+.sav-add-contrib select,.sav-add-contrib input{padding:6px 8px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.72rem;font-family:'DM Sans',sans-serif}
+.sav-add-contrib input{flex:1;min-width:0}
+.sav-add-contrib button{padding:6px 12px;background:var(--accent);color:#000;border:none;border-radius:8px;font-family:'Syne',sans-serif;font-size:.7rem;font-weight:700;cursor:pointer;white-space:nowrap}
+.sav-empty{text-align:center;padding:30px 10px;color:var(--muted);font-size:.78rem}
+.sav-pri-badge{font-size:.55rem;padding:2px 6px;border-radius:6px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-left:6px}
+.sav-pri-badge.high{background:rgba(255,107,53,.15);color:var(--accent2)}
+.sav-pri-badge.medium{background:rgba(53,200,245,.15);color:var(--accent3)}
+.sav-pri-badge.low{background:rgba(102,102,102,.15);color:var(--muted)}
+.sav-goal-actions{display:flex;gap:4px;position:absolute;top:12px;right:10px}
+.sav-goal-actions button{background:none;border:none;color:var(--muted);font-size:.82rem;cursor:pointer;padding:2px}
 
 /* ── MODALS ── */
 .modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:200;align-items:center;justify-content:center;padding:18px}
@@ -437,15 +457,11 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .prio-btn.active-urgent{border-color:var(--accent2);color:var(--accent2);background:rgba(255,107,53,.08)}
 
 /* ── VOICE INPUT ── */
-.voice-btn{width:42px;height:42px;border-radius:50%;border:2px solid var(--accent3);background:transparent;color:var(--accent3);font-size:1.1rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.voice-btn:hover{background:rgba(53,200,245,.1)}
-.voice-btn.recording{border-color:var(--accent2);color:var(--accent2);background:rgba(255,107,53,.15);animation:vpulse 1s infinite}
-@keyframes vpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
 .voice-row{display:flex;gap:8px;align-items:flex-end;margin-bottom:9px}
 .voice-row .field{flex:1;margin-bottom:0}
-.voice-status{font-size:.65rem;color:var(--accent3);text-align:center;margin-bottom:6px}
 .cam-btn{width:42px;height:42px;border-radius:50%;border:2px solid var(--accent2);background:transparent;color:var(--accent2);font-size:1.1rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .cam-btn:hover{background:rgba(255,107,53,.1)}
+.cam-btn[style*="accent3"]:hover{background:rgba(53,200,245,.1)}
 
 /* ── RECEIPT SCAN MODAL ── */
 .scan-modal{background:var(--surface);border:1px solid var(--accent2);border-radius:17px;padding:20px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto}
@@ -472,17 +488,6 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .scan-btn.cancel{background:var(--surface2);color:var(--muted)}
 
 /* ── RECURRING ITEMS ── */
-.recurring-section{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:12px 14px;margin-bottom:11px}
-.recurring-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.recurring-title{font-family:'Syne',sans-serif;font-size:.74rem;font-weight:700;color:var(--accent3);text-transform:uppercase;letter-spacing:.07em}
-.recurring-add-all{padding:5px 11px;background:var(--accent3);color:#000;border:none;border-radius:8px;font-family:'Syne',sans-serif;font-size:.68rem;font-weight:700;cursor:pointer;transition:transform .15s}
-.recurring-add-all:active{transform:scale(.95)}
-.recurring-chips{display:flex;flex-wrap:wrap;gap:4px}
-.rec-chip{padding:4px 9px;background:var(--surface2);border:1px solid var(--border);border-radius:15px;font-size:.68rem;color:var(--text);display:flex;align-items:center;gap:4px}
-.rec-chip-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.7rem;padding:0 2px}
-.rec-chip-del:hover{color:var(--accent2)}
-.add-recurring-btn{padding:4px 9px;background:transparent;border:1px dashed var(--accent3);border-radius:15px;font-size:.68rem;color:var(--accent3);cursor:pointer;transition:all .15s}
-.add-recurring-btn:hover{background:rgba(53,200,245,.1)}
 
 /* ── SMART SUGGESTIONS ── */
 .suggestions-bar{background:linear-gradient(135deg,#0f1a2a,#0a1020);border:1px solid var(--accent3);border-radius:12px;padding:10px 13px;margin-bottom:11px;overflow:hidden}
@@ -565,14 +570,11 @@ body.light .suggestions-bar{background:linear-gradient(135deg,#e8f4fd,#dbeef8);b
   <button class="tab" onclick="sw('rekap')"><span class="tab-icon">📊</span>Rekap</button>
   <button class="tab" onclick="sw('profil')"><span class="tab-icon">👤</span>Profil</button>
   <button class="tab" onclick="sw('catalog')"><span class="tab-icon">🏪</span>Katalog</button>
-  <button class="tab" onclick="sw('share')"><span class="tab-icon">📤</span>Dijeli</button>
+  <button class="tab" onclick="sw('stednja')"><span class="tab-icon">🐷</span>Štednja</button>
 </div>
 
 <!-- ═══ LIST ═══ -->
 <div class="page active" id="page-list">
-  <div class="imp-banner" id="imp-banner">
-    📥 <strong>Lista primljena!</strong> Uvezeno <span id="imp-count">0</span> novih namirnica.
-  </div>
   <div class="buyer-bar">
     <button class="buyer-btn" id="btn-nedim" onclick="selectBuyer('Nedim')">
       <div class="bav">N</div>Nedim kupuje
@@ -594,11 +596,14 @@ body.light .suggestions-bar{background:linear-gradient(135deg,#e8f4fd,#dbeef8);b
   </div>
   <div id="budget-section"></div>
   <div id="suggestions-section"></div>
-  <div id="recurring-section"></div>
+  <div class="list-search" style="position:relative;margin-bottom:10px">
+    <input type="text" id="list-search" placeholder="Pretraži katalog i dodaj..." autocomplete="off" oninput="onListSearch()" onblur="setTimeout(()=>document.getElementById('ls-results').style.display='none',200)" style="width:100%;padding:9px 11px 9px 32px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;transition:border-color .2s" onfocus="onListSearch()"/>
+    <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:.9rem;pointer-events:none">🔍</span>
+    <div id="ls-results" style="display:none;position:absolute;top:100%;left:0;right:0;background:#1e1e1e;border:1px solid var(--accent);border-radius:9px;z-index:50;max-height:220px;overflow-y:auto;margin-top:2px;box-shadow:0 8px 24px rgba(0,0,0,.5)"></div>
+  </div>
   <div class="list-hdr">
     <span class="list-title">Namirnice</span>
     <div class="hdr-btns">
-      <button class="hdr-btn" onclick="sw('share')">📤 Pošalji</button>
       <span class="badge" id="item-count">0</span>
     </div>
   </div>
@@ -617,11 +622,11 @@ body.light .suggestions-bar{background:linear-gradient(135deg,#e8f4fd,#dbeef8);b
           oninput="onNameInput()" onblur="hideAc()" onkeydown="onNameKey(event)"/>
         <div class="ac-list" id="ac-list" style="display:none"></div>
       </div>
-      <button class="voice-btn" id="voice-btn" onclick="toggleVoice()" title="Glasovni unos">🎤</button>
       <button class="cam-btn" id="cam-btn" onclick="openReceiptCamera()" title="Uslikaj račun">📷</button>
-      <input type="file" id="receipt-file" accept="image/*" capture="environment" style="display:none" onchange="onReceiptPhoto(event)"/>
+      <button class="cam-btn" id="gallery-btn" onclick="openReceiptGallery()" title="Učitaj iz galerije" style="border-color:var(--accent3);color:var(--accent3)">🖼️</button>
+      <input type="file" id="receipt-file-cam" accept="image/*" capture="environment" style="display:none" onchange="onReceiptPhoto(event)"/>
+      <input type="file" id="receipt-file-gal" accept="image/*" style="display:none" onchange="onReceiptPhoto(event)"/>
     </div>
-    <div class="voice-status" id="voice-status" style="display:none"></div>
     <div class="row2">
       <div class="field"><label>Količina</label><input type="text" id="in-qty" placeholder="npr. 1 L"/></div>
       <div class="field"><label>Cijena (KM)</label><input type="number" id="in-price" placeholder="0.00" min="0" step="0.01"/></div>
@@ -746,35 +751,35 @@ body.light .suggestions-bar{background:linear-gradient(135deg,#e8f4fd,#dbeef8);b
   <div id="catalog-content"></div>
 </div>
 
-<!-- ═══ SHARE ═══ -->
-<div class="page" id="page-share">
-  <div class="share-card">
-    <h2>📤 Pošalji listu porodici</h2>
-    <p>Generiši link i pošalji putem WhatsAppa ili Vibera.</p>
-    <button class="share-btn" onclick="genLink()">🔗 Generiši link</button>
-    <button class="share-btn sec" onclick="shareWA()">💬 WhatsApp</button>
-    <button class="share-btn sec" onclick="shareViber()">📱 Viber</button>
-    <div class="link-box" id="link-box">
-      <label>Link:</label>
-      <input type="text" class="link-input" id="link-input" readonly onclick="this.select()"/>
-      <button class="copy-btn" onclick="copyLink()">📋 Kopiraj</button>
-    </div>
+<!-- ═══ ŠTEDNJA ═══ -->
+<div class="page" id="page-stednja">
+  <div class="sav-header">
+    <h2>🐷 Štednja</h2>
+    <button class="sav-add-btn" onclick="openGoalModal()">+ Novi cilj</button>
   </div>
-  <div class="share-card">
-    <h2>📋 Pregled liste (<span id="prev-count">0</span> stavki)</h2>
-    <div id="share-prev"></div>
-  </div>
+  <div class="sav-summary" id="sav-summary"></div>
+  <div id="sav-goals"></div>
 </div>
 
-<!-- Import modal -->
-<div class="modal-ov" id="imp-modal">
+<!-- Goal modal -->
+<div class="modal-ov" id="goal-modal">
   <div class="modal">
-    <h2>📥 Primljena <span>lista!</span></h2>
-    <p>Primljeno <strong id="imp-modal-cnt">0</strong> namirnica.</p>
-    <div class="modal-prev" id="imp-modal-prev"></div>
+    <h2>🎯 <span id="goal-modal-title">Novi cilj</span></h2>
+    <p>Unesite detalje cilja štednje</p>
+    <input type="hidden" id="goal-edit-id">
+    <input type="text" id="goal-name" placeholder="Naziv cilja (npr. Peleti 2 tone)" style="width:100%;padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:.8rem;margin-bottom:8px;font-family:'DM Sans',sans-serif">
+    <input type="number" id="goal-amount" placeholder="Ciljani iznos (KM)" step="0.01" style="width:100%;padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:.8rem;margin-bottom:8px;font-family:'DM Sans',sans-serif">
+    <label style="font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:3px">Rok za prikupljanje</label>
+    <input type="date" id="goal-deadline" style="width:100%;padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:.8rem;margin-bottom:8px;font-family:'DM Sans',sans-serif">
+    <label style="font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:3px">Prioritet</label>
+    <div style="display:flex;gap:6px;margin-bottom:12px">
+      <button type="button" class="share-btn sec" id="pri-high" onclick="setGoalPri('high')" style="flex:1;padding:8px;border-radius:8px;font-size:.72rem">🔴 Visok</button>
+      <button type="button" class="share-btn sec" id="pri-medium" onclick="setGoalPri('medium')" style="flex:1;padding:8px;border-radius:8px;font-size:.72rem">🟡 Srednji</button>
+      <button type="button" class="share-btn sec" id="pri-low" onclick="setGoalPri('low')" style="flex:1;padding:8px;border-radius:8px;font-size:.72rem">🟢 Nizak</button>
+    </div>
     <div class="modal-btns">
-      <button class="modal-btn cancel" onclick="dismissImp()">Otkaži</button>
-      <button class="modal-btn ok" onclick="importList()">✓ Uvezi</button>
+      <button class="modal-btn cancel" onclick="closeGoalModal()">Otkaži</button>
+      <button class="modal-btn ok" onclick="saveGoal()">✓ Spremi</button>
     </div>
   </div>
 </div>
@@ -797,18 +802,26 @@ body.light .suggestions-bar{background:linear-gradient(135deg,#e8f4fd,#dbeef8);b
 <div class="modal-ov" id="scan-modal">
   <div class="scan-modal">
     <h2>📷 <span>Skeniraj račun</span></h2>
-    <div class="sub">Uslikajte račun — stavke i cijene će biti prepoznate</div>
+    <div class="sub">Stavke i cijene će biti prepoznate i dodane na listu i u račune</div>
     <img id="scan-preview" class="scan-preview" style="display:none"/>
     <div class="scan-status" id="scan-status" style="display:none"></div>
     <div class="scan-items" id="scan-items"></div>
     <div class="scan-add-row">
       <button class="scan-add-btn" onclick="scanAddRow()">+ Dodaj stavku ručno</button>
     </div>
-    <div class="field">
-      <label>Prodavnica</label>
-      <select id="scan-store">
-        <option value="">Bilo koja</option><option value="Bingo">🔵 Bingo</option><option value="DM">🔴 DM Drogerie</option><option value="Konzum">🟠 Konzum</option><option value="Mercator">🟢 Mercator</option><option value="Pijaca">🟡 Pijaca</option>
-      </select>
+    <div class="row2">
+      <div class="field"><label>TOTAL sa računa (KM)</label><input type="number" id="scan-total" placeholder="0.00" min="0" step="0.01"/></div>
+      <div class="field">
+        <label>Prodavnica</label>
+        <select id="scan-store">
+          <option value="">Bilo koja</option><option value="Bingo">🔵 Bingo</option><option value="DM">🔴 DM Drogerie</option><option value="Konzum">🟠 Konzum</option><option value="Mercator">🟢 Mercator</option><option value="Pijaca">🟡 Pijaca</option>
+        </select>
+      </div>
+    </div>
+    <div class="field"><label>Ko je platio?</label></div>
+    <div class="rec-buyer-row">
+      <button class="rb-btn" id="scan-buy-n" type="button" onclick="setScanBuyer('Nedim')"><span class="rb-dot"></span> Nedim</button>
+      <button class="rb-btn" id="scan-buy-a" type="button" onclick="setScanBuyer('Azra')"><span class="rb-dot"></span> Azra</button>
     </div>
     <div class="scan-btns">
       <button class="scan-btn cancel" onclick="closeScan()">Otkaži</button>
@@ -849,7 +862,7 @@ body.light .suggestions-bar{background:linear-gradient(135deg,#e8f4fd,#dbeef8);b
 //  STORAGE KEYS
 // ════════════════════════════════════════════════
 const SK='kup_items_v3',MK='kup_mem_v3',CK='kup_cat_v3',HSK='kup_hist_v2',RSK='kup_receipts_v1',BK='kup_buyer_v1';
-const RCK='kup_recurring_v1',BGK='kup_budget_v1',THK='kup_theme_v1';
+const RCK='kup_recurring_v1',BGK='kup_budget_v1',THK='kup_theme_v1',SVK='kup_stednja_v1';
 
 // ════════════════════════════════════════════════
 //  CATEGORY META
@@ -950,6 +963,7 @@ async function pushToFirebase() {
       items: items.length ? items : null,
       history: history.length ? history : null,
       receipts: receipts.length ? receipts : null,
+      savGoals: savGoals.length ? savGoals : null,
       lastUpdated: Date.now(),
       lastDevice: navigator.userAgent.includes('Mobile') ? 'Mobitel' : 'Računar'
     });
@@ -966,9 +980,10 @@ async function manualSync() {
     const snap = await db.ref(ROOT).get();
     if (snap.exists()) {
       const d = snap.val();
-      if (d.items)    { items    = d.items;    saveItemsLocal(); }
-      if (d.history)  { history  = d.history;  saveHistoryLocal(); }
-      if (d.receipts) { receipts = d.receipts; saveReceiptsLocal(); }
+      if (d.items)    { items    = fbArr(d.items);    saveItemsLocal(); }
+      if (d.history)  { history  = fbArr(d.history);  saveHistoryLocal(); }
+      if (d.receipts) { receipts = fbArr(d.receipts); saveReceiptsLocal(); }
+      if (d.savGoals) { savGoals = fbArr(d.savGoals).map(g=>({...g,contribs:fbArr(g.contribs)})); saveGoalsLocal(); }
       renderList();
       const page = document.querySelector('.page.active');
       if (page) {
@@ -976,6 +991,7 @@ async function manualSync() {
         if (id==='rekap') renderRekap();
         else if (id==='profil') renderProfile();
         else if (id==='racuni') renderReceiptPage();
+        else if (id==='stednja') renderStednja();
       }
       const when = d.lastUpdated ? new Date(d.lastUpdated).toLocaleTimeString('bs',{hour:'2-digit',minute:'2-digit'}) : '—';
       const who = d.lastDevice || '';
@@ -995,6 +1011,8 @@ async function manualSync() {
 function saveItemsLocal(){localStorage.setItem(SK,JSON.stringify(items))}
 function saveHistoryLocal(){localStorage.setItem(HSK,JSON.stringify(history))}
 function saveReceiptsLocal(){localStorage.setItem(RSK,JSON.stringify(receipts))}
+function saveGoalsLocal(){localStorage.setItem(SVK,JSON.stringify(savGoals))}
+function fbArr(v){if(!v)return[];if(Array.isArray(v))return v;return Object.values(v);}
 
 // ── REAL-TIME LISTENER ──
 function startRealtimeSync() {
@@ -1007,10 +1025,11 @@ function startRealtimeSync() {
     if (remote > local + 2000) {
       // Remote is newer — pull it in
       const oldLen=items.length;
-      if (d.items)    { items    = d.items;    saveItemsLocal(); }
-      if (d.history)  { history  = d.history;  saveHistoryLocal(); }
-      if (d.receipts) { receipts = d.receipts; saveReceiptsLocal(); }
-      if (d.items&&d.items.length>oldLen) showNotification('Kupovina 🛒',(d.items.length-oldLen)+' novih namirnica dodano na listu!');
+      if (d.items)    { items    = fbArr(d.items);    saveItemsLocal(); }
+      if (d.history)  { history  = fbArr(d.history);  saveHistoryLocal(); }
+      if (d.receipts) { receipts = fbArr(d.receipts); saveReceiptsLocal(); }
+      if (d.savGoals) { savGoals = fbArr(d.savGoals).map(g=>({...g,contribs:fbArr(g.contribs)})); saveGoalsLocal(); }
+      if (d.items&&fbArr(d.items).length>oldLen) showNotification('Kupovina 🛒',(d.items.length-oldLen)+' novih namirnica dodano na listu!');
       renderList();
       const page = document.querySelector('.page.active');
       if (page) {
@@ -1018,6 +1037,7 @@ function startRealtimeSync() {
         if (id==='rekap') renderRekap();
         else if (id==='profil') renderProfile();
         else if (id==='racuni') renderReceiptPage();
+        else if (id==='stednja') renderStednja();
       }
       const when = new Date(remote).toLocaleTimeString('bs',{hour:'2-digit',minute:'2-digit'});
       setSyncStatus('online', '🔄 Ažurirano · ' + when);
@@ -1066,7 +1086,7 @@ function fmtTime(iso){const d=new Date(iso);return d.toLocaleTimeString('bs',{ho
 function sw(tab){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  const tabs=['list','add','racuni','rekap','profil','catalog','share'];
+  const tabs=['list','add','racuni','rekap','profil','catalog','stednja'];
   document.querySelectorAll('.tab')[tabs.indexOf(tab)].classList.add('active');
   document.getElementById('page-'+tab).classList.add('active');
   if(tab==='list')renderList();
@@ -1074,7 +1094,7 @@ function sw(tab){
   else if(tab==='rekap')renderRekap();
   else if(tab==='profil')renderProfile();
   else if(tab==='catalog')renderCatalog();
-  else if(tab==='share')renderSharePrev();
+  else if(tab==='stednja')renderStednja();
 }
 
 // ════════════════════════════════════════════════
@@ -1101,7 +1121,7 @@ function renderList(){
   document.getElementById('lb-rem').textContent=(tA-tC).toFixed(2)+' KM';
   const pct=tA>0?Math.round(tC/tA*100):(items.length>0?Math.round(ci.length/items.length*100):0);
   document.getElementById('lb-fill').style.width=pct+'%';
-  renderBudget();renderSuggestions();renderRecurring();
+  renderBudget();renderSuggestions();
   if(!items.length){c.innerHTML='<div class="empty-state"><div class="icon">🛒</div><p>Lista je prazna.<br>Dodaj namirnice ili ih odaberi iz Kataloga!</p></div>';return;}
   const groups={};
   items.forEach((item,i)=>{const cat=item.cat||'ostalo';if(!groups[cat])groups[cat]=[];groups[cat].push({item,i});});
@@ -1457,6 +1477,13 @@ function addItem(){
   if(!name){toast('Upiši naziv!');return;}
   items.push({name,qty,price,cat,store,checked:false,id:Date.now(),priority:addPriority,note});saveItems();
   if(price>0)remem(name,price,qty,cat);
+  // Add to catalog if not already there, or update price
+  if(price>0){
+    const catIdx=catalog.findIndex(c=>c.name.toLowerCase()===name.toLowerCase());
+    if(catIdx>=0){catalog[catIdx].price=price;if(store)catalog[catIdx].store=store;}
+    else catalog.push({name,qty,price,cat,store});
+    saveCatalog();
+  }
   document.getElementById('in-name').value='';document.getElementById('in-qty').value='';document.getElementById('in-price').value='';document.getElementById('in-note').value='';
   document.getElementById('mem-note').style.display='none';document.getElementById('ac-list').style.display='none';
   setPriority('normal');
@@ -1467,6 +1494,48 @@ function addFromCatalog(idx){
   if(items.find(i=>i.name.toLowerCase()===p.name.toLowerCase()&&!i.checked)){toast('⚠️ Već na listi!');return;}
   items.push({name:p.name,qty:p.qty,price:p.price,cat:p.cat,store:p.store||'',checked:false,id:Date.now(),priority:'normal',note:''});saveItems();toast('✓ '+p.name);
   const btn=document.getElementById('cat-add-'+idx);if(btn){btn.textContent='✓';setTimeout(()=>btn.textContent='+',1200);}
+}
+
+// ════════════════════════════════════════════════
+//  LIST SEARCH (search catalog from Lista tab)
+// ════════════════════════════════════════════════
+function onListSearch(){
+  const q=document.getElementById('list-search').value.trim().toLowerCase();
+  const box=document.getElementById('ls-results');
+  if(q.length<1){box.style.display='none';return;}
+  // Search catalog + price memory
+  const seen=new Set();
+  const results=[];
+  catalog.forEach((p,i)=>{
+    if(p.name.toLowerCase().includes(q)){
+      results.push({name:p.name,qty:p.qty,price:p.price,cat:p.cat,store:p.store,idx:i,src:'cat'});
+      seen.add(p.name.toLowerCase());
+    }
+  });
+  for(const key in priceMemory){
+    if(key.includes(q)&&!seen.has(key)){
+      const m=priceMemory[key];
+      results.push({name:m.name,qty:m.qty,price:m.price,cat:m.cat,store:'',idx:-1,src:'mem'});
+      seen.add(key);
+    }
+  }
+  if(!results.length){box.innerHTML='<div style="padding:10px;font-size:.78rem;color:var(--muted);text-align:center">Nema rezultata</div>';box.style.display='block';return;}
+  box.innerHTML=results.slice(0,15).map(r=>{
+    const onList=items.find(i=>i.name.toLowerCase()===r.name.toLowerCase()&&!i.checked);
+    return `<div style="padding:8px 11px;cursor:pointer;font-size:.83rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);transition:background .15s" onmousedown="addFromSearch('${esc(r.name)}',${r.price},'${esc(r.qty||'')}','${r.cat||'ostalo'}','${esc(r.store||'')}')">
+      <div><span style="font-weight:500">${esc(r.name)}</span><br><span style="font-size:.63rem;color:var(--muted)">${esc(r.qty||'')}${r.store?' · '+esc(r.store):''}</span></div>
+      <div style="text-align:right"><span style="font-family:'Syne',sans-serif;font-size:.75rem;color:var(--accent);font-weight:700">${r.price.toFixed(2)} KM</span>${onList?'<br><span style="font-size:.55rem;color:var(--accent2)">već na listi</span>':''}</div>
+    </div>`;
+  }).join('');
+  box.style.display='block';
+}
+function addFromSearch(name,price,qty,cat,store){
+  if(items.find(i=>i.name.toLowerCase()===name.toLowerCase()&&!i.checked)){toast('⚠️ Već na listi!');return;}
+  items.push({name,qty,price,cat,store,checked:false,id:Date.now(),priority:'normal',note:''});
+  saveItems();renderList();
+  document.getElementById('list-search').value='';
+  document.getElementById('ls-results').style.display='none';
+  toast('✓ '+name+' dodano!');
 }
 
 // ════════════════════════════════════════════════
@@ -1485,10 +1554,16 @@ function renderCatalog(){
     if(stores.length===1&&stores[0]==='DM'){sl='DM';sc='store-dm';}
     else if(stores.length===1&&stores[0]==='Bingo'){sl='Bingo';sc='store-bingo';}
     html+=`<div class="cat-section"><div class="cat-section-hdr"><span class="cat-section-icon">${m.icon}</span><span class="cat-section-name">${m.name}</span><span class="cat-section-store ${sc}">${sl}</span></div><div class="cat-prod-grid">`;
-    groups[cat].forEach(({p,i})=>{html+=`<div class="cat-prod"><div class="cat-prod-info"><div class="cat-prod-name">${esc(p.name)}</div><div class="cat-prod-qty">${esc(p.qty||'')}${p.store?' · '+esc(p.store):''}</div></div><span class="cat-prod-price">${p.price.toFixed(2)} KM</span><button class="cat-prod-edit" onclick="openEdit(${i})">✏️</button><button class="cat-prod-add" id="cat-add-${i}" onclick="addFromCatalog(${i})">+</button></div>`;});
+    groups[cat].forEach(({p,i})=>{html+=`<div class="cat-prod"><div class="cat-prod-info"><div class="cat-prod-name">${esc(p.name)}</div><div class="cat-prod-qty">${esc(p.qty||'')}${p.store?' · '+esc(p.store):''}</div></div><span class="cat-prod-price">${p.price.toFixed(2)} KM</span><button class="cat-prod-edit" onclick="openEdit(${i})">✏️</button><button class="cat-prod-edit" onclick="deleteCatalogItem(${i})" style="color:var(--accent2)">🗑️</button><button class="cat-prod-add" id="cat-add-${i}" onclick="addFromCatalog(${i})">+</button></div>`;});
     html+=`</div></div>`;
   });
   container.innerHTML=html;
+}
+function deleteCatalogItem(idx){
+  const name=catalog[idx].name;
+  if(!confirm('Obrisati "'+name+'" iz kataloga?'))return;
+  catalog.splice(idx,1);
+  saveCatalog();renderCatalog();toast('🗑️ '+name+' obrisano');
 }
 function openEdit(idx){const p=catalog[idx];editKey=idx;document.getElementById('edit-prod-name').textContent=p.name;document.getElementById('edit-qty').value=p.qty||'';document.getElementById('edit-price').value=p.price;document.getElementById('edit-modal').classList.add('visible');}
 function closeEdit(){document.getElementById('edit-modal').classList.remove('visible');editKey=null;}
@@ -1499,49 +1574,181 @@ function saveEdit(){
 }
 
 // ════════════════════════════════════════════════
-//  SHARE
+//  ŠTEDNJA (Savings Goals)
 // ════════════════════════════════════════════════
-function renderSharePrev(){
-  document.getElementById('prev-count').textContent=items.length;
-  const el=document.getElementById('share-prev');
-  if(!items.length){el.innerHTML='<div style="color:var(--muted);font-size:.76rem;padding:6px 0">Nema stavki.</div>';return;}
-  el.innerHTML=items.map(i=>`<div class="prev-item"><span>${esc(i.name)}${i.qty?` <span style="color:var(--muted);font-size:.65rem">(${esc(i.qty)})</span>`:''}</span><span class="pi-p">${i.price?parseFloat(i.price).toFixed(2)+' KM':'—'}</span></div>`).join('');
-}
-function buildUrl(){
-  if(!items.length)return null;
-  const data=JSON.stringify(items.map(i=>({n:i.name,q:i.qty||'',p:i.price||0,c:i.cat||'ostalo',s:i.store||''})));
-  return window.location.href.split('?')[0].split('#')[0]+'?lista='+btoa(unescape(encodeURIComponent(data)));
-}
-function genLink(){const url=buildUrl();if(!url){toast('Nema stavki!');return;}document.getElementById('link-input').value=url;document.getElementById('link-box').classList.add('visible');toast('🔗 Link generisan!');}
-function copyLink(){const input=document.getElementById('link-input');input.select();navigator.clipboard.writeText(input.value).then(()=>toast('📋 Kopirano!')).catch(()=>{document.execCommand('copy');toast('📋 Kopirano!');});}
-function shareWA(){const url=buildUrl();if(!url){toast('Nema stavki!');return;}const total=items.reduce((s,i)=>s+(parseFloat(i.price)||0),0);window.open('https://wa.me/?text='+encodeURIComponent(`🛒 *Kupovina — Porodica Ćehić*\n\n${items.length} namirnica (~${total.toFixed(2)} KM)\n\n${url}`),'_blank');}
-function shareViber(){const url=buildUrl();if(!url){toast('Nema stavki!');return;}const total=items.reduce((s,i)=>s+(parseFloat(i.price)||0),0);window.open('viber://forward?text='+encodeURIComponent(`🛒 Kupovina — Porodica Ćehić\n${items.length} namirnica (~${total.toFixed(2)} KM)\n${url}`),'_blank');}
+let savGoals=[];try{savGoals=JSON.parse(localStorage.getItem(SVK)||'[]');}catch(e){}
+let goalPriSel='medium';
 
-// ════════════════════════════════════════════════
-//  IMPORT
-// ════════════════════════════════════════════════
-function checkUrl(){
-  const lista=new URLSearchParams(window.location.search).get('lista');if(!lista)return;
-  try{
-    const raw=JSON.parse(decodeURIComponent(escape(atob(lista))));
-    pendingImport=raw.map(i=>({name:i.n,qty:i.q,price:parseFloat(i.p)||0,cat:i.c||'ostalo',store:i.s||'',checked:false,id:Date.now()+Math.random(),priority:'normal',note:''}));
-    document.getElementById('imp-modal-cnt').textContent=pendingImport.length;
-    document.getElementById('imp-modal-prev').innerHTML=pendingImport.slice(0,8).map(i=>`<div class="modal-pi"><span>${esc(i.name)}</span><span class="mp">${i.price?i.price.toFixed(2)+' KM':'—'}</span></div>`).join('')+(pendingImport.length>8?`<div style="color:var(--muted);font-size:.68rem;padding:3px 0">...i još ${pendingImport.length-8}</div>`:'');
-    document.getElementById('imp-modal').classList.add('visible');
-    window.history.replaceState({},'',window.location.pathname);
-  }catch(e){console.log('Invalid link');}
+function saveSavGoals(){saveGoalsLocal();schedulePush();}
+
+function setGoalPri(p){
+  goalPriSel=p;
+  ['high','medium','low'].forEach(x=>{
+    const el=document.getElementById('pri-'+x);
+    if(x===p){el.style.borderColor='var(--accent)';el.style.color='var(--accent)';}
+    else{el.style.borderColor='var(--border)';el.style.color='var(--muted)';}
+  });
 }
-function importList(){
-  if(!pendingImport)return;
-  const ex=new Set(items.map(i=>i.name.toLowerCase()));
-  const newOnes=pendingImport.filter(i=>!ex.has(i.name.toLowerCase()));
-  items=[...items,...newOnes];saveItems();newOnes.forEach(i=>{if(i.price>0)remem(i.name,i.price,i.qty,i.cat);});
-  document.getElementById('imp-modal').classList.remove('visible');
-  document.getElementById('imp-banner').classList.add('visible');
-  document.getElementById('imp-count').textContent=newOnes.length;
-  pendingImport=null;renderList();toast('✓ Uvezeno '+newOnes.length+' stavki!');
+
+function openGoalModal(editId){
+  const m=document.getElementById('goal-modal');
+  document.getElementById('goal-edit-id').value=editId||'';
+  if(editId){
+    const g=savGoals.find(x=>x.id==editId);
+    if(!g)return;
+    document.getElementById('goal-modal-title').textContent='Uredi cilj';
+    document.getElementById('goal-name').value=g.name;
+    document.getElementById('goal-amount').value=g.target;
+    document.getElementById('goal-deadline').value=g.deadline||'';
+    goalPriSel=g.priority||'medium';
+  }else{
+    document.getElementById('goal-modal-title').textContent='Novi cilj';
+    document.getElementById('goal-name').value='';
+    document.getElementById('goal-amount').value='';
+    document.getElementById('goal-deadline').value='';
+    goalPriSel='medium';
+  }
+  setGoalPri(goalPriSel);
+  m.classList.add('visible');
 }
-function dismissImp(){document.getElementById('imp-modal').classList.remove('visible');pendingImport=null;}
+function closeGoalModal(){document.getElementById('goal-modal').classList.remove('visible');}
+
+function saveGoal(){
+  const name=document.getElementById('goal-name').value.trim();
+  const target=parseFloat(document.getElementById('goal-amount').value)||0;
+  const deadline=document.getElementById('goal-deadline').value;
+  const editId=document.getElementById('goal-edit-id').value;
+  if(!name||target<=0){toast('Unesite naziv i iznos!');return;}
+  if(editId){
+    const g=savGoals.find(x=>x.id==editId);
+    if(g){g.name=name;g.target=target;g.deadline=deadline;g.priority=goalPriSel;}
+  }else{
+    savGoals.push({id:Date.now(),name,target,deadline,priority:goalPriSel,contribs:[]});
+  }
+  saveSavGoals();closeGoalModal();renderStednja();
+  toast(editId?'✓ Cilj ažuriran!':'✓ Cilj dodan!');
+}
+
+function deleteGoal(id){
+  if(!confirm('Obrisati ovaj cilj?'))return;
+  savGoals=savGoals.filter(g=>g.id!=id);
+  saveSavGoals();renderStednja();toast('Cilj obrisan.');
+}
+
+function addContrib(goalId){
+  const g=savGoals.find(x=>x.id==goalId);if(!g)return;
+  const who=document.getElementById('c-who-'+goalId).value;
+  const amt=parseFloat(document.getElementById('c-amt-'+goalId).value)||0;
+  if(amt<=0){toast('Unesite iznos!');return;}
+  g.contribs.push({who,amount:amt,date:new Date().toISOString()});
+  saveSavGoals();renderStednja();
+  toast('✓ '+who+' uštedio/la '+amt.toFixed(2)+' KM');
+}
+
+function deleteContrib(goalId,idx){
+  const g=savGoals.find(x=>x.id==goalId);if(!g)return;
+  g.contribs.splice(idx,1);
+  saveSavGoals();renderStednja();
+}
+
+function renderStednja(){
+  // Summary
+  let totalSaved=0,totalTarget=0;
+  const perPerson={Nedim:0,Azra:0};
+  savGoals.forEach(g=>{
+    totalTarget+=g.target;
+    (g.contribs||[]).forEach(c=>{totalSaved+=c.amount;if(perPerson[c.who]!==undefined)perPerson[c.who]+=c.amount;});
+  });
+  document.getElementById('sav-summary').innerHTML=`
+    <div class="sav-sum-card">
+      <div class="sav-sum-label">Ukupno ušteđeno</div>
+      <div class="sav-sum-amt" style="color:var(--accent)">${totalSaved.toFixed(2)} KM</div>
+    </div>
+    <div class="sav-sum-card">
+      <div class="sav-sum-label" style="color:var(--nedim)">Nedim</div>
+      <div class="sav-sum-amt" style="color:var(--nedim)">${perPerson.Nedim.toFixed(2)}</div>
+    </div>
+    <div class="sav-sum-card">
+      <div class="sav-sum-label" style="color:var(--azra)">Azra</div>
+      <div class="sav-sum-amt" style="color:var(--azra)">${perPerson.Azra.toFixed(2)}</div>
+    </div>
+  `;
+
+  const container=document.getElementById('sav-goals');
+  if(!savGoals.length){container.innerHTML='<div class="sav-empty">Nema ciljeva štednje.<br>Dodajte prvi cilj pritiskom na "+ Novi cilj".</div>';return;}
+
+  // Sort by priority
+  const priOrder={high:0,medium:1,low:2};
+  const sorted=[...savGoals].sort((a,b)=>(priOrder[a.priority]||1)-(priOrder[b.priority]||1));
+
+  let html='';
+  sorted.forEach(g=>{
+    const saved=(g.contribs||[]).reduce((s,c)=>s+c.amount,0);
+    const pct=Math.min(100,Math.round((saved/g.target)*100));
+    const remaining=Math.max(0,g.target-saved);
+    const priLabel={high:'Visok',medium:'Srednji',low:'Nizak'}[g.priority]||'Srednji';
+    const barColor={high:'var(--accent2)',medium:'var(--accent3)',low:'var(--accent)'}[g.priority]||'var(--accent3)';
+
+    // Deadline info
+    let deadlineHtml='';
+    if(g.deadline){
+      const dl=new Date(g.deadline);
+      const now=new Date();
+      const daysLeft=Math.ceil((dl-now)/(86400000));
+      if(daysLeft<0)deadlineHtml=`<div class="sav-goal-deadline">⚠️ Rok istekao ${Math.abs(daysLeft)} dana</div>`;
+      else if(daysLeft<=7)deadlineHtml=`<div class="sav-goal-deadline">⏰ Još ${daysLeft} dana (${dl.toLocaleDateString('bs')})</div>`;
+      else deadlineHtml=`<div class="sav-goal-deadline ok">📅 Rok: ${dl.toLocaleDateString('bs')} (${daysLeft} dana)</div>`;
+    }
+
+    // Per-person for this goal
+    const gPerson={Nedim:0,Azra:0};
+    (g.contribs||[]).forEach(c=>{if(gPerson[c.who]!==undefined)gPerson[c.who]+=c.amount;});
+
+    html+=`<div class="sav-goal pri-${g.priority}">
+      <div class="sav-goal-actions">
+        <button onclick="openGoalModal(${g.id})" title="Uredi">✏️</button>
+        <button onclick="deleteGoal(${g.id})" title="Obriši">🗑️</button>
+      </div>
+      <div class="sav-goal-top">
+        <span class="sav-goal-name">${esc(g.name)}<span class="sav-pri-badge ${g.priority}">${priLabel}</span></span>
+      </div>
+      <div class="sav-goal-target">Cilj: <strong>${g.target.toFixed(2)} KM</strong> · Ušteđeno: <strong>${saved.toFixed(2)} KM</strong> · Preostalo: ${remaining.toFixed(2)} KM</div>
+      ${deadlineHtml}
+      <div class="sav-bar"><div class="sav-bar-fill" style="width:${pct}%;background:${barColor}"></div></div>
+      <span class="sav-pct">${pct}%</span>
+      <div style="display:flex;gap:10px;font-size:.65rem;color:var(--muted);margin-bottom:6px">
+        <span style="color:var(--nedim)">Nedim: ${gPerson.Nedim.toFixed(2)} KM</span>
+        <span style="color:var(--azra)">Azra: ${gPerson.Azra.toFixed(2)} KM</span>
+      </div>`;
+
+    // Contributions list
+    if(g.contribs&&g.contribs.length){
+      html+=`<div class="sav-contribs">`;
+      g.contribs.slice().reverse().forEach((c,ri)=>{
+        const idx=g.contribs.length-1-ri;
+        const d=new Date(c.date);
+        const color=c.who==='Nedim'?'var(--nedim)':'var(--azra)';
+        html+=`<div class="sav-contrib-row">
+          <span class="sav-contrib-who" style="color:${color}">${c.who}</span>
+          <span class="sav-contrib-date">${d.toLocaleDateString('bs')}</span>
+          <span class="sav-contrib-amt" style="color:${color}">${c.amount.toFixed(2)} KM</span>
+          <button onclick="deleteContrib(${g.id},${idx})" style="background:none;border:none;color:var(--muted);font-size:.7rem;cursor:pointer;padding:0 2px">✕</button>
+        </div>`;
+      });
+      html+=`</div>`;
+    }
+
+    // Add contribution form
+    html+=`<div class="sav-add-contrib">
+      <select id="c-who-${g.id}"><option value="Nedim">Nedim</option><option value="Azra">Azra</option></select>
+      <input type="number" id="c-amt-${g.id}" placeholder="Iznos KM" step="0.01">
+      <button onclick="addContrib(${g.id})">+ Dodaj</button>
+    </div>`;
+
+    html+=`</div>`;
+  });
+  container.innerHTML=html;
+}
 
 // ════════════════════════════════════════════════
 //  TOAST
@@ -1604,34 +1811,6 @@ function editBudget(){
 //  RECURRING ITEMS
 // ════════════════════════════════════════════════
 function saveRecurring(){localStorage.setItem(RCK,JSON.stringify(recurringItems));}
-function renderRecurring(){
-  const el=document.getElementById('recurring-section');if(!el)return;
-  if(!recurringItems.length){
-    el.innerHTML='<div class="recurring-section"><div class="recurring-hdr"><span class="recurring-title">🔄 Sedmične namirnice</span></div><div style="font-size:.68rem;color:var(--muted);margin-bottom:6px">Dodaj artikle koje kupuješ svake sedmice.</div><button class="add-recurring-btn" onclick="addRecurringPrompt()">+ Dodaj sedmičnu</button></div>';
-    return;
-  }
-  el.innerHTML='<div class="recurring-section"><div class="recurring-hdr"><span class="recurring-title">🔄 Sedmične ('+recurringItems.length+')</span><button class="recurring-add-all" onclick="addAllRecurring()">+ Dodaj sve na listu</button></div><div class="recurring-chips">'+recurringItems.map((r,i)=>'<span class="rec-chip">'+esc(r.name)+'<button class="rec-chip-del" onclick="removeRecurring('+i+')">✕</button></span>').join('')+'<button class="add-recurring-btn" onclick="addRecurringPrompt()">+</button></div></div>';
-}
-function addRecurringPrompt(){
-  const name=prompt('Naziv namirnice za sedmičnu listu:');
-  if(!name||!name.trim())return;
-  const n=name.trim();
-  if(recurringItems.find(r=>r.name.toLowerCase()===n.toLowerCase())){toast('Već postoji!');return;}
-  const mem=priceMemory[n.toLowerCase()];
-  recurringItems.push({name:mem?mem.name:n,qty:mem?mem.qty:'',price:mem?mem.price:0,cat:mem?mem.cat:'ostalo'});
-  saveRecurring();renderRecurring();toast('🔄 '+n+' dodano u sedmične');
-}
-function removeRecurring(i){recurringItems.splice(i,1);saveRecurring();renderRecurring();}
-function addAllRecurring(){
-  let added=0;
-  recurringItems.forEach(r=>{
-    if(items.find(i=>i.name.toLowerCase()===r.name.toLowerCase()&&!i.checked))return;
-    items.push({name:r.name,qty:r.qty||'',price:r.price||0,cat:r.cat||'ostalo',store:'',checked:false,id:Date.now()+Math.random(),priority:'normal',note:''});
-    added++;
-  });
-  if(added>0){saveItems();renderList();toast('🔄 Dodano '+added+' sedmičnih');}
-  else toast('Sve sedmične su već na listi!');
-}
 
 // ════════════════════════════════════════════════
 //  SMART SUGGESTIONS
@@ -1716,67 +1895,23 @@ function showNotification(title,body){
 }
 
 // ════════════════════════════════════════════════
-//  VOICE INPUT (Web Speech API)
-// ════════════════════════════════════════════════
-let recognition=null,isRecording=false;
-function initVoice(){
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){const vb=document.getElementById('voice-btn');if(vb)vb.style.display='none';return;}
-  recognition=new SR();
-  recognition.lang='bs-BA';
-  recognition.continuous=false;
-  recognition.interimResults=false;
-  recognition.onresult=(e)=>{
-    const text=e.results[0][0].transcript;
-    stopVoice();
-    const parts=text.split(/[,i]+/).map(s=>s.trim()).filter(s=>s);
-    if(parts.length===1){
-      document.getElementById('in-name').value=parts[0];
-      onNameInput();
-      toast('🎤 '+parts[0]);
-    }else{
-      let added=0;
-      parts.forEach(name=>{
-        if(!name)return;
-        const mem=priceMemory[name.toLowerCase()];
-        const itemName=mem?mem.name:name.charAt(0).toUpperCase()+name.slice(1);
-        if(items.find(i=>i.name.toLowerCase()===itemName.toLowerCase()&&!i.checked))return;
-        items.push({name:itemName,qty:mem?mem.qty:'',price:mem?mem.price:0,cat:mem?mem.cat:'ostalo',store:'',checked:false,id:Date.now()+Math.random(),priority:'normal',note:''});
-        added++;
-      });
-      if(added>0){saveItems();renderList();toast('🎤 Dodano '+added+' stavki');}
-      else toast('Sve je već na listi!');
-    }
-  };
-  recognition.onerror=()=>{stopVoice();toast('Greška sa mikrofonom');};
-  recognition.onend=()=>{stopVoice();};
-}
-function startVoice(){
-  if(!recognition){toast('Preglednik ne podržava glasovni unos');return;}
-  isRecording=true;
-  const btn=document.getElementById('voice-btn');
-  btn.classList.add('recording');btn.textContent='⏹';
-  const st=document.getElementById('voice-status');
-  st.textContent='🎤 Slušam… Recite namirnice';st.style.display='block';
-  recognition.start();
-}
-function stopVoice(){
-  isRecording=false;
-  const btn=document.getElementById('voice-btn');
-  if(btn){btn.classList.remove('recording');btn.textContent='🎤';}
-  const st=document.getElementById('voice-status');
-  if(st)st.style.display='none';
-  try{recognition.stop();}catch(e){}
-}
-function toggleVoice(){if(isRecording)stopVoice();else startVoice();}
-
-// ════════════════════════════════════════════════
 //  RECEIPT PHOTO SCAN (Tesseract OCR)
 // ════════════════════════════════════════════════
 let scanParsedItems=[];
+let scanBuyer='';
 
 function openReceiptCamera(){
-  document.getElementById('receipt-file').click();
+  document.getElementById('receipt-file-cam').click();
+}
+
+function openReceiptGallery(){
+  document.getElementById('receipt-file-gal').click();
+}
+
+function setScanBuyer(b){
+  scanBuyer=b;
+  document.getElementById('scan-buy-n').className='rb-btn'+(b==='Nedim'?' rb-nedim':'');
+  document.getElementById('scan-buy-a').className='rb-btn'+(b==='Azra'?' rb-azra':'');
 }
 
 function onReceiptPhoto(e){
@@ -1790,6 +1925,8 @@ function onReceiptPhoto(e){
     document.getElementById('scan-modal').classList.add('visible');
     document.getElementById('scan-items').innerHTML='';
     scanParsedItems=[];
+    // Pre-select active buyer
+    setScanBuyer(activeBuyer||'');
     startOCR(ev.target.result);
   };
   reader.readAsDataURL(file);
@@ -1821,47 +1958,194 @@ async function startOCR(imageData){
 }
 
 function parseReceiptText(text){
-  const lines=text.split('\n').map(l=>l.trim()).filter(l=>l.length>2);
+  console.log('OCR raw text:\n'+text);
+  const lines=text.split('\n').map(l=>l.trim()).filter(l=>l.length>0);
   scanParsedItems=[];
-  // Common receipt patterns: item name followed by price
-  // Patterns: "Mlijeko 1.55", "MLIJEKO   1,55", "Mlijeko......1.55", "Mlijeko  1.55 KM"
-  const priceRegex=/^(.+?)\s{2,}[\.…]*\s*(\d+[.,]\d{2})\s*(KM|BAM)?$/i;
-  const priceRegex2=/^(.+?)[\.…]+\s*(\d+[.,]\d{2})\s*(KM|BAM)?$/i;
-  const priceRegex3=/^(.+?)\s+(\d+[.,]\d{2})\s*(KM|BAM)?$/i;
 
-  // Skip common header/footer words
-  const skipWords=['ukupno','total','pdv','gotovina','kartica','povrat','hvala','fiskalni','id','jib','pib','datum','vrijeme','račun','racun','br.','porez','visa','mastercard','subtotal','cash','change'];
+  // Bosnian fiscal receipt format (two-line per item):
+  //   Line 1: [CODE] PRODUCT NAME
+  //   Line 2: [QTY]x    [UNIT_PRICE]    [TOTAL]E
+  // Right column may have total like "2.74E" or "10,15E"
+  // Also handle single-line formats as fallback
 
-  lines.forEach(line=>{
-    const lower=line.toLowerCase();
-    if(skipWords.some(w=>lower.includes(w)))return;
-    if(/^\d+[.,]\d{2}$/.test(line.trim()))return; // just a price
-    if(line.length<3)return;
+  // Skip words for header/footer lines
+  const skipWords=['ukupno','total','pdv','gotovina','kartica','povrat','hvala','fiskalni',
+    'jib','pib','datum','vrijeme','racun','račun','porez','visa','mastercard','uplaceno',
+    'uplaćeno','osn','subtotal','cash','change','bf:','ve:','----','====','****'];
 
-    let match=line.match(priceRegex)||line.match(priceRegex2)||line.match(priceRegex3);
-    if(match){
-      let name=match[1].replace(/[\.…]+$/,'').trim();
-      let price=parseFloat(match[2].replace(',','.'));
-      if(name.length>=2 && price>0 && price<9999){
-        // Try to match with price memory for better name/category
-        const memMatch=findMemoryMatch(name);
+  function shouldSkip(line){
+    const l=line.toLowerCase();
+    return skipWords.some(w=>l.includes(w));
+  }
+
+  // Pattern for product line: starts with alphanumeric code (3-6 chars) then product name
+  const productLineRe=/^([A-Z0-9]{3,7})\s+(.+)/i;
+
+  // Pattern for qty/price line: starts with qty like "1.000x" or "0.498x"
+  const qtyLineRe=/^(\d+[.,]\d+)\s*[xX×]\s+(\d+[.,]\d+)/;
+
+  // Pattern for right-column total price (e.g. "2.74E" or "10,15E" at end of line)
+  const totalRightRe=/(\d+[.,]\d{2})\s*E?\s*$/i;
+
+  // Pattern for standalone price line with E suffix (right column picked up separately)
+  const standaloneTotalRe=/^\s*(\d+[.,]\d{2})\s*E\s*$/i;
+
+  // Single-line fallback: "PRODUCT NAME   PRICE"
+  const singleLineRe=/^(.{3,}?)\s{2,}(\d+[.,]\d{2})\s*$/;
+
+  let pendingProduct=null;
+
+  for(let i=0;i<lines.length;i++){
+    const line=lines[i];
+    if(shouldSkip(line))continue;
+    if(line.length<2)continue;
+
+    // Check if this is a product code line
+    const prodMatch=line.match(productLineRe);
+    if(prodMatch){
+      // Extract product name (remove trailing price if right-column is on same line)
+      let rawName=prodMatch[2];
+      let inlineTotal=0;
+      const inlineTotalMatch=rawName.match(/\s+(\d+[.,]\d{2})\s*E?\s*$/i);
+      if(inlineTotalMatch){
+        // Sometimes OCR puts the right-column total on the product name line
+        // Only treat as price if it's after a gap (not part of product name like "250G")
+        const beforePrice=rawName.substring(0,rawName.length-inlineTotalMatch[0].length);
+        if(beforePrice.length>=3){
+          inlineTotal=parseFloat(inlineTotalMatch[1].replace(',','.'));
+          rawName=beforePrice.trim();
+        }
+      }
+      pendingProduct={name:rawName.trim(),inlineTotal:inlineTotal};
+      continue;
+    }
+
+    // Check if this is a quantity/price line
+    const qtyMatch=line.match(qtyLineRe);
+    if(qtyMatch && pendingProduct){
+      const qty=parseFloat(qtyMatch[1].replace(',','.'));
+      const unitPrice=parseFloat(qtyMatch[2].replace(',','.'));
+
+      // Look for total on this line or use inline total from product line
+      let lineTotal=0;
+      const rightMatch=line.match(/(\d+[.,]\d{2})\s*E?\s*$/i);
+      if(rightMatch){
+        const candidate=parseFloat(rightMatch[1].replace(',','.'));
+        // Make sure it's not the unit price itself
+        if(Math.abs(candidate-unitPrice)>0.005){
+          lineTotal=candidate;
+        }
+      }
+
+      // Determine final price: prefer right-column total, then inline total, then qty*unit
+      let finalPrice=lineTotal || pendingProduct.inlineTotal || Math.round(qty*unitPrice*100)/100;
+      // For qty=1, unit price equals total
+      if(Math.abs(qty-1)<0.01) finalPrice=unitPrice;
+
+      if(finalPrice>0 && finalPrice<9999 && pendingProduct.name.length>=2){
+        const cleanName=pendingProduct.name
+          .replace(/^\d+\s*/,'') // remove leading numbers if code wasn't caught
+          .trim();
+        const memMatch=findMemoryMatch(cleanName);
+        const qtyStr=qty!==1?(qty+'x'):'';
         scanParsedItems.push({
-          name: memMatch?memMatch.name:titleCase(name),
-          price: price,
-          qty: memMatch?memMatch.qty:'',
-          cat: memMatch?memMatch.cat:'ostalo',
+          name: memMatch?memMatch.name:titleCase(cleanName),
+          price: finalPrice,
+          qty: memMatch?memMatch.qty:qtyStr,
+          cat: memMatch?memMatch.cat:guessCategory(cleanName),
           matched: !!memMatch
         });
       }
+      pendingProduct=null;
+      continue;
     }
-  });
 
+    // Check for standalone total (right column on its own line) — skip these
+    if(line.match(standaloneTotalRe)){
+      continue;
+    }
+
+    // Fallback: single-line format "NAME   PRICE"
+    if(!pendingProduct){
+      const slMatch=line.match(singleLineRe);
+      if(slMatch && !shouldSkip(slMatch[1])){
+        const name=slMatch[1].trim();
+        const price=parseFloat(slMatch[2].replace(',','.'));
+        if(name.length>=2 && price>0 && price<9999){
+          const memMatch=findMemoryMatch(name);
+          scanParsedItems.push({
+            name: memMatch?memMatch.name:titleCase(name),
+            price: price,
+            qty: memMatch?memMatch.qty:'',
+            cat: memMatch?memMatch.cat:guessCategory(name),
+            matched: !!memMatch
+          });
+        }
+      }
+    }
+  }
+
+  // Extract TOTAL from receipt (the authoritative amount)
+  let receiptTotal=0;
+  for(let i=0;i<lines.length;i++){
+    const l=lines[i].replace(/\s+/g,' ');
+    // Match "TOTAL: 64.44" or "TOTAL 64,44" or "UKUPNO: 64.44" etc.
+    const totalMatch=l.match(/(?:total|ukupno)[:\s]+(\d+[.,]\d{2})/i);
+    if(totalMatch){
+      receiptTotal=parseFloat(totalMatch[1].replace(',','.'));
+      break;
+    }
+  }
+  // Fill in the total field
+  const totalField=document.getElementById('scan-total');
+  if(receiptTotal>0){
+    totalField.value=receiptTotal.toFixed(2);
+  }else{
+    // Fallback: sum of parsed items
+    const sum=scanParsedItems.reduce((s,it)=>s+it.price,0);
+    if(sum>0) totalField.value=sum.toFixed(2);
+  }
+
+  // Auto-detect store from receipt text
+  const fullText=text.toLowerCase();
+  const storeSelect=document.getElementById('scan-store');
+  if(/bingo/.test(fullText)) storeSelect.value='Bingo';
+  else if(/\bdm\b|drogerie/.test(fullText)) storeSelect.value='DM';
+  else if(/konzum/.test(fullText)) storeSelect.value='Konzum';
+  else if(/mercator/.test(fullText)) storeSelect.value='Mercator';
+
+  // Show summary
+  const parsedSum=scanParsedItems.reduce((s,it)=>s+it.price,0);
   if(scanParsedItems.length===0){
     document.getElementById('scan-status').innerHTML='Nisam prepoznao stavke. Dodajte ih ručno koristeći dugme ispod.';
     document.getElementById('scan-status').style.display='block';
     document.getElementById('scan-status').style.color='var(--muted)';
+  }else{
+    let msg='Prepoznato '+scanParsedItems.length+' stavki — zbir: '+parsedSum.toFixed(2)+' KM';
+    if(receiptTotal>0 && Math.abs(receiptTotal-parsedSum)>0.01){
+      msg+=' (TOTAL sa računa: '+receiptTotal.toFixed(2)+' KM)';
+    }
+    document.getElementById('scan-status').innerHTML=msg;
+    document.getElementById('scan-status').style.display='block';
+    document.getElementById('scan-status').style.color=receiptTotal>0&&Math.abs(receiptTotal-parsedSum)>0.5?'var(--accent2)':'var(--accent)';
   }
   renderScanItems();
+}
+
+function guessCategory(name){
+  const n=name.toLowerCase();
+  if(/mlijeko|jogurt|sir\b|kajmak|pavlak|kefir|surutka|krem za kuh|maslac/.test(n))return 'mlijeko';
+  if(/pilet|juneć|svinjsk|meso|salama|slanina|pljeskav|hrenovk|sudžuk|tenders/.test(n))return 'meso';
+  if(/salata|paradajz|krastavac|paprik|luk\b|krompir|mrkva|banana|jabuk|limun|brokul|voće|povrće/.test(n))return 'voce';
+  if(/hljeb|hleb|brašno|riža|tjestenin|pasta\b|zobene|pekara/.test(n))return 'pekara';
+  if(/smrzn|pizza smr|grašak smr|pomfrit/.test(n))return 'smrznuto';
+  if(/sok\b|voda\b|coca|kafa|čaj|piće|pića/.test(n))return 'pice';
+  if(/čokolad|nutel|chipsy|med\b|slatkiš|bananic|keks/.test(n))return 'slatkisi';
+  if(/šampon|pasta za zu|četkic|dezodor|krema|gel za tuš|sapun|maram/.test(n))return 'kozmetika';
+  if(/prašak|omekšiv|gel za su[dđ]|toaletn|kuhinjs|hemij|ariel|lenor/.test(n))return 'hemija';
+  if(/beba|pelen|huggies|pampers/.test(n))return 'beba';
+  if(/supa\b|majonez|kečap|ulje\b|sol\b|šećer|začin/.test(n))return 'ostalo';
+  return 'ostalo';
 }
 
 function findMemoryMatch(name){
@@ -1887,7 +2171,7 @@ function renderScanItems(){
   scanParsedItems.forEach((item,i)=>{
     html+=`<div class="scan-item" id="si-${i}">
       <input type="text" value="${esc(item.name)}" onchange="scanParsedItems[${i}].name=this.value" placeholder="Naziv"/>
-      <input type="number" value="${item.price.toFixed(2)}" step="0.01" min="0" style="width:75px" onchange="scanParsedItems[${i}].price=parseFloat(this.value)||0" placeholder="KM"/>
+      <input type="number" value="${item.price.toFixed(2)}" step="0.01" min="0" style="width:75px" onchange="scanParsedItems[${i}].price=parseFloat(this.value)||0;updateScanTotal()" placeholder="KM"/>
       <button class="si-del" onclick="scanRemoveRow(${i})">✕</button>
     </div>`;
     if(item.matched){
@@ -1895,6 +2179,22 @@ function renderScanItems(){
     }
   });
   container.innerHTML=html;
+  updateScanTotal();
+}
+
+function updateScanTotal(){
+  const rows=document.querySelectorAll('.scan-item');
+  let total=0;
+  rows.forEach((row,i)=>{
+    const p=row.querySelector('input[type="number"]');
+    if(p)total+=parseFloat(p.value)||0;
+  });
+  const st=document.getElementById('scan-status');
+  if(scanParsedItems.length>0){
+    st.innerHTML='Stavki: '+scanParsedItems.length+' — Ukupno: '+total.toFixed(2)+' KM';
+    st.style.display='block';
+    st.style.color='var(--accent)';
+  }
 }
 
 function scanAddRow(){
@@ -1928,12 +2228,20 @@ function saveScanItems(){
   });
 
   const store=document.getElementById('scan-store').value;
+  const buyer=scanBuyer;
+  if(!buyer){toast('Odaberi ko je platio!');return;}
+
   let added=0;
+  let totalAmount=0;
+  const itemNames=[];
+
   scanParsedItems.forEach(item=>{
     if(!item.name)return;
-    // Check for duplicate on list
+    totalAmount+=item.price;
+    itemNames.push(item.name);
+
+    // Add to shopping list (or update price if duplicate)
     if(items.find(i=>i.name.toLowerCase()===item.name.toLowerCase()&&!i.checked)){
-      // Update price if already exists
       const existing=items.find(i=>i.name.toLowerCase()===item.name.toLowerCase()&&!i.checked);
       if(item.price>0){existing.price=item.price;}
     }else{
@@ -1954,11 +2262,55 @@ function saveScanItems(){
     if(item.price>0){
       remem(item.name,item.price,item.qty||'',item.cat||'ostalo');
     }
+
+    // Add to catalog or update existing price
+    if(item.price>0){
+      const catIdx=catalog.findIndex(c=>c.name.toLowerCase()===item.name.toLowerCase());
+      if(catIdx>=0){
+        // Update price (and store if set)
+        catalog[catIdx].price=item.price;
+        if(store) catalog[catIdx].store=store;
+      }else{
+        // Add new item to catalog
+        catalog.push({
+          name:item.name,
+          qty:item.qty||'',
+          price:item.price,
+          cat:item.cat||'ostalo',
+          store:store||''
+        });
+      }
+    }
   });
+
+  // Save catalog and re-render
+  saveCatalog();
+  renderCatalog();
+
+  // Save as receipt in Računi — use TOTAL field (from receipt) not sum of parsed items
+  const receiptAmount=parseFloat(document.getElementById('scan-total').value)||totalAmount;
+  if(receiptAmount>0){
+    const storeName=store||'Nepoznata';
+    const title='Račun '+storeName+(itemNames.length?' ('+itemNames.length+' stavki)':'');
+    const note=itemNames.join(', ');
+    const now=new Date();
+    const dateStr=now.toISOString().split('T')[0]+'T'+now.toTimeString().slice(0,8);
+    receipts.unshift({
+      id:Date.now(),
+      date:dateStr,
+      title:title,
+      amount:Math.round(receiptAmount*100)/100,
+      cat:'hrana',
+      buyer:buyer,
+      note:note
+    });
+    saveReceipts();
+    renderReceiptList();
+  }
 
   if(added>0||scanParsedItems.length>0){
     saveItems();renderList();
-    toast('📷 Dodano '+added+' stavki, cijene ažurirane!');
+    toast('📷 Dodano '+added+' stavki + račun sačuvan!');
   }
   closeScan();
 }
@@ -2002,9 +2354,7 @@ function quickAdd(name){
 //  INIT
 // ════════════════════════════════════════════════
 applyTheme();
-initVoice();
 requestNotifPermission();
-checkUrl();
 renderList();
 updateBuyerUI();
 setRecBuyer('');
