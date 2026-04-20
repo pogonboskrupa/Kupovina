@@ -3,10 +3,10 @@
     "porodica_cehic": {
       ".read": true,
       ".write": true,
-      "items": { ".validate": "newData.isList() || newData.val() === null" },
-      "history": { ".validate": "newData.isList() || newData.val() === null" },
-      "receipts": { ".validate": "newData.isList() || newData.val() === null" },
-      "savGoals": { ".validate": "newData.isList() || newData.val() === null" },
+      "items": { ".validate": "newData.hasChildren() || newData.val() === null" },
+      "history": { ".validate": "newData.hasChildren() || newData.val() === null" },
+      "receipts": { ".validate": "newData.hasChildren() || newData.val() === null" },
+      "savGoals": { ".validate": "newData.hasChildren() || newData.val() === null" },
       "presence": { ".read": true, ".write": true },
       "lastUpdated": { ".validate": "newData.isNumber()" },
       "lastDevice": { ".validate": "newData.isString()" }
