@@ -6,10 +6,13 @@
 <title>Kupovina — Porodica Ćehić</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0f0f0f">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Kupovina">
-<link rel="apple-touch-icon" href="icon-192.svg">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
+<link rel="apple-touch-icon" href="icon-180.png">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -965,8 +968,15 @@ const firebaseConfig = {
   messagingSenderId: "664140526247",
   appId: "1:664140526247:web:0230a26c8222e3a56ba182"
 };
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+let db = null;
+let firebaseAvailable = false;
+try {
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.database();
+  firebaseAvailable = true;
+} catch(e) {
+  console.log('Firebase SDK nedostupan (offline / blokiran CDN) — rad samo lokalno:', e && e.message);
+}
 const ROOT = 'porodica_cehic';
 
 let syncEnabled = false;
@@ -1015,6 +1025,11 @@ async function pushToFirebase() {
 }
 
 async function manualSync() {
+  if (!firebaseAvailable) {
+    setSyncStatus('offline', '📴 Offline — lokalni podaci');
+    toast('⚠️ Cloud nije dostupan, radim lokalno');
+    return;
+  }
   setSyncStatus('syncing', 'Sinkronizacija…');
   try {
     const snap = await db.ref(ROOT).get();
@@ -1088,6 +1103,10 @@ function startRealtimeSync() {
 
 // ── INIT FIREBASE CONNECTION ──
 async function initFirebase() {
+  if (!firebaseAvailable) {
+    setSyncStatus('offline', '📴 Offline — lokalni podaci');
+    return;
+  }
   try {
     const snap = await db.ref(ROOT + '/lastUpdated').get();
     syncEnabled = true;
@@ -1615,7 +1634,13 @@ function shareViber(){const url=buildUrl();if(!url){toast('Nema stavki!');return
 //  IMPORT
 // ════════════════════════════════════════════════
 function checkUrl(){
-  const lista=new URLSearchParams(window.location.search).get('lista');if(!lista)return;
+  const params=new URLSearchParams(window.location.search);
+  const tab=params.get('tab');
+  if(tab&&['spisak','list','add','racuni','rekap','profil','catalog','share'].includes(tab)){
+    sw(tab);
+    window.history.replaceState({},'',window.location.pathname);
+  }
+  const lista=params.get('lista');if(!lista)return;
   try{
     const raw=JSON.parse(decodeURIComponent(escape(atob(lista))));
     pendingImport=raw.map(i=>({name:i.n,qty:i.q,price:parseFloat(i.p)||0,cat:i.c||'ostalo',store:i.s||'',checked:false,id:Date.now()+Math.random(),priority:'normal',note:''}));
