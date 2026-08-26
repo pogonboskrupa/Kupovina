@@ -570,6 +570,29 @@ body.azra-mode .cat-prod-edit:hover{background:rgba(224,131,159,.12)}
 body.azra-mode .si-type.shop{background:rgba(224,131,159,.15)}
 body.azra-mode .copy-btn:hover{background:rgba(224,131,159,.12)}
 body.azra-mode .prio-btn.active-normal{background:rgba(224,131,159,.1)}
+
+/* ── NEDIM MODE (svijetlo zlatna i antracit) ── */
+body.nedim-mode{
+  --bg:#f5f3ee;--surface:#fffdf9;--surface2:#eee7d6;--surface3:#e4dabf;
+  --accent:#b8912a;--accent2:#4b5259;--accent3:#7c8590;
+  --text:#2b2e33;--muted:#8b8680;--border:#e4dcc8;--checked:#f6ecc9;
+}
+body.nedim-mode .sync-bar{background:#fffdf9;border-bottom-color:var(--border)}
+body.nedim-mode .tabs{background:var(--bg)}
+body.nedim-mode .live-bar{background:linear-gradient(135deg,#f7ecc9,#fffaf0)}
+body.nedim-mode .price-hero{background:linear-gradient(135deg,#f7ecc9,#fffaf0)}
+body.nedim-mode .price-hero::before{background:radial-gradient(circle at 50% 50%,rgba(184,145,42,.08),transparent 60%)}
+body.nedim-mode .rekap-total-card.week{background:linear-gradient(135deg,#f7ecc9,#fffaf0)}
+body.nedim-mode .rekap-total-card.month{background:linear-gradient(135deg,#e7e9eb,#f8f8f9)}
+body.nedim-mode .rekap-total-card.year{background:linear-gradient(135deg,#eae1c8,#faf6ea)}
+body.nedim-mode .imp-banner{background:linear-gradient(135deg,#f7ecc9,#fffaf0)}
+body.nedim-mode .pwa-install-banner{background:linear-gradient(135deg,#f7ecc9,#fffaf0)}
+body.nedim-mode .suggestions-bar{background:linear-gradient(135deg,#e7e9eb,#f8f8f9)}
+body.nedim-mode .item-card.checked{border-color:rgba(184,145,42,.4)}
+body.nedim-mode .cat-prod-edit:hover{background:rgba(184,145,42,.12)}
+body.nedim-mode .si-type.shop{background:rgba(184,145,42,.15)}
+body.nedim-mode .copy-btn:hover{background:rgba(184,145,42,.12)}
+body.nedim-mode .prio-btn.active-normal{background:rgba(184,145,42,.1)}
 </style>
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -1341,9 +1364,11 @@ function setProfile(p){
 }
 function applyProfileTheme(){
   const isAzra=activeProfile==='Azra';
+  const isNedim=activeProfile==='Nedim';
   document.body.classList.toggle('azra-mode',isAzra);
+  document.body.classList.toggle('nedim-mode',isNedim);
   const mc=document.querySelector('meta[name="theme-color"]');
-  if(mc)mc.setAttribute('content',isAzra?'#e0839f':'#0f0f0f');
+  if(mc)mc.setAttribute('content',isAzra?'#e0839f':isNedim?'#b8912a':'#0f0f0f');
 }
 function renderProfile(){
   setProfile(activeProfile);
