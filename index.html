@@ -534,6 +534,16 @@ body.light .suggestions-bar{background:linear-gradient(135deg,#e8f4fd,#dbeef8);b
 .budget-prog-fill.over{background:#f44336}
 .budget-edit-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:4px 8px;color:var(--muted);font-size:.6rem;cursor:pointer;transition:all .15s;flex-shrink:0}
 .budget-edit-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── SPISAK (MINIMALISTIČKI SPISAK ZA TRGOVINU) ── */
+.simple-add-row{display:flex;gap:8px;margin-bottom:14px}
+.simple-add-row input{flex:1;padding:11px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;transition:border-color .2s}
+.simple-add-row input:focus{border-color:var(--accent)}
+.simple-add-row input::placeholder{color:var(--muted)}
+.simple-add-btn{width:46px;flex-shrink:0;background:var(--accent);color:#000;border:none;border-radius:10px;font-size:1.3rem;font-weight:700;cursor:pointer;transition:transform .15s}
+.simple-add-btn:active{transform:scale(.92)}
+.simple-clear-btn{padding:4px 9px;background:transparent;border:1px solid var(--border);border-radius:14px;color:var(--muted);font-size:.65rem;cursor:pointer;transition:all .2s}
+.simple-clear-btn:hover{border-color:var(--accent2);color:var(--accent2)}
 </style>
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -560,6 +570,7 @@ body.light .suggestions-bar{background:linear-gradient(135deg,#e8f4fd,#dbeef8);b
 
 <div class="tabs">
   <button class="tab active" onclick="sw('list')"><span class="tab-icon">📋</span>Lista</button>
+  <button class="tab" onclick="sw('spisak')"><span class="tab-icon">🛍️</span>Spisak</button>
   <button class="tab" onclick="sw('add')"><span class="tab-icon">➕</span>Dodaj</button>
   <button class="tab" onclick="sw('racuni')"><span class="tab-icon">🧾</span>Računi</button>
   <button class="tab" onclick="sw('rekap')"><span class="tab-icon">📊</span>Rekap</button>
@@ -604,6 +615,22 @@ body.light .suggestions-bar{background:linear-gradient(135deg,#e8f4fd,#dbeef8);b
   </div>
   <div id="shopping-list"></div>
   <button class="finish-btn hidden" id="finish-btn" onclick="openFinish()">🏁 Završi kupovinu i sačuvaj</button>
+</div>
+
+<!-- ═══ SPISAK (minimalistički spisak za trgovinu) ═══ -->
+<div class="page" id="page-spisak">
+  <div class="simple-add-row">
+    <input type="text" id="simple-input" placeholder="Dodaj stavku…" autocomplete="off" onkeydown="onSimpleKey(event)"/>
+    <button class="simple-add-btn" onclick="addSimpleItem()">+</button>
+  </div>
+  <div class="list-hdr">
+    <span class="list-title">Spisak za trgovinu</span>
+    <div class="hdr-btns">
+      <button class="simple-clear-btn" id="simple-clear-btn" onclick="clearCheckedSimple()" style="display:none">🗑️ Obriši kupljeno</button>
+      <span class="badge" id="simple-count">0</span>
+    </div>
+  </div>
+  <div id="simple-list"></div>
 </div>
 
 <!-- ═══ ADD ═══ -->
@@ -848,7 +875,7 @@ body.light .suggestions-bar{background:linear-gradient(135deg,#e8f4fd,#dbeef8);b
 // ════════════════════════════════════════════════
 //  STORAGE KEYS
 // ════════════════════════════════════════════════
-const SK='kup_items_v3',MK='kup_mem_v3',CK='kup_cat_v3',HSK='kup_hist_v2',RSK='kup_receipts_v1',BK='kup_buyer_v1';
+const SK='kup_items_v3',MK='kup_mem_v3',CK='kup_cat_v3',HSK='kup_hist_v2',RSK='kup_receipts_v1',BK='kup_buyer_v1',SPK='kup_simple_v1';
 const RCK='kup_recurring_v1',BGK='kup_budget_v1',THK='kup_theme_v1';
 
 // ════════════════════════════════════════════════
@@ -891,6 +918,8 @@ let items=[];try{items=JSON.parse(localStorage.getItem(SK)||'[]');}catch(e){}
 let history=[];try{history=JSON.parse(localStorage.getItem(HSK)||'[]');}catch(e){}
 // receipts: {id, date, title, amount, cat, buyer, note}
 let receipts=[];try{receipts=JSON.parse(localStorage.getItem(RSK)||'[]');}catch(e){}
+// simpleList entries (Spisak za trgovinu): {id, name, checked}
+let simpleList=[];try{simpleList=JSON.parse(localStorage.getItem(SPK)||'[]');}catch(e){}
 
 let activeBuyer=localStorage.getItem(BK)||'';
 let pendingImport=null,editKey=null,collapsedCats=new Set(),currentPeriod='week',finishBuyer='',recBuyer='',recCatSel='ostalo',recFilter='all',activeProfile='Nedim';
@@ -934,6 +963,7 @@ function saveMem(){localStorage.setItem(MK,JSON.stringify(priceMemory))}
 function saveHistory(){localStorage.setItem(HSK,JSON.stringify(history));schedulePush();}
 function saveReceipts(){localStorage.setItem(RSK,JSON.stringify(receipts));schedulePush();}
 function saveBuyer(){localStorage.setItem(BK,activeBuyer)}
+function saveSimpleList(){localStorage.setItem(SPK,JSON.stringify(simpleList));schedulePush();}
 
 // ── DEBOUNCED PUSH TO FIREBASE ──
 function schedulePush() {
@@ -950,6 +980,7 @@ async function pushToFirebase() {
       items: items.length ? items : null,
       history: history.length ? history : null,
       receipts: receipts.length ? receipts : null,
+      simpleList: simpleList.length ? simpleList : null,
       lastUpdated: Date.now(),
       lastDevice: navigator.userAgent.includes('Mobile') ? 'Mobitel' : 'Računar'
     });
@@ -966,9 +997,10 @@ async function manualSync() {
     const snap = await db.ref(ROOT).get();
     if (snap.exists()) {
       const d = snap.val();
-      if (d.items)    { items    = d.items;    saveItemsLocal(); }
-      if (d.history)  { history  = d.history;  saveHistoryLocal(); }
-      if (d.receipts) { receipts = d.receipts; saveReceiptsLocal(); }
+      if (d.items)      { items      = d.items;      saveItemsLocal(); }
+      if (d.history)    { history    = d.history;    saveHistoryLocal(); }
+      if (d.receipts)   { receipts   = d.receipts;   saveReceiptsLocal(); }
+      if (d.simpleList) { simpleList = d.simpleList; saveSimpleListLocal(); }
       renderList();
       const page = document.querySelector('.page.active');
       if (page) {
@@ -976,6 +1008,7 @@ async function manualSync() {
         if (id==='rekap') renderRekap();
         else if (id==='profil') renderProfile();
         else if (id==='racuni') renderReceiptPage();
+        else if (id==='spisak') renderSpisak();
       }
       const when = d.lastUpdated ? new Date(d.lastUpdated).toLocaleTimeString('bs',{hour:'2-digit',minute:'2-digit'}) : '—';
       const who = d.lastDevice || '';
@@ -995,6 +1028,7 @@ async function manualSync() {
 function saveItemsLocal(){localStorage.setItem(SK,JSON.stringify(items))}
 function saveHistoryLocal(){localStorage.setItem(HSK,JSON.stringify(history))}
 function saveReceiptsLocal(){localStorage.setItem(RSK,JSON.stringify(receipts))}
+function saveSimpleListLocal(){localStorage.setItem(SPK,JSON.stringify(simpleList))}
 
 // ── REAL-TIME LISTENER ──
 function startRealtimeSync() {
@@ -1007,9 +1041,10 @@ function startRealtimeSync() {
     if (remote > local + 2000) {
       // Remote is newer — pull it in
       const oldLen=items.length;
-      if (d.items)    { items    = d.items;    saveItemsLocal(); }
-      if (d.history)  { history  = d.history;  saveHistoryLocal(); }
-      if (d.receipts) { receipts = d.receipts; saveReceiptsLocal(); }
+      if (d.items)      { items      = d.items;      saveItemsLocal(); }
+      if (d.history)    { history    = d.history;    saveHistoryLocal(); }
+      if (d.receipts)   { receipts   = d.receipts;   saveReceiptsLocal(); }
+      if (d.simpleList) { simpleList = d.simpleList; saveSimpleListLocal(); }
       if (d.items&&d.items.length>oldLen) showNotification('Kupovina 🛒',(d.items.length-oldLen)+' novih namirnica dodano na listu!');
       renderList();
       const page = document.querySelector('.page.active');
@@ -1018,6 +1053,7 @@ function startRealtimeSync() {
         if (id==='rekap') renderRekap();
         else if (id==='profil') renderProfile();
         else if (id==='racuni') renderReceiptPage();
+        else if (id==='spisak') renderSpisak();
       }
       const when = new Date(remote).toLocaleTimeString('bs',{hour:'2-digit',minute:'2-digit'});
       setSyncStatus('online', '🔄 Ažurirano · ' + when);
@@ -1066,10 +1102,11 @@ function fmtTime(iso){const d=new Date(iso);return d.toLocaleTimeString('bs',{ho
 function sw(tab){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  const tabs=['list','add','racuni','rekap','profil','catalog','share'];
+  const tabs=['list','spisak','add','racuni','rekap','profil','catalog','share'];
   document.querySelectorAll('.tab')[tabs.indexOf(tab)].classList.add('active');
   document.getElementById('page-'+tab).classList.add('active');
   if(tab==='list')renderList();
+  else if(tab==='spisak')renderSpisak();
   else if(tab==='racuni')renderReceiptPage();
   else if(tab==='rekap')renderRekap();
   else if(tab==='profil')renderProfile();
@@ -1122,6 +1159,32 @@ function renderList(){
 function toggleCat(cat){collapsedCats.has(cat)?collapsedCats.delete(cat):collapsedCats.add(cat);renderList();}
 function toggleItem(i){if(justSwiped)return;items[i].checked=!items[i].checked;saveItems();renderList();}
 function delItem(e,i){e.stopPropagation();items.splice(i,1);saveItems();renderList();}
+
+// ════════════════════════════════════════════════
+//  SPISAK (minimalistički spisak za trgovinu)
+// ════════════════════════════════════════════════
+function addSimpleItem(){
+  const inp=document.getElementById('simple-input');
+  const name=inp.value.trim();
+  if(!name)return;
+  simpleList.push({id:Date.now(),name,checked:false});
+  saveSimpleList();
+  inp.value='';
+  inp.focus();
+  renderSpisak();
+}
+function onSimpleKey(e){if(e.key==='Enter'){e.preventDefault();addSimpleItem();}}
+function toggleSimpleItem(id){const it=simpleList.find(i=>i.id===id);if(!it)return;it.checked=!it.checked;saveSimpleList();renderSpisak();}
+function delSimpleItem(e,id){e.stopPropagation();simpleList=simpleList.filter(i=>i.id!==id);saveSimpleList();renderSpisak();}
+function clearCheckedSimple(){simpleList=simpleList.filter(i=>!i.checked);saveSimpleList();renderSpisak();toast('🗑️ Kupljeno obrisano');}
+function renderSpisak(){
+  const c=document.getElementById('simple-list');
+  document.getElementById('simple-count').textContent=simpleList.filter(i=>!i.checked).length;
+  document.getElementById('simple-clear-btn').style.display=simpleList.some(i=>i.checked)?'':'none';
+  if(!simpleList.length){c.innerHTML='<div class="empty-state"><div class="icon">🛍️</div><p>Spisak je prazan.<br>Dodaj šta trebaš kupiti u trgovini.</p></div>';return;}
+  const sorted=[...simpleList].sort((a,b)=>(a.checked===b.checked)?0:(a.checked?1:-1));
+  c.innerHTML=sorted.map(item=>`<div class="item-card ${item.checked?'checked':''}" onclick="toggleSimpleItem(${item.id})"><div class="chk">${item.checked?'✓':''}</div><div class="item-info"><div class="item-name">${esc(item.name)}</div></div><button class="item-del" onclick="delSimpleItem(event,${item.id})">✕</button></div>`).join('');
+}
 
 // ════════════════════════════════════════════════
 //  FINISH SHOPPING
@@ -2006,6 +2069,7 @@ initVoice();
 requestNotifPermission();
 checkUrl();
 renderList();
+renderSpisak();
 updateBuyerUI();
 setRecBuyer('');
 document.getElementById('pt-nedim').className='pt-btn pt-nedim';
