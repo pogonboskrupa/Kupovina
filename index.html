@@ -569,8 +569,8 @@ body.light .suggestions-bar{background:linear-gradient(135deg,#e8f4fd,#dbeef8);b
 </div>
 
 <div class="tabs">
+  <button class="tab" onclick="sw('spisak')"><span class="tab-icon">🛍️</span>Spisak<br>za kupovinu</button>
   <button class="tab active" onclick="sw('list')"><span class="tab-icon">📋</span>Lista</button>
-  <button class="tab" onclick="sw('spisak')"><span class="tab-icon">🛍️</span>Spisak</button>
   <button class="tab" onclick="sw('add')"><span class="tab-icon">➕</span>Dodaj</button>
   <button class="tab" onclick="sw('racuni')"><span class="tab-icon">🧾</span>Računi</button>
   <button class="tab" onclick="sw('rekap')"><span class="tab-icon">📊</span>Rekap</button>
@@ -624,7 +624,7 @@ body.light .suggestions-bar{background:linear-gradient(135deg,#e8f4fd,#dbeef8);b
     <button class="simple-add-btn" onclick="addSimpleItem()">+</button>
   </div>
   <div class="list-hdr">
-    <span class="list-title">Spisak za trgovinu</span>
+    <span class="list-title">Spisak za kupovinu</span>
     <div class="hdr-btns">
       <button class="simple-clear-btn" id="simple-clear-btn" onclick="clearCheckedSimple()" style="display:none">🗑️ Obriši kupljeno</button>
       <span class="badge" id="simple-count">0</span>
@@ -1102,7 +1102,7 @@ function fmtTime(iso){const d=new Date(iso);return d.toLocaleTimeString('bs',{ho
 function sw(tab){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  const tabs=['list','spisak','add','racuni','rekap','profil','catalog','share'];
+  const tabs=['spisak','list','add','racuni','rekap','profil','catalog','share'];
   document.querySelectorAll('.tab')[tabs.indexOf(tab)].classList.add('active');
   document.getElementById('page-'+tab).classList.add('active');
   if(tab==='list')renderList();
