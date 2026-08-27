@@ -540,7 +540,8 @@ body.light .suggestions-bar{background:linear-gradient(135deg,#e8f4fd,#dbeef8);b
 
 /* ── SPISAK (MINIMALISTIČKI SPISAK ZA TRGOVINU) ── */
 .simple-add-row{display:flex;gap:8px;margin-bottom:14px}
-.simple-add-row input{flex:1;padding:11px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;transition:border-color .2s}
+.simple-input-wrap{position:relative;flex:1}
+.simple-add-row input{width:100%;padding:11px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;transition:border-color .2s}
 .simple-add-row input:focus{border-color:var(--accent)}
 .simple-add-row input::placeholder{color:var(--muted)}
 .simple-add-btn{width:46px;flex-shrink:0;background:var(--accent);color:#000;border:none;border-radius:10px;font-size:1.3rem;font-weight:700;cursor:pointer;transition:transform .15s}
@@ -669,9 +670,13 @@ body.nedim-mode .prio-btn.active-normal{background:rgba(184,145,42,.1)}
 <!-- ═══ SPISAK (minimalistički spisak za trgovinu) ═══ -->
 <div class="page" id="page-spisak">
   <div class="simple-add-row">
-    <input type="text" id="simple-input" placeholder="Dodaj stavku…" autocomplete="off" onkeydown="onSimpleKey(event)"/>
+    <div class="simple-input-wrap">
+      <input type="text" id="simple-input" placeholder="Dodaj stavku…" autocomplete="off" oninput="onSimpleNameInput()" onkeydown="onSimpleKey(event)" onblur="hideSimpleAc()"/>
+      <div class="ac-list" id="simple-ac-list" style="display:none"></div>
+    </div>
     <button class="simple-add-btn" onclick="addSimpleItem()">+</button>
   </div>
+  <div id="simple-suggest" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:11px"></div>
   <div class="list-hdr">
     <span class="list-title">Spisak za kupovinu</span>
     <div class="hdr-btns">
@@ -924,7 +929,7 @@ body.nedim-mode .prio-btn.active-normal{background:rgba(184,145,42,.1)}
 // ════════════════════════════════════════════════
 //  STORAGE KEYS
 // ════════════════════════════════════════════════
-const SK='kup_items_v3',MK='kup_mem_v3',CK='kup_cat_v3',HSK='kup_hist_v2',RSK='kup_receipts_v1',BK='kup_buyer_v1',SPK='kup_simple_v1',PRK='kup_profile_v1';
+const SK='kup_items_v3',MK='kup_mem_v3',CK='kup_cat_v3',HSK='kup_hist_v2',RSK='kup_receipts_v1',BK='kup_buyer_v1',SPK='kup_simple_v1',PRK='kup_profile_v1',SHK='kup_simple_hist_v1';
 const RCK='kup_recurring_v1',BGK='kup_budget_v1',THK='kup_theme_v1';
 
 // ════════════════════════════════════════════════
@@ -969,6 +974,8 @@ let history=[];try{history=JSON.parse(localStorage.getItem(HSK)||'[]');}catch(e)
 let receipts=[];try{receipts=JSON.parse(localStorage.getItem(RSK)||'[]');}catch(e){}
 // simpleList entries (Spisak za trgovinu): {id, name, checked}
 let simpleList=[];try{simpleList=JSON.parse(localStorage.getItem(SPK)||'[]');}catch(e){}
+// simpleHistory: pamti nazive ranije dodanih stavki u Fasunga, za autocomplete/brzi odabir. {lowerName: {name, count, lastUsed}}
+let simpleHistory={};try{simpleHistory=JSON.parse(localStorage.getItem(SHK)||'{}');}catch(e){}
 
 let activeBuyer=localStorage.getItem(BK)||'';
 let pendingImport=null,editKey=null,collapsedCats=new Set(),currentPeriod='week',finishBuyer='',recBuyer='',recCatSel='ostalo',recFilter='all',activeProfile=localStorage.getItem(PRK)||'Nedim';
@@ -1020,6 +1027,7 @@ function saveHistory(){localStorage.setItem(HSK,JSON.stringify(history));schedul
 function saveReceipts(){localStorage.setItem(RSK,JSON.stringify(receipts));schedulePush();}
 function saveBuyer(){localStorage.setItem(BK,activeBuyer)}
 function saveSimpleList(){localStorage.setItem(SPK,JSON.stringify(simpleList));schedulePush();}
+function saveSimpleHistory(){localStorage.setItem(SHK,JSON.stringify(simpleHistory));schedulePush();}
 
 // ── DEBOUNCED PUSH TO FIREBASE ──
 function schedulePush() {
@@ -1037,6 +1045,7 @@ async function pushToFirebase() {
       history: history.length ? history : null,
       receipts: receipts.length ? receipts : null,
       simpleList: simpleList.length ? simpleList : null,
+      simpleHistory: Object.keys(simpleHistory).length ? simpleHistory : null,
       lastUpdated: Date.now(),
       lastDevice: navigator.userAgent.includes('Mobile') ? 'Mobitel' : 'Računar'
     });
@@ -1062,6 +1071,7 @@ async function manualSync() {
       if (d.history)    { history    = d.history;    saveHistoryLocal(); }
       if (d.receipts)   { receipts   = d.receipts;   saveReceiptsLocal(); }
       if (d.simpleList) { simpleList = d.simpleList; saveSimpleListLocal(); }
+      if (d.simpleHistory) { simpleHistory = d.simpleHistory; saveSimpleHistoryLocal(); }
       renderList();
       const page = document.querySelector('.page.active');
       if (page) {
@@ -1090,6 +1100,7 @@ function saveItemsLocal(){localStorage.setItem(SK,JSON.stringify(items))}
 function saveHistoryLocal(){localStorage.setItem(HSK,JSON.stringify(history))}
 function saveReceiptsLocal(){localStorage.setItem(RSK,JSON.stringify(receipts))}
 function saveSimpleListLocal(){localStorage.setItem(SPK,JSON.stringify(simpleList))}
+function saveSimpleHistoryLocal(){localStorage.setItem(SHK,JSON.stringify(simpleHistory))}
 
 // ── REAL-TIME LISTENER ──
 function startRealtimeSync() {
@@ -1106,6 +1117,7 @@ function startRealtimeSync() {
       if (d.history)    { history    = d.history;    saveHistoryLocal(); }
       if (d.receipts)   { receipts   = d.receipts;   saveReceiptsLocal(); }
       if (d.simpleList) { simpleList = d.simpleList; saveSimpleListLocal(); }
+      if (d.simpleHistory) { simpleHistory = d.simpleHistory; saveSimpleHistoryLocal(); }
       if (d.items&&d.items.length>oldLen) showNotification('Kupovina 🛒',(d.items.length-oldLen)+' novih namirnica dodano na listu!');
       renderList();
       const page = document.querySelector('.page.active');
@@ -1228,17 +1240,41 @@ function delItem(e,i){e.stopPropagation();items.splice(i,1);saveItems();renderLi
 // ════════════════════════════════════════════════
 //  SPISAK (minimalistički spisak za trgovinu)
 // ════════════════════════════════════════════════
+function rememberSimpleName(name){
+  const key=name.toLowerCase();
+  const prev=simpleHistory[key];
+  simpleHistory[key]={name,count:(prev&&prev.count||0)+1,lastUsed:Date.now()};
+  saveSimpleHistory();
+}
 function addSimpleItem(){
   const inp=document.getElementById('simple-input');
   const name=inp.value.trim();
   if(!name)return;
   simpleList.push({id:Date.now(),name,checked:false});
   saveSimpleList();
+  rememberSimpleName(name);
   inp.value='';
   inp.focus();
+  hideSimpleAcNow();
   renderSpisak();
 }
-function onSimpleKey(e){if(e.key==='Enter'){e.preventDefault();addSimpleItem();}}
+function quickAddSimple(name){
+  if(simpleList.find(i=>i.name.toLowerCase()===name.toLowerCase()&&!i.checked)){toast('⚠️ Već na spisku!');return;}
+  simpleList.push({id:Date.now(),name,checked:false});
+  saveSimpleList();
+  rememberSimpleName(name);
+  renderSpisak();
+}
+function onSimpleKey(e){
+  const list=document.getElementById('simple-ac-list');
+  if(list.style.display!=='none'){
+    if(e.key==='ArrowDown'){simpleAcIdx=Math.min(simpleAcIdx+1,simpleAcMatches.length-1);hiSimpleAc();e.preventDefault();return;}
+    if(e.key==='ArrowUp'){simpleAcIdx=Math.max(simpleAcIdx-1,-1);hiSimpleAc();e.preventDefault();return;}
+    if(e.key==='Enter'&&simpleAcIdx>=0){pickSimpleAc(simpleAcIdx);e.preventDefault();return;}
+    if(e.key==='Escape'){list.style.display='none';return;}
+  }
+  if(e.key==='Enter'){e.preventDefault();addSimpleItem();}
+}
 function toggleSimpleItem(id){const it=simpleList.find(i=>i.id===id);if(!it)return;it.checked=!it.checked;saveSimpleList();renderSpisak();}
 function delSimpleItem(e,id){e.stopPropagation();simpleList=simpleList.filter(i=>i.id!==id);saveSimpleList();renderSpisak();}
 function clearCheckedSimple(){simpleList=simpleList.filter(i=>!i.checked);saveSimpleList();renderSpisak();toast('🗑️ Kupljeno obrisano');}
@@ -1246,10 +1282,39 @@ function renderSpisak(){
   const c=document.getElementById('simple-list');
   document.getElementById('simple-count').textContent=simpleList.filter(i=>!i.checked).length;
   document.getElementById('simple-clear-btn').style.display=simpleList.some(i=>i.checked)?'':'none';
+  renderSimpleSuggest();
   if(!simpleList.length){c.innerHTML='<div class="empty-state"><div class="icon">🛍️</div><p>Spisak je prazan.<br>Dodaj šta trebaš kupiti u trgovini.</p></div>';return;}
   const sorted=[...simpleList].sort((a,b)=>(a.checked===b.checked)?0:(a.checked?1:-1));
   c.innerHTML=sorted.map(item=>`<div class="item-card ${item.checked?'checked':''}" onclick="toggleSimpleItem(${item.id})"><div class="chk">${item.checked?'✓':''}</div><div class="item-info"><div class="item-name">${esc(item.name)}</div></div><button class="item-del" onclick="delSimpleItem(event,${item.id})">✕</button></div>`).join('');
 }
+function renderSimpleSuggest(){
+  const el=document.getElementById('simple-suggest');if(!el)return;
+  const activeNames=new Set(simpleList.filter(i=>!i.checked).map(i=>i.name.toLowerCase()));
+  const suggestions=Object.values(simpleHistory).filter(m=>!activeNames.has(m.name.toLowerCase())).sort((a,b)=>b.count-a.count||b.lastUsed-a.lastUsed).slice(0,10);
+  if(!suggestions.length){el.innerHTML='';return;}
+  el.innerHTML=suggestions.map(m=>`<div class="rec-chip" style="cursor:pointer" onclick="quickAddSimple('${esc(m.name)}')">${esc(m.name)}</div>`).join('');
+}
+
+// ── AUTOCOMPLETE (pamti dodane stvari) ──
+let simpleAcIdx=-1,simpleAcMatches=[];
+function onSimpleNameInput(){
+  const val=document.getElementById('simple-input').value.trim().toLowerCase();
+  const list=document.getElementById('simple-ac-list');
+  if(!val){list.style.display='none';return;}
+  simpleAcMatches=Object.values(simpleHistory).filter(m=>m.name.toLowerCase().startsWith(val)&&m.name.toLowerCase()!==val).sort((a,b)=>b.count-a.count||b.lastUsed-a.lastUsed);
+  simpleAcIdx=-1;
+  if(!simpleAcMatches.length){list.style.display='none';return;}
+  list.innerHTML=simpleAcMatches.slice(0,6).map((m,idx)=>`<div class="ac-item" id="sac${idx}" onmousedown="pickSimpleAc(${idx})" onmouseover="simpleAcIdx=${idx};hiSimpleAc()"><span>${esc(m.name)}</span></div>`).join('');
+  list.style.display='block';
+}
+function hiSimpleAc(){document.querySelectorAll('#simple-ac-list .ac-item').forEach((el,i)=>el.classList.toggle('active',i===simpleAcIdx));}
+function pickSimpleAc(idx){
+  const m=simpleAcMatches[idx];if(!m)return;
+  document.getElementById('simple-input').value=m.name;
+  document.getElementById('simple-ac-list').style.display='none';
+}
+function hideSimpleAcNow(){const l=document.getElementById('simple-ac-list');if(l)l.style.display='none';}
+function hideSimpleAc(){setTimeout(hideSimpleAcNow,170);}
 
 // ════════════════════════════════════════════════
 //  FINISH SHOPPING
