@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kupovina-v2';
+const CACHE_NAME = 'kupovina-v3';
 const ASSETS = [
   './',
   './index.html',
