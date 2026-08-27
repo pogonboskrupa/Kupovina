@@ -671,7 +671,7 @@ body.nedim-mode .prio-btn.active-normal{background:rgba(184,145,42,.1)}
 <div class="page" id="page-spisak">
   <div class="simple-add-row">
     <div class="simple-input-wrap">
-      <input type="text" id="simple-input" placeholder="Dodaj stavku…" autocomplete="off" oninput="onSimpleNameInput()" onkeydown="onSimpleKey(event)" onblur="hideSimpleAc()"/>
+      <input type="text" id="simple-input" placeholder="Dodaj stavku…" autocomplete="off" oninput="onSimpleNameInput(event)" onkeydown="onSimpleKey(event)" onblur="hideSimpleAc()"/>
       <div class="ac-list" id="simple-ac-list" style="display:none"></div>
     </div>
     <button class="simple-add-btn" onclick="addSimpleItem()">+</button>
@@ -1250,6 +1250,11 @@ function addSimpleItem(){
   const inp=document.getElementById('simple-input');
   const name=inp.value.trim();
   if(!name)return;
+  if(simpleList.find(i=>i.name.toLowerCase()===name.toLowerCase()&&!i.checked)){
+    toast('⚠️ Već na spisku!');
+    inp.value='';inp.focus();hideSimpleAcNow();
+    return;
+  }
   simpleList.push({id:Date.now(),name,checked:false});
   saveSimpleList();
   rememberSimpleName(name);
@@ -1297,15 +1302,29 @@ function renderSimpleSuggest(){
 
 // ── AUTOCOMPLETE (pamti dodane stvari) ──
 let simpleAcIdx=-1,simpleAcMatches=[];
-function onSimpleNameInput(){
-  const val=document.getElementById('simple-input').value.trim().toLowerCase();
+function onSimpleNameInput(e){
+  const inp=document.getElementById('simple-input');
+  const raw=inp.value;
+  const val=raw.trim().toLowerCase();
   const list=document.getElementById('simple-ac-list');
   if(!val){list.style.display='none';return;}
   simpleAcMatches=Object.values(simpleHistory).filter(m=>m.name.toLowerCase().startsWith(val)&&m.name.toLowerCase()!==val).sort((a,b)=>b.count-a.count||b.lastUsed-a.lastUsed);
   simpleAcIdx=-1;
-  if(!simpleAcMatches.length){list.style.display='none';return;}
-  list.innerHTML=simpleAcMatches.slice(0,6).map((m,idx)=>`<div class="ac-item" id="sac${idx}" onmousedown="pickSimpleAc(${idx})" onmouseover="simpleAcIdx=${idx};hiSimpleAc()"><span>${esc(m.name)}</span></div>`).join('');
-  list.style.display='block';
+  if(!simpleAcMatches.length){list.style.display='none';}
+  else{
+    list.innerHTML=simpleAcMatches.slice(0,6).map((m,idx)=>`<div class="ac-item" id="sac${idx}" onmousedown="pickSimpleAc(${idx})" onmouseover="simpleAcIdx=${idx};hiSimpleAc()"><span>${esc(m.name)}</span></div>`).join('');
+    list.style.display='block';
+  }
+  // brzo dovršavanje: dopuni sivim (selektovanim) predloženim ostatkom dok kucaš naprijed
+  const isDeleting=e&&e.inputType&&e.inputType.indexOf('delete')===0;
+  const atEnd=inp.selectionStart===raw.length&&inp.selectionEnd===raw.length;
+  if(!isDeleting&&atEnd&&simpleAcMatches.length){
+    const best=simpleAcMatches[0];
+    if(best.name.length>raw.length){
+      inp.value=raw+best.name.slice(raw.length);
+      inp.setSelectionRange(raw.length,inp.value.length);
+    }
+  }
 }
 function hiSimpleAc(){document.querySelectorAll('#simple-ac-list .ac-item').forEach((el,i)=>el.classList.toggle('active',i===simpleAcIdx));}
 function pickSimpleAc(idx){
