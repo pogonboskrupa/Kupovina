@@ -13,7 +13,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
 <link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
 <link rel="apple-touch-icon" href="icon-180.png">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#0f0f0f;--surface:#181818;--surface2:#222;--surface3:#2a2a2a;
@@ -29,6 +29,9 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .header h1{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:800;letter-spacing:-.5px;line-height:1.1}
 .header h1 .ac{color:var(--accent)}
 .header h1 .fam{display:block;font-size:.54rem;font-weight:400;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-top:1px;font-family:'DM Sans',sans-serif}
+.header h1 .fam-love{display:block;font-family:'Dancing Script',cursive;font-size:1.05rem;line-height:1.15;margin-top:1px;letter-spacing:.01em}
+.header h1 .fam-love .fl-names{color:var(--accent2);font-weight:700}
+.header h1 .fam-love .fl-msg{color:var(--accent);font-weight:600}
 .header-avatars{display:flex;gap:-4px}
 .hav{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:.68rem;border:2px solid var(--bg);cursor:pointer;transition:all .2s;flex-shrink:0}
 .hav.n{background:var(--nedim);color:#000;margin-right:-8px}
@@ -227,7 +230,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 
 .profile-hero{border-radius:18px;padding:22px 18px;margin-bottom:14px;position:relative;overflow:hidden}
 .profile-hero.ph-nedim{background:linear-gradient(135deg,#f7ecc9,#fffaf0);border:1px solid rgba(184,145,42,.35)}
-.profile-hero.ph-azra{background:linear-gradient(135deg,#ffe4ec,#fff6f0);border:1px solid rgba(224,131,159,.4)}
+.profile-hero.ph-azra{background:linear-gradient(135deg,#ffe0ea,#fff3d9);border:1px solid rgba(201,162,39,.35)}
 .prof-name{font-family:'Syne',sans-serif;font-size:.65rem;text-transform:uppercase;letter-spacing:.15em;margin-bottom:3px}
 .ph-nedim .prof-name{color:#8a6a1a}
 .ph-azra .prof-name{color:#b34968}
@@ -552,21 +555,21 @@ body.light .suggestions-bar{background:linear-gradient(135deg,#e8f4fd,#dbeef8);b
 /* ── AZRA MODE (rozo-bež "women app" izgled) ── */
 body.azra-mode{
   --bg:#fdf3ef;--surface:#fffaf8;--surface2:#fbe7ea;--surface3:#f6d8dd;
-  --accent:#e0839f;--accent2:#c98c5e;--accent3:#d9b48f;
+  --accent:#e0779c;--accent2:#c9a227;--accent3:#e8c988;
   --text:#4a3339;--muted:#ab8b87;--border:#f1dcd6;--checked:#fce3ea;
 }
 body.azra-mode .sync-bar{background:#fffaf8;border-bottom-color:var(--border)}
 body.azra-mode .tabs{background:var(--bg)}
-body.azra-mode .live-bar{background:linear-gradient(135deg,#ffe4ec,#fff6f0)}
-body.azra-mode .price-hero{background:linear-gradient(135deg,#ffe4ec,#fff6f0)}
-body.azra-mode .price-hero::before{background:radial-gradient(circle at 50% 50%,rgba(224,131,159,.08),transparent 60%)}
-body.azra-mode .rekap-total-card.week{background:linear-gradient(135deg,#ffe4ec,#fff6f0)}
+body.azra-mode .live-bar{background:linear-gradient(135deg,#ffe0ea,#fff3d9)}
+body.azra-mode .price-hero{background:linear-gradient(135deg,#ffe0ea,#fff3d9)}
+body.azra-mode .price-hero::before{background:radial-gradient(circle at 50% 50%,rgba(201,162,39,.1),transparent 60%)}
+body.azra-mode .rekap-total-card.week{background:linear-gradient(135deg,#ffe0ea,#fff3d9)}
 body.azra-mode .rekap-total-card.month{background:linear-gradient(135deg,#f6e6f0,#fdf6f8)}
-body.azra-mode .rekap-total-card.year{background:linear-gradient(135deg,#f5e6d8,#fdf3ea)}
-body.azra-mode .imp-banner{background:linear-gradient(135deg,#ffe4ec,#fff6f0)}
-body.azra-mode .pwa-install-banner{background:linear-gradient(135deg,#ffe4ec,#fff6f0)}
-body.azra-mode .suggestions-bar{background:linear-gradient(135deg,#f5e6d8,#fdf3ea)}
-body.azra-mode .item-card.checked{border-color:rgba(224,131,159,.4)}
+body.azra-mode .rekap-total-card.year{background:linear-gradient(135deg,#f8ecd2,#fdf6ea)}
+body.azra-mode .imp-banner{background:linear-gradient(135deg,#ffe0ea,#fff3d9)}
+body.azra-mode .pwa-install-banner{background:linear-gradient(135deg,#ffe0ea,#fff3d9)}
+body.azra-mode .suggestions-bar{background:linear-gradient(135deg,#f8ecd2,#fdf6ea)}
+body.azra-mode .item-card.checked{border-color:rgba(201,162,39,.45)}
 body.azra-mode .cat-prod-edit:hover{background:rgba(224,131,159,.12)}
 body.azra-mode .si-type.shop{background:rgba(224,131,159,.15)}
 body.azra-mode .copy-btn:hover{background:rgba(224,131,159,.12)}
@@ -615,7 +618,8 @@ body.nedim-mode .btn-save-rec,body.nedim-mode .cat-chip.active,body.nedim-mode .
 <div class="presence-bar" id="presence-bar"></div>
 <div class="header">
   <h1>🛒 Kupov<span class="ac">i</span>na
-    <span class="fam">Porodica Ćehić</span>
+    <span class="fam" id="fam-default">Porodica Ćehić</span>
+    <span class="fam-love" id="fam-love" style="display:none"><span class="fl-names">Eman, Kerim, Amar</span> <span class="fl-msg">voli vas vaša mama 💗</span></span>
   </h1>
   <div class="header-avatars" style="gap:6px;align-items:center">
     <button class="theme-toggle" onclick="toggleTheme()" title="Svijetli/tamni mod" id="theme-btn">☀️</button>
@@ -1476,6 +1480,8 @@ function applyProfileTheme(){
   document.body.classList.toggle('nedim-mode',isNedim);
   const mc=document.querySelector('meta[name="theme-color"]');
   if(mc)mc.setAttribute('content',isAzra?'#e0839f':isNedim?'#b8912a':'#0f0f0f');
+  const famDef=document.getElementById('fam-default'),famLove=document.getElementById('fam-love');
+  if(famDef&&famLove){famDef.style.display=isAzra?'none':'block';famLove.style.display=isAzra?'block':'none';}
 }
 function renderProfile(){
   setProfile(activeProfile);
