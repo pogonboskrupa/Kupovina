@@ -972,10 +972,24 @@ let items=[];try{items=JSON.parse(localStorage.getItem(SK)||'[]');}catch(e){}
 let history=[];try{history=JSON.parse(localStorage.getItem(HSK)||'[]');}catch(e){}
 // receipts: {id, date, title, amount, cat, buyer, note}
 let receipts=[];try{receipts=JSON.parse(localStorage.getItem(RSK)||'[]');}catch(e){}
+// Firebase RTDB zna objekat s brojčanim ključevima ("2", "100") vratiti kao rijedak niz s null rupama.
+// Zato svaki zapis iz cloud-a/localStorage-a propuštamo kroz ove funkcije prije upotrebe.
+function cleanSimpleList(v){
+  return (Array.isArray(v)?v:Object.values(v||{})).filter(x=>x&&typeof x==='object'&&x.name);
+}
+function cleanSimpleHistory(v){
+  const out={};
+  (Array.isArray(v)?v:Object.values(v||{})).forEach(m=>{
+    if(!m||typeof m!=='object'||!m.name)return;
+    out[String(m.name).toLowerCase()]={name:m.name,count:m.count||1,lastUsed:m.lastUsed||0};
+  });
+  return out;
+}
+
 // simpleList entries (Spisak za trgovinu): {id, name, checked}
-let simpleList=[];try{simpleList=JSON.parse(localStorage.getItem(SPK)||'[]');}catch(e){}
+let simpleList=[];try{simpleList=cleanSimpleList(JSON.parse(localStorage.getItem(SPK)||'[]'));}catch(e){}
 // simpleHistory: pamti nazive ranije dodanih stavki u Fasunga, za autocomplete/brzi odabir. {lowerName: {name, count, lastUsed}}
-let simpleHistory={};try{simpleHistory=JSON.parse(localStorage.getItem(SHK)||'{}');}catch(e){}
+let simpleHistory={};try{simpleHistory=cleanSimpleHistory(JSON.parse(localStorage.getItem(SHK)||'{}'));}catch(e){}
 
 let activeBuyer=localStorage.getItem(BK)||'';
 let pendingImport=null,editKey=null,collapsedCats=new Set(),currentPeriod='week',finishBuyer='',recBuyer='',recCatSel='ostalo',recFilter='all',activeProfile=localStorage.getItem(PRK)||'Nedim';
@@ -1045,7 +1059,7 @@ async function pushToFirebase() {
       history: history.length ? history : null,
       receipts: receipts.length ? receipts : null,
       simpleList: simpleList.length ? simpleList : null,
-      simpleHistory: Object.keys(simpleHistory).length ? simpleHistory : null,
+      simpleHistory: Object.keys(simpleHistory).length ? Object.values(simpleHistory) : null,
       lastUpdated: Date.now(),
       lastDevice: navigator.userAgent.includes('Mobile') ? 'Mobitel' : 'Računar'
     });
@@ -1070,8 +1084,8 @@ async function manualSync() {
       if (d.items)      { items      = d.items;      saveItemsLocal(); }
       if (d.history)    { history    = d.history;    saveHistoryLocal(); }
       if (d.receipts)   { receipts   = d.receipts;   saveReceiptsLocal(); }
-      if (d.simpleList) { simpleList = d.simpleList; saveSimpleListLocal(); }
-      if (d.simpleHistory) { simpleHistory = d.simpleHistory; saveSimpleHistoryLocal(); }
+      if (d.simpleList) { simpleList = cleanSimpleList(d.simpleList); saveSimpleListLocal(); }
+      if (d.simpleHistory) { simpleHistory = cleanSimpleHistory(d.simpleHistory); saveSimpleHistoryLocal(); }
       renderList();
       const page = document.querySelector('.page.active');
       if (page) {
@@ -1116,8 +1130,8 @@ function startRealtimeSync() {
       if (d.items)      { items      = d.items;      saveItemsLocal(); }
       if (d.history)    { history    = d.history;    saveHistoryLocal(); }
       if (d.receipts)   { receipts   = d.receipts;   saveReceiptsLocal(); }
-      if (d.simpleList) { simpleList = d.simpleList; saveSimpleListLocal(); }
-      if (d.simpleHistory) { simpleHistory = d.simpleHistory; saveSimpleHistoryLocal(); }
+      if (d.simpleList) { simpleList = cleanSimpleList(d.simpleList); saveSimpleListLocal(); }
+      if (d.simpleHistory) { simpleHistory = cleanSimpleHistory(d.simpleHistory); saveSimpleHistoryLocal(); }
       if (d.items&&d.items.length>oldLen) showNotification('Kupovina 🛒',(d.items.length-oldLen)+' novih namirnica dodano na listu!');
       renderList();
       const page = document.querySelector('.page.active');
@@ -1170,6 +1184,8 @@ async function pushToFirebaseTracked() {
 }
 function remem(name,price,qty,cat){priceMemory[name.toLowerCase()]={name,price:parseFloat(price),qty:qty||'',cat:cat||'ostalo'};saveMem();}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+// Naziv koji ide kao argument u inline onclick="fn('…')" — apostrof u imenu je inače rušio handler
+function jsq(s){return esc(String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'"))}
 function fmtDate(iso){const d=new Date(iso);const days=['Ned','Pon','Uto','Sri','Čet','Pet','Sub'];return`${days[d.getDay()]} ${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}`;}
 function fmtTime(iso){const d=new Date(iso);return d.toLocaleTimeString('bs',{hour:'2-digit',minute:'2-digit'});}
 
@@ -1255,7 +1271,7 @@ function addSimpleItem(){
     inp.value='';inp.focus();hideSimpleAcNow();
     return;
   }
-  simpleList.push({id:Date.now(),name,checked:false});
+  simpleList.push({id:Date.now()+Math.random(),name,checked:false});
   saveSimpleList();
   rememberSimpleName(name);
   inp.value='';
@@ -1265,7 +1281,7 @@ function addSimpleItem(){
 }
 function quickAddSimple(name){
   if(simpleList.find(i=>i.name.toLowerCase()===name.toLowerCase()&&!i.checked)){toast('⚠️ Već na spisku!');return;}
-  simpleList.push({id:Date.now(),name,checked:false});
+  simpleList.push({id:Date.now()+Math.random(),name,checked:false});
   saveSimpleList();
   rememberSimpleName(name);
   renderSpisak();
@@ -1285,6 +1301,7 @@ function delSimpleItem(e,id){e.stopPropagation();simpleList=simpleList.filter(i=
 function clearCheckedSimple(){simpleList=simpleList.filter(i=>!i.checked);saveSimpleList();renderSpisak();toast('🗑️ Kupljeno obrisano');}
 function renderSpisak(){
   const c=document.getElementById('simple-list');
+  simpleList=cleanSimpleList(simpleList);
   document.getElementById('simple-count').textContent=simpleList.filter(i=>!i.checked).length;
   document.getElementById('simple-clear-btn').style.display=simpleList.some(i=>i.checked)?'':'none';
   renderSimpleSuggest();
@@ -1294,10 +1311,10 @@ function renderSpisak(){
 }
 function renderSimpleSuggest(){
   const el=document.getElementById('simple-suggest');if(!el)return;
-  const activeNames=new Set(simpleList.filter(i=>!i.checked).map(i=>i.name.toLowerCase()));
-  const suggestions=Object.values(simpleHistory).filter(m=>!activeNames.has(m.name.toLowerCase())).sort((a,b)=>b.count-a.count||b.lastUsed-a.lastUsed).slice(0,10);
+  const activeNames=new Set(simpleList.filter(i=>i&&i.name&&!i.checked).map(i=>i.name.toLowerCase()));
+  const suggestions=Object.values(simpleHistory).filter(m=>m&&m.name&&!activeNames.has(m.name.toLowerCase())).sort((a,b)=>b.count-a.count||b.lastUsed-a.lastUsed).slice(0,10);
   if(!suggestions.length){el.innerHTML='';return;}
-  el.innerHTML=suggestions.map(m=>`<div class="rec-chip" style="cursor:pointer" onclick="quickAddSimple('${esc(m.name)}')">${esc(m.name)}</div>`).join('');
+  el.innerHTML=suggestions.map(m=>`<div class="rec-chip" style="cursor:pointer" onclick="quickAddSimple('${jsq(m.name)}')">${esc(m.name)}</div>`).join('');
 }
 
 // ── AUTOCOMPLETE (pamti dodane stvari) ──
@@ -1308,7 +1325,7 @@ function onSimpleNameInput(e){
   const val=raw.trim().toLowerCase();
   const list=document.getElementById('simple-ac-list');
   if(!val){list.style.display='none';return;}
-  simpleAcMatches=Object.values(simpleHistory).filter(m=>m.name.toLowerCase().startsWith(val)&&m.name.toLowerCase()!==val).sort((a,b)=>b.count-a.count||b.lastUsed-a.lastUsed);
+  simpleAcMatches=Object.values(simpleHistory).filter(m=>m&&m.name&&m.name.toLowerCase().startsWith(val)&&m.name.toLowerCase()!==val).sort((a,b)=>b.count-a.count||b.lastUsed-a.lastUsed);
   simpleAcIdx=-1;
   if(!simpleAcMatches.length){list.style.display='none';}
   else{
@@ -1892,7 +1909,7 @@ function renderSuggestions(){
   const el=document.getElementById('suggestions-section');if(!el)return;
   const suggestions=getSuggestions();
   if(!suggestions.length){el.innerHTML='';return;}
-  el.innerHTML='<div class="suggestions-bar"><div class="sug-title">💡 Možda trebate</div><div class="sug-scroll">'+suggestions.map(s=>'<div class="sug-chip" onclick="addSuggestion(\''+esc(s.name).replace(/'/g,"\\'")+'\')">'+'<span class="sug-name">'+esc(s.name)+'</span><span class="sug-days">'+s.daysSince+'d</span></div>').join('')+'</div></div>';
+  el.innerHTML='<div class="suggestions-bar"><div class="sug-title">💡 Možda trebate</div><div class="sug-scroll">'+suggestions.map(s=>'<div class="sug-chip" onclick="addSuggestion(\''+jsq(s.name)+'\')">'+'<span class="sug-name">'+esc(s.name)+'</span><span class="sug-days">'+s.daysSince+'d</span></div>').join('')+'</div></div>';
 }
 function addSuggestion(name){
   const mem=priceMemory[name.toLowerCase()];
@@ -2217,7 +2234,7 @@ function initSwipe(el,idx){
 //  QUICK CHIPS
 // ════════════════════════════════════════════════
 const QN=['Hljeb bijeli','Mlijeko','Jaja L','Maslac','Šećer','Ulje suncokret','Jogurt','Sir bijeli','Piletina cijela','Banana','Kafa mljeven','Krompir','Paradajz','Pasta za zube','Prašak Ariel'];
-document.getElementById('quick-chips').innerHTML=QN.map(name=>`<div style="padding:5px 11px;background:var(--surface);border:1px solid var(--border);border-radius:20px;font-size:.72rem;cursor:pointer;transition:all .15s;color:var(--text)" onclick="quickAdd('${esc(name)}')" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text)'">${name}</div>`).join('');
+document.getElementById('quick-chips').innerHTML=QN.map(name=>`<div style="padding:5px 11px;background:var(--surface);border:1px solid var(--border);border-radius:20px;font-size:.72rem;cursor:pointer;transition:all .15s;color:var(--text)" onclick="quickAdd('${jsq(name)}')" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text)'">${name}</div>`).join('');
 function quickAdd(name){
   const mem=priceMemory[name.toLowerCase()];if(!mem){toast('Dodaj ručno');return;}
   if(items.find(i=>i.name.toLowerCase()===name.toLowerCase()&&!i.checked)){toast('⚠️ Već na listi!');return;}
