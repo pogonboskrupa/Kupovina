@@ -226,14 +226,14 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .pt-btn.pt-azra .pt-avatar{background:var(--azra);color:#fff}
 
 .profile-hero{border-radius:18px;padding:22px 18px;margin-bottom:14px;position:relative;overflow:hidden}
-.profile-hero.ph-nedim{background:linear-gradient(135deg,#1a2a04,#0f1a00);border:1px solid rgba(200,245,53,.4)}
-.profile-hero.ph-azra{background:linear-gradient(135deg,#2a0a18,#1a0010);border:1px solid rgba(255,107,157,.4)}
+.profile-hero.ph-nedim{background:linear-gradient(135deg,#f7ecc9,#fffaf0);border:1px solid rgba(184,145,42,.35)}
+.profile-hero.ph-azra{background:linear-gradient(135deg,#ffe4ec,#fff6f0);border:1px solid rgba(224,131,159,.4)}
 .prof-name{font-family:'Syne',sans-serif;font-size:.65rem;text-transform:uppercase;letter-spacing:.15em;margin-bottom:3px}
-.ph-nedim .prof-name{color:var(--nedim)}
-.ph-azra .prof-name{color:var(--azra)}
+.ph-nedim .prof-name{color:#8a6a1a}
+.ph-azra .prof-name{color:#b34968}
 .prof-total{font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;letter-spacing:-2px;line-height:1}
-.ph-nedim .prof-total{color:var(--nedim)}
-.ph-azra .prof-total{color:var(--azra)}
+.ph-nedim .prof-total{color:#8a6a1a}
+.ph-azra .prof-total{color:#b34968}
 .prof-sub{font-size:.7rem;color:var(--muted);margin-top:4px}
 
 .stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:14px}
@@ -290,9 +290,9 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .rtc-row{display:flex;gap:14px;margin-top:12px}
 .rtc-mini{flex:1;text-align:center;padding:8px;background:rgba(0,0,0,.3);border-radius:10px}
 .rtc-mini-label{font-size:.56rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
-.week .rtc-mini-label{color:rgba(200,245,53,.6)}
-.month .rtc-mini-label{color:rgba(53,200,245,.6)}
-.year .rtc-mini-label{color:rgba(255,107,53,.6)}
+.week .rtc-mini-label{color:var(--accent);opacity:.7}
+.month .rtc-mini-label{color:var(--accent3);opacity:.7}
+.year .rtc-mini-label{color:var(--accent2);opacity:.7}
 .rtc-mini-val{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:800}
 .week .rtc-mini-val{color:var(--accent)}
 .month .rtc-mini-val{color:var(--accent3)}
@@ -571,6 +571,9 @@ body.azra-mode .cat-prod-edit:hover{background:rgba(224,131,159,.12)}
 body.azra-mode .si-type.shop{background:rgba(224,131,159,.15)}
 body.azra-mode .copy-btn:hover{background:rgba(224,131,159,.12)}
 body.azra-mode .prio-btn.active-normal{background:rgba(224,131,159,.1)}
+body.azra-mode .rtc-mini{background:rgba(255,255,255,.55)}
+body.azra-mode .lb-bar{background:rgba(0,0,0,.08)}
+body.azra-mode .btn-save-rec,body.azra-mode .cat-chip.active,body.azra-mode .edit-save,body.azra-mode .recurring-add-all{background:var(--accent);border-color:var(--accent)}
 
 /* ── NEDIM MODE (svijetlo zlatna i antracit) ── */
 body.nedim-mode{
@@ -594,6 +597,9 @@ body.nedim-mode .cat-prod-edit:hover{background:rgba(184,145,42,.12)}
 body.nedim-mode .si-type.shop{background:rgba(184,145,42,.15)}
 body.nedim-mode .copy-btn:hover{background:rgba(184,145,42,.12)}
 body.nedim-mode .prio-btn.active-normal{background:rgba(184,145,42,.1)}
+body.nedim-mode .rtc-mini{background:rgba(255,255,255,.55)}
+body.nedim-mode .lb-bar{background:rgba(0,0,0,.08)}
+body.nedim-mode .btn-save-rec,body.nedim-mode .cat-chip.active,body.nedim-mode .edit-save,body.nedim-mode .recurring-add-all{background:var(--accent);border-color:var(--accent)}
 </style>
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
