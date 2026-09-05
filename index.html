@@ -631,8 +631,8 @@ body.nedim-mode .btn-save-rec,body.nedim-mode .cat-chip.active,body.nedim-mode .
 </div>
 
 <div class="tabs">
-  <button class="tab" onclick="sw('spisak')"><span class="tab-icon">🛍️</span>Fasunga</button>
-  <button class="tab active" onclick="sw('list')"><span class="tab-icon">📋</span>Lista</button>
+  <button class="tab active" onclick="sw('spisak')"><span class="tab-icon">🛍️</span>Fasunga</button>
+  <button class="tab" onclick="sw('list')"><span class="tab-icon">📋</span>Lista</button>
   <button class="tab" onclick="sw('add')"><span class="tab-icon">➕</span>Dodaj</button>
   <button class="tab" onclick="sw('racuni')"><span class="tab-icon">🧾</span>Računi</button>
   <button class="tab" onclick="sw('rekap')"><span class="tab-icon">📊</span>Rekap</button>
@@ -642,7 +642,7 @@ body.nedim-mode .btn-save-rec,body.nedim-mode .cat-chip.active,body.nedim-mode .
 </div>
 
 <!-- ═══ LIST ═══ -->
-<div class="page active" id="page-list">
+<div class="page" id="page-list">
   <div class="imp-banner" id="imp-banner">
     📥 <strong>Lista primljena!</strong> Uvezeno <span id="imp-count">0</span> novih namirnica.
   </div>
@@ -680,7 +680,7 @@ body.nedim-mode .btn-save-rec,body.nedim-mode .cat-chip.active,body.nedim-mode .
 </div>
 
 <!-- ═══ SPISAK (minimalistički spisak za trgovinu) ═══ -->
-<div class="page" id="page-spisak">
+<div class="page active" id="page-spisak">
   <div class="simple-add-row">
     <div class="simple-input-wrap">
       <input type="text" id="simple-input" placeholder="Dodaj stavku…" autocomplete="off" oninput="onSimpleNameInput(event)" onkeydown="onSimpleKey(event)" onblur="hideSimpleAc()"/>
